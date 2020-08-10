@@ -1,0 +1,19 @@
+{
+  "name": "project-skujy",
+  "version": "1.0.0",
+  "description": "cbt web app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emmanuerl/project-skujy.git"
+  },
+  "author": "Chukwurah Emmanuel, Hyeman Samuel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Emmanuerl/project-skujy/issues"
+  },
+  "homepage": "https://github.com/Emmanuerl/project-skujy#readme"
+}

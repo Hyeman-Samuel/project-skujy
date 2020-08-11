@@ -1,6 +1,6 @@
 const {Question,ValidateQuestion} = require("../../models/Question");
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
-const { functions } = require("lodash");
+
 
 async function createQuestion(req,res) {    
     const {error}=ValidateQuestion(req.body);         
@@ -49,7 +49,7 @@ async function createQuestion(req,res) {
   }
 
   async function getById(req,res){
-    const question = await Question.findById(req.params.id)
+    const question = await Question.findById(req.params.questionId)
       return question
   }
   
@@ -61,7 +61,7 @@ async function createQuestion(req,res) {
             return -1
         }        
         
-      const question = await Question.findOneAndUpdate({"_id":req.params.id},req.body,{new:true});
+      const question = await Question.findOneAndUpdate({"_id":req.params.questionId},req.body,{new:true});
       console.log(question);
       return question;
     }catch{
@@ -72,7 +72,7 @@ async function createQuestion(req,res) {
   
     async function deleteQuestion(req,res) {
         try{
-        const question = await Question.findByIdAndDelete(req.params.id);
+        const question = await Question.findByIdAndDelete(req.params.questionId);
         return question;
         }catch{
         //logger

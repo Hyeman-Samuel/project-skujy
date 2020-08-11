@@ -15,7 +15,6 @@ const OptionSchema = new Mongoose.Schema({
     "index":{type:Number,required:true}
 })
 
-
 const Question = Mongoose.model('Question',QuestionSchema);
 
 

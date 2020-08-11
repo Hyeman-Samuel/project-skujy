@@ -13,6 +13,6 @@ app.get('/',(req,res)=>{
   })
 
 
-  app.listen(app.get('port'), function() {
+app.listen(app.get('port'), function() {
     console.log(`server listening on port ${app.get('port')}`)
   });

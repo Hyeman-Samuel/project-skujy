@@ -5,13 +5,16 @@ const _=require('lodash');
 
 const QuestionSchema=new Mongoose.Schema({
     "Title":{type:String,required:true},
-    "Question":[{type:OptionSchema}]
+    "Question":[{type:OptionSchema}],
+    "CorrectOptionIndex":{type:Number,required:true}
 })
 
 const OptionSchema = new Mongoose.Schema({
     "Title":{type:String,required:true},
-    "IsCorrect":{type:Boolean,required:true}
+    "IsCorrect":{type:Boolean,required:true},
+    "index":{type:Number,required:true}
 })
+
 
 const Question = Mongoose.model('Question',QuestionSchema);
 

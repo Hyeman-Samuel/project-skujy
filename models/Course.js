@@ -5,7 +5,7 @@ const _=require('lodash');
 
 const CourseSchema=new Mongoose.Schema({
     "Title":{type:String,required:true},
-    "Question":[{type:Mongoose.Schema.Types.ObjectId,ref:"Question"}]
+    "Questions":[{type:Mongoose.Schema.Types.ObjectId,ref:"Question"}]
 })
 
 const Course= Mongoose.model('Course',CourseSchema);
@@ -16,4 +16,9 @@ async function ValidateCourse(Course){
     const Schema ={
         "Title":Joi.string().required()
     }
+}
+
+module.exports = {
+    Course,
+    ValidateCourse
 }

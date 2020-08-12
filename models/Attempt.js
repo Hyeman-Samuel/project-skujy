@@ -13,12 +13,26 @@ const AttemptSchema=new Mongoose.Schema({
     "QuestionsAttempted":[{type:QuestionsAttemptedSchema,required:true}],
     "Score":{type:Number,default:-1},
     "HasSubmitted":{type:Boolean,default:false},
-    "TestId":{type:Mongoose.Schema.Types.ObjectId,ref:"TestFormat"},
-    "StartTime":{type:Number,required:true},
-    "StopTime":{type:Number,required:true}
+    "Test":{type:Mongoose.Schema.Types.ObjectId,ref:"TestFormat"},
+    "StartTime":{type:String,required:true},
+    "StopTime":{type:String,required:true},
+    "CourseTitle":{type:String}
 })
 
 
+const Attempt= Mongoose.model('Attempt',AttemptSchema);
 
+
+
+async function ValidateAttempt(Course){
+    const Schema ={
+        "Email":Joi.string.required()
+    }
+}
+
+module.exports = {
+    ValidateAttempt,
+    Attempt
+}
 
 

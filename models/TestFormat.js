@@ -6,9 +6,9 @@ const _=require('lodash');
 
 const TestFormatSchema=new Mongoose.Schema({
     "Title":{type:String,required:true},
-    "QuestionNumber":{type:Number,required:true},
-    "Duration":{type:Date,required:true},
-    "CourseId":{type:Mongoose.Schema.Types.ObjectId,ref:"Course",required:true},
+    "NumberOfQuestions":{type:Number,required:true},
+    "Duration":{type:String,required:true},
+    "Course":{type:Mongoose.Schema.Types.ObjectId,ref:"Course",required:true},
     "IsClosed":{type:Boolean,default:false}
 })
 

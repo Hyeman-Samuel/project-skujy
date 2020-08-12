@@ -8,7 +8,7 @@ app.use(Express.json());
 //Routes
 const questions = require("./routes/QuestionRoute")
 const course = require("./routes/CourseRoute")
-
+const testFormat= require("./routes/TestFormatRoute")
 
 
 app.set('port', process.env.PORT || 3000)
@@ -18,6 +18,8 @@ useMongoDB();
 
 app.use("/questions",questions);
 app.use("/course",course);
+app.use("/test",testFormat);
+
 
 app.get('/',(req,res)=>{
     res.send("home");

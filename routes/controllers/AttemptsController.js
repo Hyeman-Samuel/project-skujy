@@ -5,15 +5,24 @@ const {Course} = require("../../models/Course");
 async function createAttempt(req,res) { 
 
     const attempt = new Attempt(req.body);
-    ///I will get the course Id
     const test = await TestFormat.findById(attempt.Test).populate(["Course"]).lean()
     const course  = await Course.findById(test.Course).populate(["Questions"]).lean()
-    attempt.QuestionsAttempted = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions)
+    const questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions)
+    console.log(attempt.QuestionsAttempted)
+    questions.forEach((item)=>{
+        const question = {        
+            "question":item
+        }
+        attempt.QuestionsAttempted.push(question)
+    })
     attempt.StartTime = "Date.now();"
     attempt.StopTime = "attempt.StartTime + test.Duration"
     attempt.CourseTitle = course.Title
     await attempt.save()
-    return attempt
+    const NewAttempt = await Attempt.findById(attempt.id).populate({
+        path:"QuestionsAttempted.question"
+       })
+    return NewAttempt
 }
 
 
@@ -26,7 +35,7 @@ async function submitAttempt(req,res){
 
 
 function getScore(questionsAttempted){
-
+////I will write it later!!
     return 0;
 }
 

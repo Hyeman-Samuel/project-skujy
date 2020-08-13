@@ -4,7 +4,7 @@ const Mongoose=require('mongoose');
 const _=require('lodash');
 
 const QuestionsAttemptedSchema = new Mongoose.Schema({
-    "QuestionId":{type:String,required:true},
+    "question":{type:Mongoose.Schema.Types.ObjectId,ref:"Question"},
     "AnswerPickedIndex":{type:Number,default:-1}
 })
 

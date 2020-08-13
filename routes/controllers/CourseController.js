@@ -1,6 +1,8 @@
 const {Course,ValidateCourse} = require("../../models/Course");
+const {TestFormat,ValidateTestFormat} = require("../../models/TestFormat")
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
+const { func } = require("joi");
 
 async function createCourse(req,res) { 
     const {error}=ValidateCourse(req.body);         
@@ -27,6 +29,11 @@ async function createCourse(req,res) {
     }
  }
 
+ async function getTests(req,res){
+   const tests = await TestFormat.find({"Course":req.params.id}).lean()
+   return tests;
+   }
+
  async function getCourses(req,res) { 
     const CourseCollection=await Course.find().lean()
     if(CourseCollection.length == 0)return ("No Courses");
@@ -36,8 +43,8 @@ async function createCourse(req,res) {
 
 
  async function getById(req,res){
-    const course = await Course.findById(req.params.id)
-      return course
+    const course = await Course.findById(req.params.id).populate(["Questions"]).lean()
+    return course
   }
 
 
@@ -68,5 +75,5 @@ module.exports = {
     updateCourse,
     deleteCourse,
     getById,
-    AddQuestionToCourses
+    getTests
 }

@@ -1,6 +1,7 @@
 const Mongoose=require('mongoose');
 const config= require("config");
 module.exports=function (){
+   // Mongoose.set('useFindAndModify', false);
     Mongoose.connect(config.get("MongoDbConnectionString"),{ useNewUrlParser: true }).then(()=>{
 ////Database Connected 
 console.log("connected");

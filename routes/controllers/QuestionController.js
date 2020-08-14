@@ -1,4 +1,5 @@
 const {Question,ValidateQuestion} = require("../../models/Question");
+const {Attempt} = require("../../models/Attempt");
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 
 
@@ -6,8 +7,6 @@ async function createQuestion(req,res) {
     try{
     const question = new Question(req.body);
     const isSet = setCorrectOptionIndex(question)
-    console.log(isSet)
-    console.log(question)
     if(isSet != null){
         return isSet 
     }    
@@ -78,7 +77,6 @@ async function createQuestion(req,res) {
         }        
         
       const question = await Question.findOneAndUpdate({"_id":req.params.questionId},req.body,{new:true});
-      console.log(question);
       return question;
     }catch{
       //logger
@@ -88,8 +86,16 @@ async function createQuestion(req,res) {
   
     async function deleteQuestion(req,res) {
         try{
-        const question = await Question.findByIdAndDelete(req.params.questionId);
-        return question;
+          const attempts = Attempt.find({"QuestionsAttempted.question": req.params.questionId})
+          console.log(attempts)
+        if (attempts == null){         
+          const question = await Question.findByIdAndDelete(req.params.questionId);
+          return question;
+        }else{
+          return {message:"This Question has already been attempted and cannot be deleted,Delete the Test(s) and Attempt(s) associated with this Question",code: -1}
+        }
+
+        
         }catch{
         //logger
         }

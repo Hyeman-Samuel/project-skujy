@@ -28,7 +28,7 @@ Router.post("/edit/:id", async(req,res)=>{
    res.send(await QuesionController.updateQuestion(req,res));
 })
 
-Router.delete("/delete/:id",async(req,res)=>{
+Router.post("/delete/:id",async(req,res)=>{
    res.send(await QuesionController.deleteQuestion(req,res));
 })
 

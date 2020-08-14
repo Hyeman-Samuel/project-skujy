@@ -1,5 +1,5 @@
-const {Attempt,ValidateAttempt} = require("../../models/Attempt");
-const {TestFormat,ValidateTestFormat} = require("../../models/TestFormat");
+const {Attempt} = require("../../models/Attempt");
+const {TestFormat} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
 
 async function createAttempt(req,res) { 
@@ -17,7 +17,7 @@ async function createAttempt(req,res) {
     var timeStamp = (new Date()).getTime();
     var Duration = test.DurationInMinutes;
     var DurationInTimeStamp = Duration*1000*60;
-    var StopTime = new Date(timeStamp + DurationInTimeStamp);
+    var StopTime = (new Date(timeStamp + DurationInTimeStamp)).getTime();
     attempt.StartTime = timeStamp.toString()
     attempt.StopTime = StopTime.toString()
     attempt.CourseTitle = course.Title

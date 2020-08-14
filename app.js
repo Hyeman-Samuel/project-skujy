@@ -16,7 +16,7 @@ useParser(app)
 useMongoDB();
 
 
-app.use("/questions",questions);
+app.use("/question",questions);
 app.use("/course",course);
 app.use("/test",testFormat);
 app.use("/attempt",attempt);

@@ -1,7 +1,6 @@
 const Joi=require('joi');
 Joi.objectId=require('joi-objectid')(Joi);
 const Mongoose=require('mongoose');
-const _=require('lodash');
 
 
 const TestFormatSchema=new Mongoose.Schema({
@@ -14,16 +13,6 @@ const TestFormatSchema=new Mongoose.Schema({
 
 const TestFormat = Mongoose.model('TestFormat',TestFormatSchema);
 
-
-
-async function ValidateTestFormat(Course){
-    const Schema ={
-        "Title":Joi.string().required(),
-        "QuestionNumber":Joi.string.required()
-    }
-}
-
 module.exports = {
-    TestFormat,
-    ValidateTestFormat
+    TestFormat
 }

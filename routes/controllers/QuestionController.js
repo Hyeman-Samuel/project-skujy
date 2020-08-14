@@ -2,18 +2,15 @@ const {Question,ValidateQuestion} = require("../../models/Question");
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 
 
-async function createQuestion(req,res) {    
-    const {error}=ValidateQuestion(req.body);         
-    if(error)return res.status(400).send(error.details[0].message);
-   
-    
+async function createQuestion(req,res) {        
     try{
     const question = new Question(req.body);
-    setIndex(req.body)
-    const isSet = setCorrectOptionIndex(req.body)
-    if(isSet != -1){
-        return -1 
-    }
+    const isSet = setCorrectOptionIndex(question)
+    console.log(isSet)
+    console.log(question)
+    if(isSet != null){
+        return isSet 
+    }    
     await question.save();
     return question
       }catch(err){
@@ -22,23 +19,34 @@ async function createQuestion(req,res) {
       }
   }
 
-  function setIndex(question){
-    var index = 1
-    question.Options.forEach(element => {
-      element.Index = index;
-      index++
+
+
+
+
+  function setIndex(question){    
+    question.Options.forEach((element,index) => {
+      question.Options[index].Index  = index  
+      console.log(question.Options[index])
     });
   }
 
 
   function setCorrectOptionIndex(question){
+    setIndex(question)
     const correctOption = question.Options.filter(function(item){
+      console.log(1)
         return item.IsCorrect == true
         })
-        if (correctOption.length  != 0){
-        question.CorrectOptionIndex = correctOption[0].index
-        } else if (correctOption.length > 1){
-         return -1
+
+        if (correctOption.length > 1){
+         return {message:"Multiple Correct Options",code:-1}
+        }else  if (correctOption.length  == 0){
+          return {message:"No Correct Options",code:-1}
+        }else if (correctOption.length == 1){
+          console.log(correctOption[0].Index)
+          question.CorrectOptionIndex = correctOption[0].Index
+        }else{
+          return {message:"Unexpected Error",code:-1}
         }
   }
 

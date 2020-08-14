@@ -1,12 +1,10 @@
 const {Course,ValidateCourse} = require("../../models/Course");
-const {TestFormat,ValidateTestFormat} = require("../../models/TestFormat")
+const {TestFormat} = require("../../models/TestFormat")
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
-const { func } = require("joi");
 
 async function createCourse(req,res) { 
-    const {error}=ValidateCourse(req.body);         
-    if(error)return res.status(400).send(error.details[0].message);
+
        
     try{
     const course = new Course(req.body);
@@ -20,8 +18,12 @@ async function createCourse(req,res) {
 
  async function AddQuestionToCourses(req,res) { 
     const question = await QuestionController.createQuestion(req,res)
+    if(question.code != undefined){
+      return question
+    }
     const course = await Course.findById(req.params.id);
-    course.questions.push(question._id)
+    console.log(question)
+    course.Questions.push(question)
     try{
     await course.save()
     }catch{
@@ -75,5 +77,6 @@ module.exports = {
     updateCourse,
     deleteCourse,
     getById,
-    getTests
+    getTests,
+    AddQuestionToCourses
 }

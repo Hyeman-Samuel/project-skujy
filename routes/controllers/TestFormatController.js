@@ -1,9 +1,7 @@
 const {TestFormat,ValidateTestFormat} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
 
-async function createTestFormat(req,res){  
-    const {error}=ValidateTestFormat(req.body);         
-    if(error)return res.status(400).send(error.details[0].message);     
+async function createTestFormat(req,res){      
     try{
     const test = new TestFormat(req.body);
     const course = await Course.findById(test.Course).populate(["Questions"]).lean();

@@ -1,7 +1,6 @@
 const Joi=require('joi');
 Joi.objectId=require('joi-objectid')(Joi);
 const Mongoose=require('mongoose');
-const _=require('lodash');
 
 const QuestionsAttemptedSchema = new Mongoose.Schema({
     "question":{type:Mongoose.Schema.Types.ObjectId,ref:"Question"},
@@ -19,19 +18,9 @@ const AttemptSchema=new Mongoose.Schema({
     "CourseTitle":{type:String}
 })
 
-
 const Attempt= Mongoose.model('Attempt',AttemptSchema);
 
-
-
-async function ValidateAttempt(Course){
-    const Schema ={
-        "Email":Joi.string.required()
-    }
-}
-
 module.exports = {
-    ValidateAttempt,
     Attempt
 }
 

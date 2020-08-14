@@ -5,18 +5,21 @@ const {Course} = require("../../models/Course");
 async function createAttempt(req,res) { 
 
     const attempt = new Attempt(req.body);
-    const test = await TestFormat.findById(attempt.Test).populate(["Course"]).lean()
-    const course  = await Course.findById(test.Course).populate(["Questions"]).lean()
+    const test = await TestFormat.findById(attempt.Test).populate(["Course"])
+    const course  = await Course.findById(test.Course).populate(["Questions"])
     const questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions)
-    console.log(attempt.QuestionsAttempted)
     questions.forEach((item)=>{
         const question = {        
             "question":item
         }
         attempt.QuestionsAttempted.push(question)
     })
-    attempt.StartTime = "Date.now();"
-    attempt.StopTime = "attempt.StartTime + test.Duration"
+    var timeStamp = (new Date()).getTime();
+    var Duration = test.DurationInMinutes;
+    var DurationInTimeStamp = Duration*1000*60;
+    var StopTime = new Date(timeStamp + DurationInTimeStamp);
+    attempt.StartTime = timeStamp.toString()
+    attempt.StopTime = StopTime.toString()
     attempt.CourseTitle = course.Title
     await attempt.save()
     const NewAttempt = await Attempt.findById(attempt.id).populate({
@@ -27,16 +30,33 @@ async function createAttempt(req,res) {
 
 
 async function submitAttempt(req,res){
-    const attempt = Attempt.findById(req.params.attemptId).lean()
+    var questionsAttempted = req.body.QuestionsAttempted;
+
+    const attempt = await Attempt.findById(req.params.attemptId).populate({
+        path:"QuestionsAttempted.question"
+       }) 
+       attempt.QuestionsAttempted.forEach((prevAttempt)=>{
+            questionsAttempted.forEach((nextAttempt)=>{
+                if(prevAttempt.question.id == nextAttempt.question){
+                    prevAttempt.AnswerPickedIndex = nextAttempt.AnswerPickedIndex
+                }
+            })
+       })
     attempt.HasSubmitted = true;
     attempt.Score = getScore(attempt.QuestionsAttempted)
+    attempt.save()
     return attempt
 }
 
-
 function getScore(questionsAttempted){
-////I will write it later!!
-    return 0;
+    var score = 0;
+    questionsAttempted.forEach((question)=>{
+
+        if(question.question.CorrectOptionIndex == question.AnswerPickedIndex){
+           score++ 
+        }
+    })
+    return score;
 }
 
 function getRandomItemsFromArray(arr, n) {

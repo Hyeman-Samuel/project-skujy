@@ -6,7 +6,7 @@ const _=require('lodash');
 const OptionSchema = new Mongoose.Schema({
     "Title":{type:String,required:true},
     "IsCorrect":{type:Boolean,default:false},
-    "index":{type:Number,required:true}
+    "Index":{type:Number,required:true}
 })
 
 const QuestionSchema=new Mongoose.Schema({

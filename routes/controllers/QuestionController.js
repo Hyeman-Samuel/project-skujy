@@ -9,6 +9,7 @@ async function createQuestion(req,res) {
     
     try{
     const question = new Question(req.body);
+    setIndex(req.body)
     const isSet = setCorrectOptionIndex(req.body)
     if(isSet != -1){
         return -1 
@@ -21,6 +22,13 @@ async function createQuestion(req,res) {
       }
   }
 
+  function setIndex(question){
+    var index = 1
+    question.Options.forEach(element => {
+      element.Index = index;
+      index++
+    });
+  }
 
 
   function setCorrectOptionIndex(question){

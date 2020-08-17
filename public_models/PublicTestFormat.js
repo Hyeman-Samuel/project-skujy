@@ -6,8 +6,7 @@ const Mongoose=require('mongoose');
     const TestFormatPublicSchema ={
         "Title":{type:String,required:true},
         "NumberOfQuestions":{type:Number,required:true},
-        "DurationInMinutes":{type:String,required:true},
-        "Course":{type:Mongoose.Schema.Types.ObjectId,ref:"Course",required:true}
+        "DurationInMinutes":{type:String,required:true}
     }
 
 
@@ -16,8 +15,7 @@ const Mongoose=require('mongoose');
         const Schema ={
             "Title":Joi.string().required(),
             "NumberOfQuestions":Joi.number().required(),
-            "DurationInMinutes":Joi.number().required(),
-            "Course":Joi.objectId().required()       
+            "DurationInMinutes":Joi.number().required()
         }
 
         return Joi.validate(TestFormat,Schema)

@@ -2,69 +2,106 @@ const {Course,ValidateCourse} = require("../../models/Course");
 const {TestFormat} = require("../../models/TestFormat")
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
+const TestFormatController=require("../controllers/TestFormatController");
 
-async function createCourse(req,res) { 
-
-       
+async function createCourse(req,res) {       
     try{
     const course = new Course(req.body);
     await course.save();
-    return course
+    return {message:"Document(s) Created",code:1, data:course};
     }catch(err){
      //logger
      return {message:err,code:-1} 
       }
  }
 
- async function AddQuestionToCourses(req,res) { 
+ async function AddQuestionToCourse(req,res) { 
     const question = await QuestionController.createQuestion(req,res)
-    if(question.code != undefined){
+    if(question.code == -1){
       return question
     }
-    const course = await Course.findById(req.params.id);
-    console.log(question)
-    course.Questions.push(question)
     try{
+    const course = await Course.findById(req.params.id);
+    if(course == null){
+      return {message:"Course Not Found",code:0}
+    }
+
+    course.Questions.push(question.data.id)
+   
     await course.save()
-    }catch{
-        return -1 
+    return {message:"Document(s) Added",code:1, data:course};
+    }catch(err){
+        return {message:err,code:-1} 
     }
  }
 
+
+ async function AddTestToCourse(req,res){
+  const test = await TestFormatController.createTestFormat(req,res);
+  if(test.code != 1){
+    return test    
+  }
+  var course = test.data.course
+  course.Tests.push(test.data.test._id)
+  try{   
+  await course.save();
+  return {message:"Test Created",code:1 }; 
+  }catch(err){
+   //logger
+   return {message:err,code:-1} 
+    }
+
+ }
+
  async function getTests(req,res){
-   const tests = await TestFormat.find({"Course":req.params.id}).lean()
-   return tests;
-   }
+   try { 
+     const tests = await TestFormat.find({"Course":req.params.id}).lean()
+   if(tests != null){
+    return {message:"Document(s) Found",code:1, data:tests};
+    }else{return {message:"Not Found",code:0}} 
+     
+   } catch (err) {
+    return {message:err,code:-1}
+   } 
+  }
 
  async function getCourses(req,res) { 
     const CourseCollection=await Course.find().lean()
-    if(CourseCollection.length == 0)return ("No Courses");
-    return CourseCollection
+    if(CourseCollection.length == 0)return ({message:"No Courses",code:0});
+    return {message:"Document(s) Found",code:1, data:CourseCollection};
  }
 
 
 
  async function getById(req,res){
-    const course = await Course.findById(req.params.id).populate(["Questions"]).lean()
-    return course
+   try {
+    const course = await Course.findById(req.params.id).populate(["Questions","Tests"]).lean()
+    if (course != null){
+      return {message:"Document(s) Found",code:1, data:course};
+    }
+   else {return {message:"Not Found",code:0}}    
+   } catch (err) {
+    return {message:err,code:-1}
+   }
+  
   }
 
 
   async function updateCourse(req,res) {
     try{        
       const course = await Course.findOneAndUpdate({"_id":req.params.id},req.body,{new:true});
-      return course;
-    }catch{
-      
+      return {message:"Document(s) Updated",code:1, data:course};
+    }catch (err){
+      return {message:err,code:-1}
     }
   }
 
   async function deleteCourse(req,res) {
     try{
     const course = await Course.findByIdAndDelete(req.params.id);
-    return course;
-    }catch{
-    return -1
+    return {message:"Document(s) deleted",code:1, data:course};
+    }catch(err){
+    return {message:err,code:-1}
     }
 }
 
@@ -78,5 +115,6 @@ module.exports = {
     deleteCourse,
     getById,
     getTests,
-    AddQuestionToCourses
+    AddQuestionToCourse,
+    AddTestToCourse
 }

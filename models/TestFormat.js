@@ -6,7 +6,7 @@ const Mongoose=require('mongoose');
 const TestFormatSchema=new Mongoose.Schema({
     "Title":{type:String,required:true},
     "NumberOfQuestions":{type:Number,required:true},
-    "DurationInMinutes":{type:String,required:true},
+    "DurationInMinutes":{type:Number,required:true},
     "Course":{type:Mongoose.Schema.Types.ObjectId,ref:"Course",required:true},
     "IsClosed":{type:Boolean,default:false}
 })

@@ -1,39 +1,56 @@
 const express = require('express');
 const Router = express.Router();
-const ValidateCourse = require("../public/models/PublicCourse")
-const CourseController = require("./controllers/CourseController")
+const ValidateCourse = require("../public_models/PublicCourse")
+const CourseController = require("./controllers/CourseController");
+const ResponseManager = require('../utility/ResponseManager');
 
 
 Router.post("/",async(req,res)=>{ 
     const {error}=ValidateCourse(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
-    res.send(await CourseController.createCourse(req,res));
+
+    var result = await CourseController.createCourse(req,res);
+    ResponseManager(req,res,result);
 })
 
 Router.get("/",async(req,res)=>{
-    res.send(await CourseController.getCourses(req,res));
+    var result = await CourseController.getCourses(req,res)
+    ResponseManager(req,res,result);
 })
 
 Router.get("/:id", async(req,res)=>{
- res.send(await CourseController.getById(req,res));
+ var result = await CourseController.getById(req,res);
+ ResponseManager(req,res,result);
 })
 
 Router.get("/:id/test",async(req,res)=>{
-    res.send(await CourseController.getTests(req,res));
+  var result = await CourseController.getTests(req,res);
+  ResponseManager(req,res,result);
 })
 
-Router.post("/edit/:id", async(req,res)=>{
+
+Router.put("/:id", async(req,res)=>{
     const {error}=ValidateCourse(req.body);         
-    if(error)return res.status(400).send(error.details[0].message);    
-   res.send(await CourseController.updateCourse(req,res));
+    if(error)return res.status(400).send(error.details[0].message);  
+    
+    
+   var result = await CourseController.updateCourse(req,res);
+   ResponseManager(req,res,result);
 })
 
-Router.delete("/delete/:id",async(req,res)=>{
-   res.send(await CourseController.deleteCourse(req,res));
+Router.delete("/:id",async(req,res)=>{
+    var result = await CourseController.deleteCourse(req,res)
+    ResponseManager(req,res,result);
 })
 
-Router.post("/addquestion/:id",async(req,res)=>{
-    res.send(await CourseController.AddQuestionToCourses(req,res));
+Router.post("/:id/addquestion",async(req,res)=>{
+    var result = await CourseController.AddQuestionToCourse(req,res);
+    ResponseManager(req,res,result);
+})
+
+Router.post("/:id/addtest",async(req,res)=>{
+    var result = await CourseController.AddTestToCourse(req,res);
+    ResponseManager(req,res,result);
 })
 
 

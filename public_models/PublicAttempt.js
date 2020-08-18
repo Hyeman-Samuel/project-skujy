@@ -29,8 +29,8 @@ const Mongoose=require('mongoose');
 
     async function ValidateSubmittedAttempt(QuestionsAttempts){
         let Attempts = Joi.object().keys({
-            question: Joi.objectId().required(),
-            AnswerPickedIndex : Joi.number().required()
+            question: Joi.objectId(),
+            AnswerPickedIndex : Joi.number()
           })
           let QuestionsAttemptedSchema = Joi.array().items(Attempts)
         return  Joi.validate(QuestionsAttempted,QuestionsAttemptedSchema)

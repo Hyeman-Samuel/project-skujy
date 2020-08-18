@@ -11,7 +11,7 @@ async function createQuestion(req,res) {
         return isSet 
     }    
     await question.save();
-    return question
+    return {message:"Document(s) Created",code:1, data:question}; 
       }catch(err){
      //logger
      return {message:err,code:-1} 
@@ -25,7 +25,6 @@ async function createQuestion(req,res) {
   function setIndex(question){    
     question.Options.forEach((element,index) => {
       question.Options[index].Index  = index  
-      console.log(question.Options[index])
     });
   }
 
@@ -33,7 +32,6 @@ async function createQuestion(req,res) {
   function setCorrectOptionIndex(question){
     setIndex(question)
     const correctOption = question.Options.filter(function(item){
-      console.log(1)
         return item.IsCorrect == true
         })
 
@@ -42,7 +40,6 @@ async function createQuestion(req,res) {
         }else  if (correctOption.length  == 0){
           return {message:"No Correct Options",code:-1}
         }else if (correctOption.length == 1){
-          console.log(correctOption[0].Index)
           question.CorrectOptionIndex = correctOption[0].Index
         }else{
           return {message:"Unexpected Error",code:-1}
@@ -53,19 +50,27 @@ async function createQuestion(req,res) {
 
 
   async function getQuestions(req,res){
-   // var Pagination=await paginateModel(req.query.page,Question);
-   // const QuestionCollection=await Question.find().skip(Pagination.NumberPerPage*CurrentPage).limit(Pagination.NumberPerPage).lean();
-   const QuestionCollection=await Question.find().lean()
-      if(!QuestionCollection)return ("No Questions");
-      //logger
-      return QuestionCollection
-     // return {QuesionCollection,Paginatio}
-      //res.render('admin/cities', );
+    try {
+        const QuestionCollection=await Question.find().lean()
+        if(!QuestionCollection)return {message:"No Questions",code:0};     
+        return {message:"Document(s) Founded",code:1, data:QuestionCollection};      
+    } catch (err) {
+        return {message:err,code:-1}
+    } 
   }
 
   async function getById(req,res){
-    const question = await Question.findById(req.params.questionId)
-      return question
+    try {
+      const question = await Question.findById(req.params.questionId)
+      if(question != null){
+      return {message:"Document(s) Founded",code:1, data:question};
+      }
+      return {message:"Document(s) Not Found",code:0};
+      
+    } catch (err) {
+      return {message:err,code:-1};
+    }
+   
   }
   
 
@@ -74,12 +79,11 @@ async function createQuestion(req,res) {
         const isSet = setCorrectOptionIndex(req.body)
         if (isSet == -1){
             return -1
-        }        
-        
+        }                
       const question = await Question.findOneAndUpdate({"_id":req.params.questionId},req.body,{new:true});
       return question;
-    }catch{
-      //logger
+    }catch (err){
+       return {message:err,code:-1}
     }
   }
 
@@ -87,15 +91,12 @@ async function createQuestion(req,res) {
     async function deleteQuestion(req,res) {
         try{
           const attempts = Attempt.find({"QuestionsAttempted.question": req.params.questionId})
-          console.log(attempts)
         if (attempts == null){         
           const question = await Question.findByIdAndDelete(req.params.questionId);
-          return question;
+          return {message:"Document(s) Deleted",code:1, data:question}
         }else{
           return {message:"This Question has already been attempted and cannot be deleted,Delete the Test(s) and Attempt(s) associated with this Question",code: -1}
-        }
-
-        
+        }        
         }catch{
         //logger
         }

@@ -1,35 +1,41 @@
 const express = require('express');
 const Router= express.Router();
 const QuesionController = require("./controllers/QuestionController");
-const ValidateQuestion = require('../public/models/PublicQuestion');
+const ValidateQuestion = require('../public_models/PublicQuestion');
+const ResponseManager = require('../utility/ResponseManager');
 
 
-Router.post("/",async(req,res)=>{ 
-    const {error}=ValidateQuestion(req.body);         
-    if(error)return res.status(400).send(error.details[0].message);
+// Router.post("/",async(req,res)=>{ 
+//     const {error}=ValidateQuestion(req.body);         
+//     if(error)return res.status(400).send(error.details[0].message);
 
-    res.send(await QuesionController.createQuestion(req,res));
-})
+//     var result = await QuesionController.createQuestion(req,res);
+//     ResponseManager(req,res,result);
+// })
 
 Router.get("/",async(req,res)=>{
-    res.send(await QuesionController.getQuestions(req,res));
+     var result = await QuesionController.getQuestions(req,res);
+     ResponseManager(req,res,result);
 })
 
 
 Router.get("/:id", async(req,res)=>{
- res.send(await QuesionController.getById(req,res));
+    var result = await QuesionController.getById(req,res);
+    ResponseManager(req,res,result);
 })
 
 
-Router.post("/edit/:id", async(req,res)=>{
+Router.put("/:id", async(req,res)=>{
     const {error}=ValidateQuestion(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
 
-   res.send(await QuesionController.updateQuestion(req,res));
+    var result = await QuesionController.updateQuestion(req,res);
+    ResponseManager(req,res,result);
 })
 
-Router.post("/delete/:id",async(req,res)=>{
-   res.send(await QuesionController.deleteQuestion(req,res));
+Router.delete("/:id",async(req,res)=>{
+    var result = await QuesionController.deleteQuestion(req,res);
+    ResponseManager(req,res,result);
 })
 
 module.exports = Router  

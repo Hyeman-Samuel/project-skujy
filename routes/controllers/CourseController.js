@@ -29,6 +29,7 @@ async function createCourse(req,res) {
     course.Questions.push(question.data.id)
    
     await course.save()
+    await course.populate(["Questions","Tests"])
     return {message:"Document(s) Added",code:1, data:course};
     }catch(err){
         return {message:err,code:-1} 
@@ -45,6 +46,7 @@ async function createCourse(req,res) {
   course.Tests.push(test.data.test._id)
   try{   
   await course.save();
+  await course.populate(["Questions","Tests"])
   return {message:"Test Created",code:1 }; 
   }catch(err){
    //logger

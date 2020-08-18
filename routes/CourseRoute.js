@@ -28,6 +28,11 @@ Router.get("/:id/test",async(req,res)=>{
   ResponseManager(req,res,result);
 })
 
+Router.get("/:id/question",async(req,res)=>{
+    var result = await CourseController.getQuestions(req,res);
+    ResponseManager(req,res,result);
+  })
+
 
 Router.put("/:id", async(req,res)=>{
     const {error}=ValidateCourse(req.body);         

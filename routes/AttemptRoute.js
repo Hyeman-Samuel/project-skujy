@@ -12,7 +12,7 @@ Router.post("/start",async(req,res)=>{
      ResponseManager(req,res,result)
 })
 
-Router.post("/:attemptId/addBatch",async (req,res)=>{
+Router.put("/:attemptId/addbatch",async (req,res)=>{
     const {error}=ValidateSubmittedAttempt(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
 
@@ -20,7 +20,7 @@ Router.post("/:attemptId/addBatch",async (req,res)=>{
    ResponseManager(req,res,result)
 })
 
-Router.post("/:attemptId/submit",async (req,res)=>{
+Router.put("/:attemptId/submit",async (req,res)=>{
     const {error}=ValidateSubmittedAttempt(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
 

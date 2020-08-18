@@ -1,1 +1,1 @@
-{"MongoDbConnectionString":"mongodb://localhost:27017/skuji"}
+{"MongoDbConnectionString":"mongodb://<indexter>:<MyPassword1>@ds241298.mlab.com:41298/heroku_cf7hck7m"}

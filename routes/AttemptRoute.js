@@ -12,6 +12,11 @@ Router.post("/start",async(req,res)=>{
      ResponseManager(req,res,result)
 })
 
+Router.get("/:attemptId",async(req,res)=>{
+    var result  = await AttemptController.getAttempt(req,res);
+    ResponseManager(req,res,result)     
+})
+
 Router.put("/:attemptId/addbatch",async (req,res)=>{
     const {error}=ValidateSubmittedAttempt(req.body);         
     if(error)return res.status(400).send(error.details[0].message);

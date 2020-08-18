@@ -45,6 +45,18 @@ async function createAttempt(req,res) {
    
 }
 
+async function getAttempt(req,res){
+        try {
+            var attempt = await Attempt.findById(req.params.attemptId)
+            if(attempt == null){
+            return {message:"Attempt Not Found",code:0};
+            }
+            return {message:"Attempt Found",code:1,data:attempt}
+        } catch (err) {
+            return {message:err,code:-1}
+        }
+}
+
 async function submitBatchOfAttempts(req,res){
 
     if(req.body.QuestionsAttempted == undefined){
@@ -136,5 +148,6 @@ function getRandomItemsFromArray(arr, n) {
 module.exports = {
     createAttempt,
     submitAttempt,
-    submitBatchOfAttempts
+    submitBatchOfAttempts,
+    getAttempt
 }

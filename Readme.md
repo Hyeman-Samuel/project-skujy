@@ -1,5 +1,5 @@
 # Project-Skuji
-    Base Url: https://domain.com
+    Base Url: https://project-skuji-api.herokuapp.com
 
 
 ## Endpoints

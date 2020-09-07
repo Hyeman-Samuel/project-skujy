@@ -23,6 +23,19 @@ async function createTestFormat(req,res){
 }
 
 
+async function getAllTests(obj){
+    try {
+        const testFormat = await TestFormat.find(obj).lean()
+        if(testFormat == null){
+            return {message:"Test(s) Not Found",code:0, };    
+        }
+        return {message:"Test(s) Found",code:1, data:testFormat }; 
+        
+    } catch (err) {
+        return {message:err,code:-1}
+    }
+}
+
 
 
 async function getById(req,res){
@@ -92,5 +105,6 @@ module.exports = {
     openTest,
     deleteTest,
     getById,
-    getAttempts
+    getAttempts,
+    getAllTests
 }

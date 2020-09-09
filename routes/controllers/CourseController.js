@@ -25,14 +25,12 @@ async function createCourse(req,res) {
     if(course == null){
       return {message:"Course Not Found",code:0}
     }
-
-    course.Questions.push(question.data.id)
-   
+    course.Questions.push(question.data.id)  
     await course.save()
     await course.populate(["Questions","Tests"])
     return {message:"Document(s) Added",code:1, data:course};
     }catch(err){
-        return {message:err,code:-1} 
+        return {message:err,code:-1,data:course} 
     }
  }
 
@@ -47,7 +45,7 @@ async function createCourse(req,res) {
   try{   
   await course.save();
   await course.populate(["Questions","Tests"])
-  return {message:"Test Created",code:1 }; 
+  return {message:"Test Created",code:1,data:course}; 
   }catch(err){
    //logger
    return {message:err,code:-1} 

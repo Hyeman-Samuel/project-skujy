@@ -61,22 +61,21 @@
                 </div>
 
                 <div class="col-lg-5 ml-auto" data-aos="fade-up" data-aos-delay="500">
-                  <form action="" method="post" class="form-box">
+                  <form action="/attempt/start" method="post" class="form-box">
                     <h3 class="h4 text-black mb-4">Take Test</h3>
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Email Addresss">
+                      <input type="text" name="Email" class="form-control" placeholder="Email Addresss">
                     </div>
                   <div class="form-group">
                         <label for="sel1">Select Test:</label>
-                        <select class="form-control" id="sel1">
-                          <option>Geg 113 - Full Semester</option>
-                          <option>Geg 117 - Mid semester</option>
-                          <option>Fsc 115 - Freestyle</option>
-                          <option>Geg 115 - Week 2</option>
+                        <select name="Test" class="form-control" id="sel1">
+                          {{#each tests as |item i|}}
+                          <option value="{{item._id}}" > {{item.Course.Title}}-{{item.Title}}</option>
+                           {{/each}}
                         </select>
                       </div>
                     <div class="form-group">
-                      <p data-aos="fade-up" data-aos-delay="300"><a href="#" class="btn btn-primary py-3 px-5 btn-pill">Take The Test</a></p>
+                      <p data-aos="fade-up" data-aos-delay="300"><button type="submit" class="btn btn-primary py-3 px-5 btn-pill">Take The Test</button></p>
                     </div>
                   </form>
                 </div>

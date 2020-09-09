@@ -15,7 +15,12 @@ const ResponseManager = require('../utility/ResponseManager');
 
 Router.get("/:id", async(req,res)=>{
     var result = await TestFormatController.getById(req,res);
-    ResponseManager(req,res,result)
+
+    if(result.code == 1){
+        res.render("layout/admin/test_detail.hbs")
+    }else{     
+        res.send("error page");  
+    }
 })
 
 Router.get("/:id/attempts", async(req,res)=>{

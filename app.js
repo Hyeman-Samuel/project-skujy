@@ -11,6 +11,7 @@ const course = require("./routes/CourseRoute")
 const testFormat= require("./routes/TestFormatRoute")
 const attempt = require("./routes/AttemptRoute")
 const home = require("./routes/HomeRoute")
+const admin = require("./routes/AdminRoute")
 
 app.set('port', process.env.PORT || 3000)
 useParser(app)
@@ -22,6 +23,7 @@ app.use("/question",questions);
 app.use("/course",course);
 app.use("/test",testFormat);
 app.use("/attempt",attempt);
+app.use("/admin",admin)
 
 
 app.get('/',home)

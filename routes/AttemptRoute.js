@@ -9,15 +9,21 @@ Router.post("/start",async(req,res)=>{
     if(error)return res.status(400).send(error.details[0].message);
 
     var result = await AttemptController.createAttempt(req,res)
-     ResponseManager(req,res,result)
+    if(result.code == 1){
+        res.redirect(`${result.data.id}/quiz`)
+    }else{
+        res.send("error page");  
+    }
+
+    
 })
+
 
 Router.get("/:attemptId/quiz",async(req,res)=>{
     var result  = await AttemptController.getAttempt(req,res);
     
     if(result.code == 1){
     var data = result.data
-    console.log(data.QuestionsAttempted)
     res.render("quiz_page.hbs",{"layout":null,data});
     }else{
     res.send("error page");
@@ -29,7 +35,11 @@ Router.put("/:attemptId/addbatch",async (req,res)=>{
     if(error)return res.status(400).send(error.details[0].message);
 
    var result = await AttemptController.submitBatchOfAttempts(req,res)
-   ResponseManager(req,res,result)
+        if(result.code == 1){
+            res.redirect(`${result.data.id}/quiz`)
+        }else{
+            res.send("error page");  
+        }
 })
 
 Router.post("/:attemptId/submit",async (req,res)=>{
@@ -37,7 +47,11 @@ Router.post("/:attemptId/submit",async (req,res)=>{
     if(error)return res.status(400).send(error.details[0].message);
 
    var result = await AttemptController.submitAttempt(req,res)
-   ResponseManager(req,res,result)
+    if(result.code == 1){
+        res.render()
+    }else{
+        res.send("error page");  
+    }
 })
 
 module.exports = Router

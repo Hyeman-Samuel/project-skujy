@@ -25,7 +25,7 @@ async function createTestFormat(req,res){
 
 async function getAllTests(obj){
     try {
-        const testFormat = await TestFormat.find(obj).lean()
+        const testFormat = await TestFormat.find(obj).populate(["Course"]).lean()
         if(testFormat == null){
             return {message:"Test(s) Not Found",code:0, };    
         }

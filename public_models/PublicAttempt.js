@@ -11,7 +11,7 @@ const Mongoose=require('mongoose');
 
     async function ValidateAttempt(Attempt){
         const Schema ={
-            "Email":Joi.string.required(),
+            "Email":Joi.string().required(),
             "Test":Joi.objectId().required()
         }
 

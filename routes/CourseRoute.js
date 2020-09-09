@@ -10,17 +10,31 @@ Router.post("/",async(req,res)=>{
     if(error)return res.status(400).send(error.details[0].message);
 
     var result = await CourseController.createCourse(req,res);
-    ResponseManager(req,res,result);
+    if(result.code == 1){
+        res.redirect(`/${result.data.id}`)
+    }else{
+        res.send("error page");  
+    }
 })
 
 Router.get("/",async(req,res)=>{
-    var result = await CourseController.getCourses(req,res)
-    ResponseManager(req,res,result);
+    var result = await CourseController.getCourses(req,res)   
+    if(result.code == 1){
+        console.log(result.data)
+        res.render("layout/admin/courses_page.hbs",{Courses:result.data,})
+    }else{
+        res.send("error page");  
+    }
+    
 })
 
 Router.get("/:id", async(req,res)=>{
  var result = await CourseController.getById(req,res);
- ResponseManager(req,res,result);
+    if(result.code == 1){
+        res.render("layout/admin/course_detail.hbs")
+    }else{
+        res.send("error page");  
+    }
 })
 
 Router.get("/:id/test",async(req,res)=>{
@@ -40,22 +54,39 @@ Router.put("/:id", async(req,res)=>{
     
     
    var result = await CourseController.updateCourse(req,res);
-   ResponseManager(req,res,result);
+    if(result.code == 1){
+        res.redirect(`/${result.data.id}`)
+    }else{
+        res.send("error page");  
+    }
 })
 
 Router.delete("/:id",async(req,res)=>{
     var result = await CourseController.deleteCourse(req,res)
-    ResponseManager(req,res,result);
+    if(result.code == 1){
+        res.redirect(`/`)
+    }else{
+        res.send("error page");  
+    }
 })
 
 Router.post("/:id/addquestion",async(req,res)=>{
     var result = await CourseController.AddQuestionToCourse(req,res);
-    ResponseManager(req,res,result);
+    if(result.code == 1){
+        res.redirect(`/${result.data.id}`)
+    }else{
+        res.send("error page");  
+    }
 })
 
 Router.post("/:id/addtest",async(req,res)=>{
     var result = await CourseController.AddTestToCourse(req,res);
-    ResponseManager(req,res,result);
+
+    if(result.code == 1){
+        res.redirect(`/${result.data.id}`)
+    }else{
+        res.send("error page");  
+    }
 })
 
 

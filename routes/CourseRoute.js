@@ -33,7 +33,8 @@ Router.get("/:id", async(req,res)=>{
     if(result.code == 1){
         res.render("layout/admin/course_detail.hbs")
     }else{
-        res.send("error page");  
+        res.render("layout/admin/course_detail.hbs")
+        //res.send("error page");  
     }
 })
 

@@ -47,7 +47,9 @@ async function createAttempt(req,res) {
 
 async function getAttempt(req,res){
         try {
-            var attempt = await Attempt.findById(req.params.attemptId)
+            var attempt = await Attempt.findById(req.params.attemptId).populate({
+            path:"QuestionsAttempted.question"   
+            }).lean()
             if(attempt == null){
             return {message:"Attempt Not Found",code:0};
             }
@@ -91,6 +93,7 @@ async function submitAttempt(req,res){
         req.body.QuestionsAttempted = []
     }
     var questionsAttempted = req.body.QuestionsAttempted;
+    console.log(questionsAttempted)
     try {
         const attempt = await Attempt.findById(req.params.attemptId).populate({
             path:"QuestionsAttempted.question"

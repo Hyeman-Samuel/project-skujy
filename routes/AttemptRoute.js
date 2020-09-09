@@ -12,9 +12,16 @@ Router.post("/start",async(req,res)=>{
      ResponseManager(req,res,result)
 })
 
-Router.get("/:attemptId",async(req,res)=>{
+Router.get("/:attemptId/quiz",async(req,res)=>{
     var result  = await AttemptController.getAttempt(req,res);
-    ResponseManager(req,res,result)     
+    
+    if(result.code == 1){
+    var data = result.data
+    console.log(data.QuestionsAttempted)
+    res.render("quiz_page.hbs",{"layout":null,data});
+    }else{
+    res.send("error page");
+    } 
 })
 
 Router.put("/:attemptId/addbatch",async (req,res)=>{
@@ -25,7 +32,7 @@ Router.put("/:attemptId/addbatch",async (req,res)=>{
    ResponseManager(req,res,result)
 })
 
-Router.put("/:attemptId/submit",async (req,res)=>{
+Router.post("/:attemptId/submit",async (req,res)=>{
     const {error}=ValidateSubmittedAttempt(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
 

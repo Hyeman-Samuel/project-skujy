@@ -1,0 +1,56 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="../../../public/css/quiz_style.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<form action="/attempt/{{data._id}}/submit" method="post" enctype='application/json'>
+    
+{{#each data.QuestionsAttempted as |item i|}}
+<div class="container-fluid bg-info">
+    <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h3><span class="label label-warning" id="qid"></span>{{item.question.Title}}</h3>
+        </div>
+        <div class="modal-body">           
+        <div class="funkyradio">
+            <input  name="QuestionsAttempted[{{i}}][question]" value="{{item.question._id}}" hidden="true"/>
+        <!---Options-->
+        {{#each item.question.Options as |option|}}
+        <div class="funkyradio-default">
+            <input type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]" value="{{Index}}" id="{{option._id}}" />
+            <label for="{{option._id}}">{{Title}}</label>
+        </div>
+        {{/each}}      
+        <!---Options END--> 
+    </div>
+   </div>
+   <div class="modal-footer text-muted">
+    <span id="answer"></span>
+</div>
+</div>
+</div>
+</div>
+{{/each}}
+<button>Submit</button>
+</form>
+
+
+
+        {{!-- <div class="funkyradio-default">
+            <input type="radio" name="AnswerPickedIndex[{{@index}}]" value="index" id="optionId2" checked/>
+            <label for="optionId2">Second Option primary</label>
+        </div>
+        <div class="funkyradio-default">
+            <input type="radio" name="AnswerPickedIndex[]" value="index" id="optionId3" />
+            <label for="optionId3">Third Option success</label>
+        </div>
+        <div class="funkyradio-default">
+            <input type="radio" name="AnswerPickedIndex[]" value="index" id="optionId4" />
+            <label for="optionId4">Fourth Option danger</label>
+        </div>
+        <div class="funkyradio-default">
+            <input type="radio" name="AnswerPickedIndex[]" value="index" id="optionId5" />
+            <label for="optionId5">Fifth Option danger</label>
+        </div> --}}

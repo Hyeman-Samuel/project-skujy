@@ -9,7 +9,7 @@ Router.get("/",async(req,res)=>{
     if(result.code == -1){
         res.send("error page")
     }
-    res.render("index",{"layout":null,"tests":result.data})
+    res.render("layout/admin/admin_layout.hbs",{"layout":null,"tests":result.data})
 })
 
 

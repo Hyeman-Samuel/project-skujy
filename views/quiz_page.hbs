@@ -3,15 +3,25 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
+<style>
 
-<form action="/attempt/{{data._id}}/submit" method="post" enctype='application/json'>
-    
+    #timer{
+        position: fixed;
+        left: 10%;
+        top: 20%;
+    }
+</style>
+
+<form action="/attempt/{{data._id}}/submit" method="post" id="Quiz" enctype='application/json'>
+
+   <h1 id="timer"></h1>
+   <p id="stopTime" hidden="true">{{data.StopTime}}</p>
 {{#each data.QuestionsAttempted as |item i|}}
-<div class="container-fluid bg-info">
+<div class="container-fluid bg">
     <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
-            <h3><span class="label label-warning" id="qid"></span>{{item.question.Title}}</h3>
+            <h3 ><span style="padding:5px 10px 5px 10px;!important" class="label label-info" id="qid">{{i}}</span>     {{item.question.Title}}</h3>
         </div>
         <div class="modal-body">           
         <div class="funkyradio">
@@ -32,10 +42,49 @@
 </div>
 </div>
 </div>
+<hr>
 {{/each}}
-<button>Submit</button>
+<div class="col-md-3 col-sm-offset-9">
+<button style="margin: 20px;" class="btn btn-large btn-danger">Submit</button>
+</div>
+
 </form>
 
+
+
+{{!-- TIMER --}}
+
+<script>
+// Set the date we're counting down to
+var stoptime = document.getElementById("stopTime").innerText
+var countDownDate = new Date(stoptime).getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = stoptime - now;
+    
+  // Time calculations for days, hours, minutes and seconds
+  //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  //var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+  // Output the result in an element with id="demo"
+  document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+    
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("timer").innerHTML = "EXPIRED";
+    document.getElementById("Quiz").submit();
+  }
+}, 1000);
+</script>
 
 
         {{!-- <div class="funkyradio-default">

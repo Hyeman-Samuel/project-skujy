@@ -89,37 +89,37 @@ async function submitBatchOfAttempts(req,res){
 
 
 async function submitAttempt(req,res){
-    if(req.body.QuestionsAttempted == undefined){
+  try {  
+      if(req.body.QuestionsAttempted == undefined){
         req.body.QuestionsAttempted = []
     }
     var questionsAttempted = req.body.QuestionsAttempted;
-    try {
+    
         const attempt = await Attempt.findById(req.params.attemptId).populate({
             path:"QuestionsAttempted.question"
-           }) 
+           })
            if(attempt.HasSubmitted == true){
-            return {message:"Already Submitted",code:1}; 
+            return {message:"Already Submitted",code:-1}; 
            }
         attempt.QuestionsAttempted.forEach((prevAttempt)=>{
-            questionsAttempted.forEach((nextAttempt)=>{
-                if(prevAttempt.question.id == nextAttempt.question){
-                    prevAttempt.AnswerPickedIndex = nextAttempt.AnswerPickedIndex
+            questionsAttempted.forEach((newAttempt)=>{
+                if(prevAttempt.question.id == newAttempt.question){
+                    prevAttempt.AnswerPickedIndex = newAttempt.AnswerPickedIndex
                 }
             })
            })
         attempt.HasSubmitted = true;
         attempt.Score = getScore(attempt.QuestionsAttempted)
-        attempt.save()
-        return {message:"Attempt Submitted",code:1, data:attempt };      
+        await attempt.save()
+        const FinishedAttempt = await Attempt.findById(attempt.id).populate([
+        "QuestionsAttempted.question","Test","Test.Course"
+        ]).lean()
+        return {message:"Attempt Submitted",code:1, data:FinishedAttempt };      
     } catch (err) {
         return {message:err,code:-1} 
     }
    
 }
-
-
-
-
 
 function getScore(questionsAttempted){
     var score = 0;

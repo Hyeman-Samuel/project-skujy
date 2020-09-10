@@ -75,7 +75,7 @@ async function createCourse(req,res) {
 
  async function getById(req,res){
    try {
-    const course = await Course.findById(req.params.id).populate(["Questions","Tests"]).lean()
+    const course = await Course.findById(req.params.id).populate(["Questions","Tests","Questions.Options"]).lean()
     if (course != null){
       return {message:"Document(s) Found",code:1, data:course};
     }

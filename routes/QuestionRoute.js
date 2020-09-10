@@ -21,6 +21,7 @@ Router.get("/",async(req,res)=>{
 
 Router.get("/:id", async(req,res)=>{
     var result = await QuesionController.getById(req,res);
+    
     ResponseManager(req,res,result);
 })
 

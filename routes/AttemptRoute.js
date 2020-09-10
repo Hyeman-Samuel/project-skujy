@@ -13,9 +13,7 @@ Router.post("/start",async(req,res)=>{
         res.redirect(`${result.data.id}/quiz`)
     }else{
         res.send("error page");  
-    }
-
-    
+    }   
 })
 
 
@@ -30,6 +28,8 @@ Router.get("/:attemptId/quiz",async(req,res)=>{
     } 
 })
 
+
+
 Router.put("/:attemptId/addbatch",async (req,res)=>{
     const {error}=ValidateSubmittedAttempt(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
@@ -41,6 +41,8 @@ Router.put("/:attemptId/addbatch",async (req,res)=>{
             res.send("error page");  
         }
 })
+
+
 
 Router.post("/:attemptId/submit",async (req,res)=>{
     const {error}=ValidateSubmittedAttempt(req.body);         

@@ -11,11 +11,20 @@ Router.post("/",async(req,res)=>{
 
     var result = await CourseController.createCourse(req,res);
     if(result.code == 1){
-        res.redirect(`/${result.data.id}`)
+        res.redirect(`course/${result.data.id}`)
     }else{
         res.send("error page");  
     }
 })
+
+
+
+
+Router.get("/add",async(req,res)=>{
+    res.render("layout/admin/forms/course_form.hbs")    
+})
+
+
 
 Router.get("/",async(req,res)=>{
     var result = await CourseController.getCourses(req,res)   
@@ -24,29 +33,23 @@ Router.get("/",async(req,res)=>{
         res.render("layout/admin/courses_page.hbs",{Courses:result.data,})
     }else{
         res.send("error page");  
-    }
-    
+    }    
 })
+
+
+
 
 Router.get("/:id", async(req,res)=>{
  var result = await CourseController.getById(req,res);
     if(result.code == 1){
-        res.render("layout/admin/course_detail.hbs")
+        res.render("layout/admin/course_detail.hbs",{Course:result.data})
     }else{
-        res.render("layout/admin/course_detail.hbs")
-        //res.send("error page");  
+        //res.render("layout/admin/course_detail.hbs")
+        res.send("error page");  
     }
 })
 
-Router.get("/:id/test",async(req,res)=>{
-  var result = await CourseController.getTests(req,res);
-  ResponseManager(req,res,result);
-})
 
-Router.get("/:id/question",async(req,res)=>{
-    var result = await CourseController.getQuestions(req,res);
-    ResponseManager(req,res,result);
-  })
 
 
 Router.put("/:id", async(req,res)=>{
@@ -62,6 +65,7 @@ Router.put("/:id", async(req,res)=>{
     }
 })
 
+
 Router.delete("/:id",async(req,res)=>{
     var result = await CourseController.deleteCourse(req,res)
     if(result.code == 1){
@@ -70,6 +74,22 @@ Router.delete("/:id",async(req,res)=>{
         res.send("error page");  
     }
 })
+
+
+
+
+
+////// Not Resful
+
+Router.get("/:id/question",async(req,res)=>{
+    var CourseId = req.params.id
+    if(CourseId != null){
+        res.render("layout/admin/forms/question_form.hbs",{"CourseId":CourseId})
+    }else{
+        res.send("error page");  
+    }
+})
+
 
 Router.post("/:id/addquestion",async(req,res)=>{
     var result = await CourseController.AddQuestionToCourse(req,res);
@@ -80,6 +100,19 @@ Router.post("/:id/addquestion",async(req,res)=>{
     }
 })
 
+
+Router.get("/:id/test",async(req,res)=>{
+    var CourseId = req.params.id
+    if(CourseId != null){
+        res.render("layout/admin/forms/test_form.hbs",{"CourseId":CourseId})
+    }else{
+        res.send("error page");  
+    }
+})
+
+
+
+
 Router.post("/:id/addtest",async(req,res)=>{
     var result = await CourseController.AddTestToCourse(req,res);
 
@@ -89,6 +122,17 @@ Router.post("/:id/addtest",async(req,res)=>{
         res.send("error page");  
     }
 })
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -106,4 +150,13 @@ Router.post("/:id/addtest",async(req,res)=>{
 //     res.send(await QuesionController.deleteQuestion(req,res));
 //  })
 
+// Router.get("/:id/test",async(req,res)=>{
+//   var result = await CourseController.getTests(req,res);
+//   ResponseManager(req,res,result);
+// })
+
+// Router.get("/:id/question",async(req,res)=>{
+//     var result = await CourseController.getQuestions(req,res);
+//     ResponseManager(req,res,result);
+//   })
 module.exports = Router  

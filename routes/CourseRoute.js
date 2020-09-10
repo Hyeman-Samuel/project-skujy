@@ -52,7 +52,7 @@ Router.get("/:id", async(req,res)=>{
 
 
 
-Router.put("/:id", async(req,res)=>{
+Router.put("/:id/edit", async(req,res)=>{
     const {error}=ValidateCourse(req.body);         
     if(error)return res.status(400).send(error.details[0].message);  
     
@@ -66,7 +66,7 @@ Router.put("/:id", async(req,res)=>{
 })
 
 
-Router.delete("/:id",async(req,res)=>{
+Router.delete("/:id/delete",async(req,res)=>{
     var result = await CourseController.deleteCourse(req,res)
     if(result.code == 1){
         res.redirect(`/`)
@@ -92,11 +92,12 @@ Router.get("/:id/question",async(req,res)=>{
 
 
 Router.post("/:id/addquestion",async(req,res)=>{
+    console.log(req.body)
     var result = await CourseController.AddQuestionToCourse(req,res);
     if(result.code == 1){
-        res.redirect(`/${result.data.id}`)
+        res.redirect(`/course/${result.data.id}`)
     }else{
-        res.send("error page");  
+        res.send("error page" + result.message);  
     }
 })
 
@@ -117,9 +118,9 @@ Router.post("/:id/addtest",async(req,res)=>{
     var result = await CourseController.AddTestToCourse(req,res);
 
     if(result.code == 1){
-        res.redirect(`/${result.data.id}`)
+        res.redirect(`/course/${result.data.id}`)
     }else{
-        res.send("error page");  
+        res.send("error page"+result.message);  
     }
 })
 

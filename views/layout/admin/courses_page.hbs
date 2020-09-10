@@ -36,14 +36,14 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-center">{{item.Questions}}</td>
+                                                <td class="text-center">7</td>
                                                 <td class="text-center">
                                                    <!-- <div class="badge badge-warning">Pending</div> -->
-                                                   <div>{{item.Tests}}</div>
+                                                   <div>4</div>
                                                 </td>
                                                 <td class="text-center">
                                                     <a href="course/{{item._id}}"><button type="button"  id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button></a>
-                                                    <a><button type="button" id="PopoverCustomT-1" class="btn btn-danger btn-sm">Delete</button></a>
+                                                    <a href="course/{{item._id}}/delete"><button type="button" id="PopoverCustomT-1" class="btn btn-danger btn-sm">Delete</button></a>
                                                 </td>
                                             </tr>
                                                 {{/each}}                                  
@@ -51,8 +51,8 @@
                                         </table>
                                     </div>
                                     <div class="d-block text-center card-footer">
-                                        <button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> </i></button>
-                                        <button class="btn-wide btn btn-success">Save</button>
+                                        <button class="btn-wide btn btn-info">Prev</button>
+                                        <button class="btn-wide btn btn-info">Next</button>
                                     </div>
                                 </div>
                             </div>

@@ -45,8 +45,8 @@ Router.put("/:attemptId/addbatch",async (req,res)=>{
 
 
 Router.post("/:attemptId/submit",async (req,res)=>{
-    const {error}=ValidateSubmittedAttempt(req.body);         
-    if(error)return res.status(400).send(error.details[0].message);
+    // const {error}=ValidateSubmittedAttempt(req.body);         
+    // if(error)return res.status(400).send(error.details[0].message);
 
    var result = await AttemptController.submitAttempt(req,res)
     if(result.code == 1){

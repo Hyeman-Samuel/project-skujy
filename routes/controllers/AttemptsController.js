@@ -93,7 +93,6 @@ async function submitAttempt(req,res){
         req.body.QuestionsAttempted = []
     }
     var questionsAttempted = req.body.QuestionsAttempted;
-    console.log(questionsAttempted)
     try {
         const attempt = await Attempt.findById(req.params.attemptId).populate({
             path:"QuestionsAttempted.question"

@@ -132,7 +132,7 @@
                                            <td class="text-right">
                                                      </td>
                                         <div class="btn-actions-pane-right">                                         
-                                             <a href="122/test"><button type="button" id="PopoverCustomT-1" class="btn btn-success btn-sm">Add Test</button> </a>                                           
+                                             <a href="{{Course._id}}/test"><button type="button" id="PopoverCustomT-1" class="btn btn-success btn-sm">Add Test</button> </a>                                           
                                         </div>
                                     </div>
                                     <div class="table-responsive">
@@ -142,6 +142,8 @@
                                             <tr>
                                                 <th class="text-center">#</th>
                                                 <th>Name</th>
+                                                <th class="text-center">Duration (In Minutes)</th>
+                                                <th class="text-center">Questions</th>
                                                 <th class="text-center">Attempts</th>
                                                 <th class="text-center">Status</th>
                                                 <th class="text-center">Actions</th>
@@ -163,6 +165,9 @@
                                                         </div>
                                                     </div>
                                                 </td>
+                                                
+                                                <td class="text-center">{{item.DurationInMinutes}}</td>
+                                                <td class="text-center">{{item.NumberOfQuestions}}</td>
                                                 <td class="text-center">30</td>
                                                 <td class="text-center">
                                                     {{#if item.IsClosed}}

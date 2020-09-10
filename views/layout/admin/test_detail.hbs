@@ -1,56 +1,9 @@
 <div class="col-md-8">
-<h2>Test Name</h2>
-<p>Geg114</p>
+<h2>{{test.Title}}</h2>
+<p>{{test.CourseTitle}}</p>
 </div>
  <hr>
  <div class="row">
-                            <div class="col-md-12">
-                                <div class="main-card mb-3 card">
-                                    <div class="card-header">Attempts
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th class="text-center">#</th>
-                                                <th>Email</th>
-                                                <th class="text-center">Score</th>
-                                                <th class="text-center">Submitted</th>
-                                                <th class="text-center">Actions</th>
-                                            </tr>
-                                            </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td class="text-center text-muted">#345</td>
-                                                <td>
-                                                    <div class="widget-content p-0">
-                                                        <div class="widget-content-wrapper">
-                                                          Hyeman1738@gmail.com
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">43</td>
-                                                <td class="text-center">
-                                                    <div class="badge badge-warning">Not Submitted</div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <button type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button>
-                                                </td>
-                                            </tr>
-                                    </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="d-block text-center card-footer">
-                                        <button class="btn-wide btn btn-primary">Prev</button>
-                                        <button class="btn-wide btn btn-primary">Next</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                         <div class="row">
                             <div class="col-md-6 col-xl-4">
                                 <div class="card mb-3 widget-content">
                                     <div class="widget-content-outer">
@@ -95,8 +48,75 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>                          
+                        </div>
+                        <hr>
+
+
+
+
+
+ 
+ <div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">Attempts
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Email</th>
+                                                <th class="text-center">Score</th>
+                                                <th class="text-center">Submitted</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                            </thead>
+                                    <tbody>
+                                        {{#each attempts as |item i| }}
+                                            <tr>
+                                                <td class="text-center text-muted">#{{i}}</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                          {{item.Email}}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">{{item.Score}}</td>
+                                                <td class="text-center">
+                                                    {{#if item.HasSubmitted}}
+                                                    <div class="badge badge-success">Submitted</div>
+                                                    {{else}}
+                                                    <div class="badge badge-warning">Not Submitted</div>
+                                                    {{/if}}
+                                                </td>
+                                                <td class="text-center">
+                                                <a><button type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button></a>
+                                                </td>
+                                            </tr>
+                                            {{/each}}
+                                    </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-block text-center card-footer">
+                                        <button class="btn-wide btn btn-primary">Prev</button>
+                                        <button class="btn-wide btn btn-primary">Next</button>
+                                    </div>
+                                </div>
                             </div>
-                            {{!-- <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
+                        </div>
+
+
+
+                        
+
+
+
+
+
+  {{!-- <div class="d-xl-none d-lg-block col-md-6 col-xl-4">
                                 <div class="card mb-3 widget-content">
                                     <div class="widget-content-outer">
                                         <div class="widget-content-wrapper">
@@ -120,6 +140,3 @@
                                     </div>
                                 </div>
                             </div> --}}
-
-                            
-                        </div>

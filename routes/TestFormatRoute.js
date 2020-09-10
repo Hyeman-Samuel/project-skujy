@@ -1,6 +1,7 @@
 const express = require('express');
 const Router= express.Router();
 const TestFormatController = require("./controllers/TestFormatController");
+const AttemptController = require("./controllers/AttemptsController");
 const ValidateTestFormat = require('../public_models/PublicTestFormat');
 const ResponseManager = require('../utility/ResponseManager');
 
@@ -15,9 +16,9 @@ const ResponseManager = require('../utility/ResponseManager');
 
 Router.get("/:id", async(req,res)=>{
     var result = await TestFormatController.getById(req,res);
-
-    if(result.code == 1){
-        res.render("layout/admin/test_detail.hbs")
+        var attemptResult = await AttemptController.getAttempts({"Test":result.data._id});
+    if(result.code == 1 && attemptResult.code != -1){
+        res.render("layout/admin/test_detail.hbs",{test:result.data,attempts:attemptResult.data})
     }else{     
         res.send("error page");  
     }

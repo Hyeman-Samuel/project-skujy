@@ -59,6 +59,19 @@ async function getAttempt(req,res){
         }
 }
 
+
+async function getAttempts(obj){
+    try {
+        const attempts = await Attempt.find(obj).lean()
+        if(attempts.length == 0){
+            return {message:"None",code:0}
+        }
+        return {message:"Sent",code:1,data:attempts}
+    } catch (err) {
+        return {message:err,code:-1}
+    }
+}
+
 async function submitBatchOfAttempts(req,res){
 
     if(req.body.QuestionsAttempted == undefined){
@@ -151,5 +164,6 @@ module.exports = {
     createAttempt,
     submitAttempt,
     submitBatchOfAttempts,
-    getAttempt
+    getAttempt,
+    getAttempts
 }

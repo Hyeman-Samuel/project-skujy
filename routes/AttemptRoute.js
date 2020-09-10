@@ -46,11 +46,12 @@ Router.put("/:attemptId/addbatch",async (req,res)=>{
 
 Router.post("/:attemptId/submit",async (req,res)=>{
    var result = await AttemptController.submitAttempt(req,res)
-   var NumberofQuestions = result.data.QuestionsAttempted.length 
+   
     if(result.code == 1){
+        var NumberofQuestions = result.data.QuestionsAttempted.length 
         res.render("result_page.hbs",{layout:false,attempt:result.data,QuestionsCount:NumberofQuestions});
     }else{
-        res.send("error page");  
+        res.send("error page:"+result.message);  
     }
 })
 

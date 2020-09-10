@@ -6,16 +6,33 @@
 <style>
 
     #timer{
-        position: fixed;
-        left: 10%;
-        top: 20%;
+        
     }
 </style>
+<div class="row">
+<div class="col-sm-3">
 
+    
+<p id="stopTime" hidden="true">{{data.StopTime}}</p>
+<div class="panel panel-default text-center" style="margin:20 120 20 20!important; width:120%">
+  <div class="panel-heading"><h1 id="timer"></h1></div>
+  <div class="panel-body">
+   <nav aria-label="Page navigation">
+  <ul class="pagination">
+   {{#each data.QuestionsAttempted as |item i|}}
+    <li><a href="#">{{i}}</a></li>
+    {{/each}}
+  </ul>
+</nav>
+  </div>
+</div>
+
+</div>
+<div class="col-sm-9">
 <form action="/attempt/{{data._id}}/submit" method="post" id="Quiz" enctype='application/json'>
 
-   <h1 id="timer"></h1>
-   <p id="stopTime" hidden="true">{{data.StopTime}}</p>
+   
+   
 {{#each data.QuestionsAttempted as |item i|}}
 <div class="container-fluid bg">
     <div class="modal-dialog">
@@ -49,7 +66,8 @@
 </div>
 
 </form>
-
+</div>
+</div>
 
 
 {{!-- TIMER --}}
@@ -83,6 +101,10 @@ var x = setInterval(function() {
     document.getElementById("timer").innerHTML = "EXPIRED";
     document.getElementById("Quiz").submit();
   }
+  if(distance < 60){
+    document.getElementById("timer").style.color = "red"
+  }
+
 }, 1000);
 </script>
 

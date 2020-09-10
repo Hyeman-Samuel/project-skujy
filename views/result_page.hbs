@@ -4,18 +4,18 @@
 
 <div class="container-fluid bg-info">      
 <div class="row">
-<div id="Score" class="col-md-6">
+<div id="Score"  class="col-md-6">
       
 <p><span class="heading">Your Score :</span>
-<span class="heading" style="font-weight: bolder;!important"><span id="correct">{{attempt.Score}}</span>/<span id="total">{{QuestionsCount}}</span></span></p>
+<span class="heading" style="font-weight: bolder;!important"><span style="margin-left: -20px ;" id="correct">{{attempt.Score}}</span>/<span id="total">{{QuestionsCount}}</span></span></p>
 <p><span class="heading">Test :</span>
-<span class="heading" style="font-weight: bolder;!important">{{attempt.CourseTitle}}-{{attempt.Test.Title}}</span></p>
+<span class="heading" style="font-weight: bolder !important; margin-left: -20px ;">{{attempt.CourseTitle}}-{{attempt.Test.Title}}</span></p>
 <p><span class="heading">Duration :</span>
-<span class="heading" style="font-weight: bolder;!important">{{attempt.Test.DurationInMinutes}} minutes</span></p>
- <p>{{attempt.Email}}</p> 
+<span class="heading" style="font-weight: bolder !important; margin-left: -20px ;">{{attempt.Test.DurationInMinutes}} minutes</span></p>
+ <h2>{{attempt.Email}}</h2> 
 <hr style="border:3px solid #f1f1f1">
     </div> 
-   
+   <hr>
         <canvas id="myChart" width="400" height="400"></canvas>     
 </div>
 </div>
@@ -54,6 +54,13 @@ var myDoughnutChart = new Chart(ctx, {
 
 
 <style>
+
+    #Score{
+      background-color:lavender;
+      border-radius:5% ;
+      padding: 30px;
+    }
+
     #myChart{
         position: absolute;
         left: 35%;

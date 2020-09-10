@@ -29,10 +29,11 @@ Router.get("/add",async(req,res)=>{
 Router.get("/",async(req,res)=>{
     var result = await CourseController.getCourses(req,res)   
     if(result.code == 1){
-        console.log(result.data)
         res.render("layout/admin/courses_page.hbs",{Courses:result.data,})
+    }else if(result.code == 0){
+        res.render("layout/admin/courses_page.hbs",{Courses:null})  
     }else{
-        res.send("error page");  
+        res.send("error page");
     }    
 })
 
@@ -92,7 +93,6 @@ Router.get("/:id/question",async(req,res)=>{
 
 
 Router.post("/:id/addquestion",async(req,res)=>{
-    console.log(req.body)
     var result = await CourseController.AddQuestionToCourse(req,res);
     if(result.code == 1){
         res.redirect(`/course/${result.data.id}`)

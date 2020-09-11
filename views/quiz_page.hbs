@@ -100,7 +100,7 @@
 <script>
 var stoptime = document.getElementById("stopTime").innerText
 var countDownDate = new Date(stoptime).getTime();
-var IsWarning;
+
 var x = setInterval(function() {
 
 
@@ -116,25 +116,17 @@ var x = setInterval(function() {
 
 
   document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
-  if(distance < (60000)){
-      if(!IsWarning){
-      document.getElementById("heading").style.backgroundColor = "red" 
-      IsWarning = true   
-      }else{
-      document.getElementById("heading").style.backgroundColor = "white" 
-      IsWarning = false       
-      }
-    
-  }
-    if(beeping){
 
-    }
+ 
   if (distance < 0) {
     clearInterval(x);
     document.getElementById("timer").innerHTML = "EXPIRED";
     document.getElementById("Quiz").submit();
   }
- 
+
+  if(distance < (60000)){
+    document.getElementById("heading").style.backgroundColor = "red";
+    }
 
 }, 1000);
 </script>

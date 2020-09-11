@@ -63,7 +63,6 @@ async function getAttempt(req,res){
             var traverser = paginationObj.NumberPerPage*(paginationObj.Page-1)
             var traverserEnd = (traverser+paginationObj.NumberPerPage)
             var Questions =questionsAttempted.slice(traverser,traverserEnd);
-            console.log(Questions[0])
             return {message:"Attempt Found",code:1,data:{"attempt":attempt,"questions":Questions,"pagination":paginationObj}}
         } catch (err) {
             return {message:err,code:-1}

@@ -21,7 +21,7 @@
                                             <tbody>
                                                 {{#each Courses as |item i|}}
                                             <tr>
-                                                <td class="text-center text-muted">#{{i}}</td>
+                                                <td class="text-center text-muted">#{{index i }}</td>
                                                 <td>
                                                     <div class="widget-content p-0">
                                                         <div class="widget-content-wrapper">
@@ -36,10 +36,10 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-center">7</td>
+                                                <td class="text-center">{{getCount item.Questions}}</td>
                                                 <td class="text-center">
                                                    <!-- <div class="badge badge-warning">Pending</div> -->
-                                                   <div>4</div>
+                                                   <div>{{getCount item.Tests}}</div>
                                                 </td>
                                                 <td class="text-center">
                                                     <a href="course/{{item._id}}"><button type="button"  id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button></a>

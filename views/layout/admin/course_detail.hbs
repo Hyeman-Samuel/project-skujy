@@ -79,7 +79,7 @@
                                             <tbody>
                                             {{#each Course.Questions as |item i|}}
                                             <tr>
-                                                <td class="text-center text-muted">#345</td>
+                                                <td class="text-center text-muted">#{{index i }}</td>
                                                 <td>
                                                     <div class="widget-content p-0">
                                                         <div class="widget-content-wrapper">
@@ -155,7 +155,7 @@
                                             <tbody>
                                         {{#each Course.Tests as |item i|}}
                                             <tr>
-                                                <td class="text-center text-muted">#{{i}}</td>
+                                                <td class="text-center text-muted">#{{index i }}</td>
                                                 <td>
                                                     <div class="widget-content p-0">
                                                         <div class="widget-content-wrapper">

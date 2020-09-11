@@ -12,13 +12,22 @@ module.exports=function (app,__dirname,Express){
 
     var hbs = ExpHandleBars.create({});
     hbs.handlebars.registerHelper("IfEqual",(leftSide,rightSide, block)=>{
-        console.log(rightSide)
             if(leftSide==rightSide){
                return block.fn(this)
             }else{
                return  block.inverse(this)
             }
-       
-    
+          
+    })
+
+    hbs.handlebars.registerHelper("index",function(index){
+        var newIndex = index + 1
+        return newIndex
+})
+
+    hbs.handlebars.registerHelper("getCount",function(list){
+        if(Array.isArray(list)){
+            return list.length
+        }
     })
 }

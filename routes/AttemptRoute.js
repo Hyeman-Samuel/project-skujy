@@ -10,7 +10,7 @@ Router.post("/start",async(req,res)=>{
 
     var result = await AttemptController.createAttempt(req,res)
     if(result.code == 1){
-        res.redirect(`${result.data.id}/quiz`)
+        res.redirect(`${result.data.id}/quiz?page=1`)
     }else{
         res.send("error page");  
     }   
@@ -18,8 +18,7 @@ Router.post("/start",async(req,res)=>{
 
 
 Router.get("/:attemptId/quiz",async(req,res)=>{
-    var result  = await AttemptController.getAttempt(req,res);
-    
+    var result  = await AttemptController.getAttempt(req,res);   
     if(result.code == 1){
     var data = result.data
     res.render("quiz_page.hbs",{"layout":null,data});
@@ -30,13 +29,13 @@ Router.get("/:attemptId/quiz",async(req,res)=>{
 
 
 
-Router.put("/:attemptId/addbatch",async (req,res)=>{
+Router.post("/:attemptId/addbatch",async (req,res)=>{
     // const {error}=ValidateSubmittedAttempt(req.body);         
     // if(error)return res.status(400).send(error.details[0].message);
 
    var result = await AttemptController.submitBatchOfAttempts(req,res)
         if(result.code == 1){
-            res.redirect(`${result.data.id}/quiz`)
+            res.redirect(`/attempt/${result.data.id}/quiz?page=${req.query.page}`)
         }else{
             res.send("error page");  
         }

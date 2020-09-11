@@ -9,4 +9,16 @@ module.exports=function (app,__dirname,Express){
     }));
     app.use("/public",Express.static("public"));
     app.set("view engine","hbs");   
+
+    var hbs = ExpHandleBars.create({});
+    hbs.handlebars.registerHelper("IfEqual",(leftSide,rightSide, block)=>{
+        console.log(rightSide)
+            if(leftSide==rightSide){
+               return block.fn(this)
+            }else{
+               return  block.inverse(this)
+            }
+       
+    
+    })
 }

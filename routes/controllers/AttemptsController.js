@@ -1,6 +1,8 @@
 const {Attempt} = require("../../models/Attempt");
 const {TestFormat} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
+const {paginateArray}=require("../../utility/Pagination");
+const Question = require("../../models/Question");
 
 async function createAttempt(req,res) { 
 
@@ -53,20 +55,30 @@ async function getAttempt(req,res){
             if(attempt == null){
             return {message:"Attempt Not Found",code:0};
             }
-            return {message:"Attempt Found",code:1,data:attempt}
+            var questionsAttempted = attempt.QuestionsAttempted
+           if (!Array.isArray(questionsAttempted)){
+            return {message:"retry",code:-1}
+           }
+            var paginationObj = paginateArray(req.query.page,questionsAttempted,2)
+            var traverser = paginationObj.NumberPerPage*(paginationObj.Page-1)
+            var traverserEnd = (traverser+paginationObj.NumberPerPage)
+            var Questions =questionsAttempted.slice(traverser,traverserEnd);
+            console.log(Questions[0])
+            return {message:"Attempt Found",code:1,data:{"attempt":attempt,"questions":Questions,"pagination":paginationObj}}
         } catch (err) {
             return {message:err,code:-1}
         }
 }
 
 
-async function getAttempts(obj){
+async function getAttempts(req,obj){
     try {
-        const attempts = await Attempt.find(obj).lean()
+        ///var paginationObj = await paginateArray(req.query.page,Attempt,10)
+        const attempts = await Attempt.find().lean()
         if(attempts.length == 0){
             return {message:"None",code:0}
         }
-        return {message:"Sent",code:1,data:attempts}
+        return {message:"Sent",code:1,data:{attempts:attempts}}
     } catch (err) {
         return {message:err,code:-1}
     }
@@ -89,11 +101,14 @@ async function submitBatchOfAttempts(req,res){
         attempt.QuestionsAttempted.forEach((prevAttempt)=>{
             questionsAttempted.forEach((nextAttempt)=>{
                 if(prevAttempt.question.id == nextAttempt.question){
+                    if(nextAttempt.AnswerPickedIndex != null){
                     prevAttempt.AnswerPickedIndex = nextAttempt.AnswerPickedIndex
                 }
+            }
             })
            })
         attempt.save()
+        console.log(attempt)
         return {message:"Batch Editied",code:1, data:attempt };      
     } catch (err) {
         return {message:err,code:-1} 

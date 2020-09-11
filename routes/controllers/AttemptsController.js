@@ -108,7 +108,6 @@ async function submitBatchOfAttempts(req,res){
             })
            })
         attempt.save()
-        console.log(attempt)
         return {message:"Batch Editied",code:1, data:attempt };      
     } catch (err) {
         return {message:err,code:-1} 

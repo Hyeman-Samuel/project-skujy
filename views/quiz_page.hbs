@@ -11,7 +11,7 @@
     <p id="stopTime" hidden="true">{{data.attempt.StopTime}}</p>
 
         <div class="panel panel-default text-center" style="margin:20 20 20 20!important; width:120%">
-            <div class="panel-heading"><h1 id="timer"></h1></div>
+            <div class="panel-heading" id="heading"><h1 id="timer"></h1></div>
             <div class="panel-body">
             <nav aria-label="Page navigation">
             <ul class="pagination">
@@ -100,8 +100,7 @@
 <script>
 var stoptime = document.getElementById("stopTime").innerText
 var countDownDate = new Date(stoptime).getTime();
-
-
+var IsWarning;
 var x = setInterval(function() {
 
 
@@ -117,15 +116,25 @@ var x = setInterval(function() {
 
 
   document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
- 
+  if(distance < (60000)){
+      if(!IsWarning){
+      document.getElementById("heading").style.backgroundColor = "red" 
+      IsWarning = true   
+      }else{
+      document.getElementById("heading").style.backgroundColor = "white" 
+      IsWarning = false       
+      }
+    
+  }
+    if(beeping){
+
+    }
   if (distance < 0) {
     clearInterval(x);
     document.getElementById("timer").innerHTML = "EXPIRED";
     document.getElementById("Quiz").submit();
   }
-  if(distance < 60){
-    document.getElementById("timer").style.color = "red"
-  }
+ 
 
 }, 1000);
 </script>

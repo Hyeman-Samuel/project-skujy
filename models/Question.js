@@ -11,8 +11,12 @@ const QuestionSchema=new Mongoose.Schema({
     "Options":[{type:OptionSchema}],
     "CorrectOptionIndex":{type:Number,required:true}
 })
+    // QuestionSchema.pre("deleteOne",function(next){
+    //     this.model("Course").deleteOne({"Questions":this._id},next)
+    // })
 
 const Question = Mongoose.model('Question',QuestionSchema);
+    
 
 module.exports={
     Question

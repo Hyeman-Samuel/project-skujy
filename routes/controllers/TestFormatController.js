@@ -93,9 +93,10 @@ async function openTest(req,res){
 async function deleteTest(req,res) {
     try{
     const test = await TestFormat.findByIdAndDelete(req.params.testId);
+    await Attempt.deleteMany({"Test":req.params.testId})
     return {message:"Test Deleted",code:1,data:test};
     }catch{
-    return {message:"UnSuccessful",code:-2}
+    return {message:"UnSuccessful",code:-1}
     }
 }
 

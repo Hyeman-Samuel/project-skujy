@@ -43,7 +43,7 @@ Router.post("/open/:testId",async(req,res)=>{
     ResponseManager(req,res,result)
 })
 
-Router.post("/delete/:testId",async(req,res)=>{
+Router.delete("/:testId/delete",async(req,res)=>{
     var result = await TestFormatController.deleteTest(req,res);
     ResponseManager(req,res,result)
 })

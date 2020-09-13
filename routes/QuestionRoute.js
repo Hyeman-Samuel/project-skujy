@@ -13,17 +13,17 @@ const ResponseManager = require('../utility/ResponseManager');
 //     ResponseManager(req,res,result);
 // })
 
-Router.get("/",async(req,res)=>{
-     var result = await QuesionController.getQuestions(req,res);
-     ResponseManager(req,res,result);
-})
+// Router.get("/",async(req,res)=>{
+//      var result = await QuesionController.getQuestions(req,res);
+//      ResponseManager(req,res,result);
+// })
 
 
-Router.get("/:id", async(req,res)=>{
-    var result = await QuesionController.getById(req,res);
+// Router.get("/:id", async(req,res)=>{
+//     var result = await QuesionController.getById(req,res);
     
-    ResponseManager(req,res,result);
-})
+//     ResponseManager(req,res,result);
+// })
 
 
 Router.put("/:id", async(req,res)=>{
@@ -34,7 +34,7 @@ Router.put("/:id", async(req,res)=>{
     ResponseManager(req,res,result);
 })
 
-Router.delete("/:id",async(req,res)=>{
+Router.delete("/:id/delete",async(req,res)=>{
     var result = await QuesionController.deleteQuestion(req,res);
     ResponseManager(req,res,result);
 })

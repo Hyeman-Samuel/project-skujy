@@ -1,5 +1,7 @@
 const {Question,ValidateQuestion} = require("../../models/Question");
 const {Attempt} = require("../../models/Attempt");
+const {Course} = require("../../models/Course");
+const {TestFormat} = require("../../models/TestFormat");
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 
 
@@ -90,10 +92,15 @@ async function createQuestion(req,res) {
   
     async function deleteQuestion(req,res) {
         try{
-          const attempts = Attempt.find({"QuestionsAttempted.question": req.params.questionId})
-        if (attempts == null){         
-          const question = await Question.findByIdAndDelete(req.params.questionId);
-          return {message:"Document(s) Deleted",code:1, data:question}
+          const attempts = await Attempt.find({"QuestionsAttempted.question": req.params.id})
+
+      if (attempts.length == 0){    
+        var result = await CompareQuestionCountWithTests(req.params.id)
+          if (result != null) {
+            return result
+          }
+          const question = await Question.findByIdAndDelete(req.params.id);
+          return {message:"Document(s) Deleted",code:1}
         }else{
           return {message:"This Question has already been attempted and cannot be deleted,Delete the Test(s) and Attempt(s) associated with this Question",code: -1}
         }        
@@ -102,6 +109,18 @@ async function createQuestion(req,res) {
         }
     }
     
+  async function CompareQuestionCountWithTests(questionId){
+    var response = null
+          const course = await Course.findOne({"Questions":questionId}).populate(["Questions"]).lean()
+          const questionCount = course.Questions.length
+          const testFormat = await TestFormat.find({"Course":course._id}).lean()
+          testFormat.forEach(test => {
+            if(questionCount <= test.NumberOfQuestions){
+              response = {message:"Not Enough Questions for test(s)",code:-1}
+            }
+          });
+          return response
+    }
 
     module.exports={       
             createQuestion,

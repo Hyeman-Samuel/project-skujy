@@ -80,7 +80,7 @@ Router.delete("/:id/delete",async(req,res)=>{
 
 
 
-////// Not Resful
+////// Question
 
 Router.get("/:id/question",async(req,res)=>{
     var CourseId = req.params.id
@@ -101,6 +101,7 @@ Router.post("/:id/addquestion",async(req,res)=>{
     }
 })
 
+////// Test
 
 Router.get("/:id/test",async(req,res)=>{
     var CourseId = req.params.id

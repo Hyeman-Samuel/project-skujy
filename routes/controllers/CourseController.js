@@ -66,7 +66,7 @@ async function createCourse(req,res) {
   }
 
  async function getCourses(req,res) { 
-    const CourseCollection=await Course.find().lean()
+    const CourseCollection=await Course.find().populate(["Questions","Tests"]).lean()
     if(CourseCollection.length == 0)return ({message:"No Courses",code:0});
     return {message:"Document(s) Found",code:1, data:CourseCollection};
  }

@@ -1,5 +1,6 @@
 const {Course,ValidateCourse} = require("../../models/Course");
-const {TestFormat} = require("../../models/TestFormat")
+const {TestFormat} = require("../../models/TestFormat");
+const {Question} = require("../../models/Question");
 const {paginateModel,paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
 const TestFormatController=require("../controllers/TestFormatController");
@@ -97,10 +98,14 @@ async function createCourse(req,res) {
   }
 
   async function deleteCourse(req,res) {
-    try{
+    try{  
     const course = await Course.findByIdAndDelete(req.params.id);
+    await Question.deleteMany({"_id":{ $in: course.Questions}})
+    await TestFormat.deleteMany({"_id":{ $in: course.Tests}})
+    
     return {message:"Document(s) deleted",code:1, data:course};
     }catch(err){
+
     return {message:err,code:-1}
     }
 }

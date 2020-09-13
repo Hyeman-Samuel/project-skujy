@@ -60,7 +60,7 @@ Router.put("/:id/edit", async(req,res)=>{
     
    var result = await CourseController.updateCourse(req,res);
     if(result.code == 1){
-        res.redirect(`/${result.data.id}`)
+        res.redirect(`/course/${result.data.id}`)
     }else{
         res.send("error page");  
     }
@@ -69,11 +69,7 @@ Router.put("/:id/edit", async(req,res)=>{
 
 Router.delete("/:id/delete",async(req,res)=>{
     var result = await CourseController.deleteCourse(req,res)
-    if(result.code == 1){
-        res.redirect(`/`)
-    }else{
-        res.send("error page");  
-    }
+    ResponseManager(req,res,result);
 })
 
 

@@ -1,37 +1,4 @@
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
-<script>  
-     function DeleteItemWithSweetAlert(url,name,id){
-                            swal({
-                                    title: "Are you sure?",
-                                    text: `Once deleted, you will not be able to recover this ${name}!`,
-                                    icon: "warning",
-                                    buttons: true,
-                                    dangerMode: true,
-                                    })
-                                    .then((willDelete) => {
-                                    if (willDelete) {
-                                        fetch(url, {
-                                            method: 'DELETE'
-                                        }).then(response => {
-                                            if(response.ok){
-                                                 swal(`${name} has been deleted!`, {
-                                                    icon: "success",
-                                                    buttons:true
-                                                    }).then(()=>{
-                                                    var row = document.getElementById(id).setAttribute("hidden","true")
-                                                    })                                               
-                                            }else{
-                                                response.json().then((data)=>
-                                                {
-                                                    swal(data.message)                                                                                                    
-                                                })                                               
-                                            }
-                                        })
-                                    } else {
-                                        swal(`Your ${name} is safe!`);
-                                    }
-                                    });
-                       }
+<script>     
     function DeleteQuestion(questionId){  
         DeleteItemWithSweetAlert(`/question${questionId}delete`,"Question",questionId)                      
     }
@@ -39,7 +6,7 @@
         DeleteItemWithSweetAlert(`/test${testId}delete`,"Test",testId)
     }
                        
-                        </script> 
+</script> 
                         
 <h2>{{Course.Title}}</h2>
  <hr/>

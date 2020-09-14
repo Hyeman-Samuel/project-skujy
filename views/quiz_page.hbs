@@ -33,7 +33,10 @@
                     <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 ><span style="padding:5px 10px 5px 10px;!important" class="label label-info" id="qid">{{index i }}</span>  {{item.question.Title}}</h3>
+                            <h3 ><span style="padding:5px 10px 5px 10px;!important" class="label label-info" id="qid">{{index i }}</span> {{item.question.Title}}</h3>
+                            {{#if item.question.ImageUrl}}
+                            <img width="500" src="{{item.question.ImageUrl}}" />
+                            {{/if}}
                         </div>
                         <div class="modal-body">           
                         <div class="funkyradio">

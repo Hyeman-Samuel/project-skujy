@@ -72,12 +72,15 @@ async function getAttempt(req,res){
 
 async function getAttempts(req,obj){
     try {
-        ///var paginationObj = await paginateArray(req.query.page,Attempt,10)
-        const attempts = await Attempt.find().lean()
+        const attempts = await Attempt.find(obj).lean()
         if(attempts.length == 0){
             return {message:"None",code:0}
         }
-        return {message:"Sent",code:1,data:{attempts:attempts}}
+        var AttemptPaginationObj = paginateArray(req.query.page,attempts,10)
+        var traverser = AttemptPaginationObj.ArrayTraverser
+        const PaginatedAttempts = attempts.slice(traverser.start,traverser.end)
+        
+        return {message:"Sent",code:1,data:{attempts:attempts,"AttemptPagination":AttemptPaginationObj,"Attempts":PaginatedAttempts}}
     } catch (err) {
         return {message:err,code:-1}
     }

@@ -16,31 +16,38 @@ const ResponseManager = require('../utility/ResponseManager');
 
 Router.get("/:id", async(req,res)=>{
     var result = await TestFormatController.getById(req,res);
-        var attemptResult = await AttemptController.getAttempts({"Test":result.data._id});
+        var attemptResult = await AttemptController.getAttempts(req,{"Test":result.data._id});
     if(result.code == 1 && attemptResult.code != -1){
-        res.render("layout/admin/test_detail.hbs",{test:result.data,attempts:attemptResult.data})
+        res.render("layout/admin/test_detail.hbs",{test:result.data,attemptData:attemptResult.data})
     }else{     
         res.send("error page:"+result.message+attemptResult.message);  
     }
 })
 
 
-Router.get("/:id/attempts", async(req,res)=>{
-    var result = await TestFormatController.getAttempts(req,res);
-    ResponseManager(req,res,result)
-})
+// Router.get("/:id/attempts", async(req,res)=>{
+//     var result = await TestFormatController.getAttempts(req,res);
+//     ResponseManager(req,res,result)
+// })
 
 
 
 
-Router.post("/close/:testId",async(req,res)=>{ 
+Router.get("/:testId/close",async(req,res)=>{ 
     var result = await TestFormatController.closeTest(req,res);
-    ResponseManager(req,res,result)
+    if(result.code == -1){
+        res.send("err")
+    }
+    res.redirect(`/test/${req.params.testId}`)
 })
 
-Router.post("/open/:testId",async(req,res)=>{ 
+
+Router.get("/:testId/open",async(req,res)=>{ 
     var result = await TestFormatController.openTest(req,res);
-    ResponseManager(req,res,result)
+    if(result.code == -1){
+        res.send("err")
+    }
+    res.redirect(`/test/${req.params.testId}`)
 })
 
 Router.delete("/:testId/delete",async(req,res)=>{

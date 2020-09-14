@@ -29,7 +29,7 @@ Router.get("/add",async(req,res)=>{
 Router.get("/",async(req,res)=>{
     var result = await CourseController.getCourses(req,res)   
     if(result.code == 1){
-        res.render("layout/admin/courses_page.hbs",{Courses:result.data,})
+        res.render("layout/admin/courses_page.hbs",{data:result.data,})
     }else if(result.code == 0){
         res.render("layout/admin/courses_page.hbs",{Courses:null})  
     }else{

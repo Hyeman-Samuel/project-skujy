@@ -5,7 +5,7 @@
  </script>
   <hr/>
  <div class="row">
-                            <div class="col-md-12">
+                    <div class="col-md-12">
                                 <div class="main-card mb-3 card">
                                     <div class="card-header">Courses
                                          <div class="btn-actions-pane-right">
@@ -24,7 +24,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                {{#each Courses as |item i|}}
+                                                {{#each data.Courses as |item i|}}
                                             <tr id="/{{item._id}}/">
                                                 <td class="text-center text-muted">#{{index i }}</td>
                                                 <td>
@@ -56,11 +56,16 @@
                                         </table>
                                     </div>
                                     <div class="d-block text-center card-footer">
-                                        <button class="btn-wide btn btn-info">Prev</button>
-                                        <button class="btn-wide btn btn-info">Next</button>
+                                    {{#if data.Pagination.PrevPage}}
+                                   <a href="?page={{data.Pagination.PrevPage}}"><button class="btn-wide btn btn-info">Prev</button></a>                                      
+                                    {{/if}}
+
+                                    {{#if data.Pagination.NextPage}}
+                                    <a href="?page={{data.Pagination.NextPage}}"><button class="btn-wide btn btn-info">Next</button></a>
+                                    {{/if}}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                    </div>
+</div>
 
 

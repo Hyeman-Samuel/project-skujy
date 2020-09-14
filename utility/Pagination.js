@@ -1,4 +1,5 @@
-async function paginateModel(Page,ModelCount,NumberPerPage){
+async function paginateModel(Page,Model,NumberPerPage){
+  const ModelCount = Model.length
   if((!Page)||(Page<=0)){Page=1;}
  return pagination(Page,ModelCount,NumberPerPage);
 }
@@ -39,7 +40,13 @@ if(PrevPage < 1){
 if(NextPage > PagesCount){
     NextPage = null
 }
+var traverser = NumberPerPage*(Page-1)
+var traverserEnd = (traverser+NumberPerPage)
 
-return {PagesCount,Pages,NextPage,PrevPage,NumberPerPage,Page};
+var ArrayTraverser ={
+              start:traverser,
+              end:traverserEnd
+}
+return {PagesCount,Pages,NextPage,PrevPage,NumberPerPage,Page,ArrayTraverser};
 }
 module.exports={paginateModel,paginateArray};

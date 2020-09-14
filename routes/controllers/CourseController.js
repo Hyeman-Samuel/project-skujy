@@ -1,7 +1,7 @@
 const {Course,ValidateCourse} = require("../../models/Course");
 const {TestFormat} = require("../../models/TestFormat");
 const {Question} = require("../../models/Question");
-const {paginateModel,paginateArray} = require("../../utility/Pagination");
+const {paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
 const TestFormatController=require("../controllers/TestFormatController");
 
@@ -68,8 +68,11 @@ async function createCourse(req,res) {
 
  async function getCourses(req,res) { 
     const CourseCollection=await Course.find().populate(["Questions","Tests"]).lean()
+    var paginationObj = paginateArray(req.query.page,CourseCollection,13)
+    var traverser = paginationObj.ArrayTraverser
+    var Courses = CourseCollection.slice(traverser.start,traverser.end);
     if(CourseCollection.length == 0)return ({message:"No Courses",code:0});
-    return {message:"Document(s) Found",code:1, data:CourseCollection};
+    return {message:"Document(s) Found",code:1, data:{"Courses":Courses,"Pagination":paginationObj}};
  }
 
 

@@ -43,10 +43,10 @@ Router.get("/",async(req,res)=>{
 Router.get("/:id", async(req,res)=>{
  var result = await CourseController.getById(req,res);
     if(result.code == 1){
-        res.render("layout/admin/course_detail.hbs",{Course:result.data})
+        res.render("layout/admin/course_detail.hbs",{data:result.data})
     }else{
         //res.render("layout/admin/course_detail.hbs")
-        res.send("error page");  
+        res.send("error page: " + result.message);  
     }
 })
 

@@ -54,8 +54,11 @@ async function createQuestion(req,res) {
   async function getQuestions(req,res){
     try {
         const QuestionCollection=await Question.find().lean()
+        var paginationObj = paginateArray(req.query.page,CourseCollection,13)
+        var traverser = paginationObj.ArrayTraverser
+        const Questions = QuestionCollection.slice(traverser.start,traverser.end)
         if(!QuestionCollection)return {message:"No Questions",code:0};     
-        return {message:"Document(s) Founded",code:1, data:QuestionCollection};      
+        return {message:"Document(s) Founded",code:1, data:{"Questions":Questions,"Pagination":paginationObj}};      
     } catch (err) {
         return {message:err,code:-1}
     } 

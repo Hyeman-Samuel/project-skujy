@@ -80,8 +80,22 @@ async function createCourse(req,res) {
  async function getById(req,res){
    try {
     const course = await Course.findById(req.params.id).populate(["Questions","Tests","Questions.Options"]).lean()
+    
+    if(!Array.isArray(course.Questions) || !Array.isArray(course.Tests)){
+      return {message:"Error",code:-1}
+    }
+    var QuestionpaginationObj = paginateArray(req.query.Qpage,course.Questions,13)
+    var Questiontraverser = QuestionpaginationObj.ArrayTraverser
+    var Questions = course.Questions.slice(Questiontraverser.start,Questiontraverser.end);
+    var TestpaginationObj = paginateArray(req.query.Tpage,course.Tests,13)
+    var Testtraverser = TestpaginationObj.ArrayTraverser
+    var Tests = course.Tests.slice(Testtraverser.start,Testtraverser.end);
     if (course != null){
-      return {message:"Document(s) Found",code:1, data:course};
+      return {message:"Document(s) Found",code:1, data:{"Course":course,
+                                                        "TestPagination":TestpaginationObj,
+                                                        "Tests":Tests,
+                                                        "QuestionPagination":QuestionpaginationObj,
+                                                        "Questions":Questions}};
     }
    else {return {message:"Not Found",code:0}}    
    } catch (err) {

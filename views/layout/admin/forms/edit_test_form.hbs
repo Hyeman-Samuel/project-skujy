@@ -4,8 +4,8 @@
 </button>
 </a>
  </div>
-<hr>
-<form class="form-horizontal" method="POST" action="/course/{{CourseId}}/addtest">
+ <hr>
+<form class="form-horizontal" method="POST" action="/test/{{CourseId}}/edit">
   <div class="form-group">
     <label class="control-label col-sm-2" for="email">Test Name:</label>
     <div class="col-sm-10">
@@ -29,29 +29,17 @@
     </div>
   </div>
 
-{{!-- 
+
   <div class="form-group">
     <label class="control-label col-sm-2" for="email">Number of Attempts</label>
     <div class="col-sm-10">
       <input type="number" name="Trials" class="form-control" value="1"  placeholder="Enter Number">
     </div>
-  </div> --}}
-
-    {{!-- <div class="form-group">
-        <label for="control-label col-sm-2">Select Course:</label>
-         <div class="col-sm-10">
-        <select class="form-control" id="sel1">
-            <option>Geg 113</option>
-            <option>Geg 117</option>
-            <option>Fsc 115</option>
-            <option>Geg 115</option>
-        </select>
-        </div>
-        </div> --}}
+  </div>
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-primary">Create</button>
+      <button type="submit" class="btn btn-primary">Update</button>
     </div>
   </div>
 </form>

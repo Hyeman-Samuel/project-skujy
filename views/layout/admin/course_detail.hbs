@@ -7,7 +7,12 @@
     }
                        
 </script> 
-                        
+<div class="row">
+<a href="/course"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+ <span class="glyphicon">&#xe257;</span> Back
+</button>
+</a>
+ </div>                   
 <h2>{{data.Course.Title}}</h2>
  <hr/>
                         <div class="row">
@@ -117,6 +122,7 @@
                                                {{/if}}
                                                 {{/each}}
                                                 <td class="text-center">
+                                                <a href="{{../data.Course._id}}/question/{{item._id}}"> <button type="button" id="PopoverCustomT-1" class="btn btn-success btn-sm">Edit</button></a>
                                                  <button onclick="DeleteQuestion(/{{item._id}}/)" class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> Delete </i></button>
                                                 </td>
                                             </tr>

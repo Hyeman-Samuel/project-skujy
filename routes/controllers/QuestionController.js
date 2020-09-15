@@ -66,7 +66,7 @@ async function createQuestion(req,res) {
 
   async function getById(req,res){
     try {
-      const question = await Question.findById(req.params.questionId)
+      const question = await Question.findById(req.params.questionId).lean()
       if(question != null){
       return {message:"Document(s) Founded",code:1, data:question};
       }
@@ -83,10 +83,10 @@ async function createQuestion(req,res) {
     try{
         const isSet = setCorrectOptionIndex(req.body)
         if (isSet == -1){
-            return -1
+            return {code:-1}
         }                
       const question = await Question.findOneAndUpdate({"_id":req.params.questionId},req.body,{new:true});
-      return question;
+      return {message:"Sent",code:1,data:{"Question":question}};
     }catch (err){
        return {message:err,code:-1}
     }

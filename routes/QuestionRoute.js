@@ -24,9 +24,13 @@ const ResponseManager = require('../utility/ResponseManager');
     
 //     ResponseManager(req,res,result);
 // })
+Router.get("/:id/edit", async(req,res)=>{
 
+    var result = await QuesionController.getById(req,res);
+    ResponseManager(req,res,result);
+})
 
-Router.put("/:id", async(req,res)=>{
+Router.post("/:id/edit", async(req,res)=>{
     const {error}=ValidateQuestion(req.body);         
     if(error)return res.status(400).send(error.details[0].message);
 

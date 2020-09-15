@@ -2,6 +2,8 @@ const express = require('express');
 const Router = express.Router();
 const ValidateCourse = require("../public_models/PublicCourse")
 const CourseController = require("./controllers/CourseController");
+const QuestionController = require("./controllers/QuestionController");
+const TestController = require("./controllers/TestFormatController")
 const ResponseManager = require('../utility/ResponseManager');
 
 
@@ -97,6 +99,33 @@ Router.post("/:id/addquestion",async(req,res)=>{
     }
 })
 
+
+
+Router.get("/:id/question/:questionId",async(req,res)=>{
+    var courseId = req.params.id;
+    var result = await QuestionController.getById(req,res)
+    if( result.code == 1){
+        res.render("layout/admin/forms/edit_question_form.hbs",{data:{"Question":result.data,"CourseId":courseId}})
+    }else{
+        res.send("error page");  
+    }
+})
+
+
+Router.post("/:id/question/:questionId/edit",async(req,res)=>{
+    var courseId = req.params.id;
+    var result = await QuestionController.updateQuestion(req,res);
+    if(result.code == 1){
+        res.redirect(`/course/${courseId}`)
+    }else{
+        res.send("error page" + result.message);  
+    }
+})
+
+
+
+
+
 ////// Test
 
 Router.get("/:id/test",async(req,res)=>{
@@ -120,6 +149,29 @@ Router.post("/:id/addtest",async(req,res)=>{
         res.send("error page"+result.message);  
     }
 })
+
+
+
+Router.get("/:id/test/:testId/edit",async(req,res)=>{
+    var CourseId = req.params.id
+    var result = await TestController.getById(req,res)
+    if(CourseId != null && result.code == 1){
+        res.render("layout/admin/forms/edit_question_form.hbs",{data:{"CourseId":CourseId,"Test":result.data}})
+    }else{
+        res.send("error page");  
+    }
+})
+
+
+// Router.post("/:id/test/:testId/edit",async(req,res)=>{
+//     var result = await TestController.update(req,res);
+//     if(result.code == 1){
+//         res.redirect(`/course/${result.data.id}`)
+//     }else{
+//         res.send("error page" + result.message);  
+//     }
+// })
+
 
 
 

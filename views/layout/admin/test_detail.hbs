@@ -1,8 +1,15 @@
 <div class="row">
+{{#if test.Course._id }}
 <a href="/course/{{test.Course._id}}"><button  type="button" class="btn btn-danger" aria-label="Left Align">
  <span class="glyphicon">&#xe257;</span> Back
 </button>
 </a>
+{{else}}
+<a href="/admin"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+ <span class="glyphicon">&#xe257;</span> Back
+</button>
+</a>
+{{/if}}
  </div>
 
 <div class="col-md-8">

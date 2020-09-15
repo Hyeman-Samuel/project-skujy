@@ -56,7 +56,6 @@ async function getById(req,res){
         if(attempts.length == 0){
             return {message:"No Attempts(s) Found",code:1}; 
         }
-        console.log("reaches")
         return {message:"Attempts(s) Found",code:1, data:attempts }; 
     } catch (err) {
         return {message:err,code:-1}

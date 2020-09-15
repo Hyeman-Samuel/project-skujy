@@ -6,13 +6,6 @@ const ValidateTestFormat = require('../public_models/PublicTestFormat');
 const ResponseManager = require('../utility/ResponseManager');
 
 
-// Router.post("/",async(req,res)=>{ 
-//     const {error}=ValidateTestFormat(req.body);         
-//     if(error)return res.status(400).send(error.details[0].message);
-    
-//     var result = await TestFormatController.createTestFormat(req,res);
-//     ResponseManager(req,res,result)
-// })
 
 Router.get("/:id", async(req,res)=>{
     var result = await TestFormatController.getById(req,res);
@@ -23,14 +16,6 @@ Router.get("/:id", async(req,res)=>{
         res.send("error page:"+result.message+attemptResult.message);  
     }
 })
-
-
-// Router.get("/:id/attempts", async(req,res)=>{
-//     var result = await TestFormatController.getAttempts(req,res);
-//     ResponseManager(req,res,result)
-// })
-
-
 
 
 Router.get("/:testId/close",async(req,res)=>{ 
@@ -56,3 +41,18 @@ Router.delete("/:testId/delete",async(req,res)=>{
 })
 
 module.exports = Router;
+
+
+// Router.get("/:id/attempts", async(req,res)=>{
+//     var result = await TestFormatController.getAttempts(req,res);
+//     ResponseManager(req,res,result)
+// })
+
+
+// Router.post("/",async(req,res)=>{ 
+//     const {error}=ValidateTestFormat(req.body);         
+//     if(error)return res.status(400).send(error.details[0].message);
+    
+//     var result = await TestFormatController.createTestFormat(req,res);
+//     ResponseManager(req,res,result)
+// })

@@ -30,8 +30,6 @@ Router.get("/:attemptId/quiz",async(req,res)=>{
 
 
 Router.post("/:attemptId/addbatch",async (req,res)=>{
-    // const {error}=ValidateSubmittedAttempt(req.body);         
-    // if(error)return res.status(400).send(error.details[0].message);
 
    var result = await AttemptController.submitBatchOfAttempts(req,res)
         if(result.code == 1){

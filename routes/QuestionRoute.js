@@ -24,6 +24,7 @@ const ResponseManager = require('../utility/ResponseManager');
     
 //     ResponseManager(req,res,result);
 // })
+
 Router.get("/:id/edit", async(req,res)=>{
 
     var result = await QuesionController.getById(req,res);
@@ -46,4 +47,4 @@ Router.delete("/:id/delete",async(req,res)=>{
 module.exports = Router  
 
 /////This Route Most likely would not be used 
-//// I just used it for testing
+//// Only the Delete is used

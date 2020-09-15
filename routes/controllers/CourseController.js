@@ -75,7 +75,16 @@ async function createCourse(req,res) {
     return {message:"Document(s) Found",code:1, data:{"Courses":Courses,"Pagination":paginationObj}};
  }
 
-
+ async function getOnlyCourseById(req,res){
+ try{const course = await Course.findById(req.params.id).lean()
+  if(course != null){
+    return {message:"Found",code:1,data:course}
+  }
+  return {message:"Not Found",code:0}
+ }catch (err){
+  return {message:err,code:-1}
+ }
+ }
 
  async function getById(req,res){
    try {
@@ -138,5 +147,6 @@ module.exports = {
     getById,
     getTests,
     AddQuestionToCourse,
-    AddTestToCourse
+    AddTestToCourse,
+    getOnlyCourseById
 }

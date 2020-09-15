@@ -51,11 +51,19 @@ Router.get("/:id", async(req,res)=>{
         res.send("error page: " + result.message);  
     }
 })
+Router.get("/:id/edit", async(req,res)=>{    
+    
+   var result = await CourseController.getOnlyCourseById(req,res);
+    if(result.code == 1){
+        res.render("layout/admin/forms/edit_course_form.hbs",{data:{"Course":result.data}})
+    }else{
+        res.send("error page");  
+    }
+})
 
 
 
-
-Router.put("/:id/edit", async(req,res)=>{
+Router.post("/:id/edit", async(req,res)=>{
     const {error}=ValidateCourse(req.body);         
     if(error)return res.status(400).send(error.details[0].message);  
     

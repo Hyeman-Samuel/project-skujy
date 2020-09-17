@@ -38,7 +38,7 @@ async function createCourse(req,res) {
 
  async function AddTestToCourse(req,res){
   const test = await TestFormatController.createTestFormat(req,res);
-  if(test.code != 1){
+  if(test.code == -1){
     return test    
   }
   var course = test.data.course

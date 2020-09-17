@@ -5,7 +5,13 @@
 </a>
  </div>
  <hr>
+
 <h2>Course</h2>
+  {{#if errors }}
+              {{# each errors }}
+                <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+              {{/each}}
+{{/if}}
 <form class="form-horizontal" action="/course" method="POST" >
   <div class="form-group">
     <label class="control-label col-sm-2" for="email">Title</label>

@@ -12,7 +12,8 @@ Router.get("/",async(req,res)=>{
     if(result.code == -1){
         res.send("error page")
     }
-    res.render("index.hbs",{"layout":null,"tests":result.data})
+    res.render("index.hbs",{"layout":null,"tests":result.data,"errors":req.session.errors})
+    req.session.errors = null
 })
 
 

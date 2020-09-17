@@ -18,7 +18,7 @@ async function createTestFormat(req,res){
     return {message:"Test Created",code:1, data:{"test":test,"course":course} }; 
     }catch(err){
      //logger
-     return {message:err,code:-2} 
+     return {message:err._message,code:-1} 
       }
 }
 
@@ -32,7 +32,7 @@ async function getAllTests(obj){
         return {message:"Test(s) Found",code:1, data:testFormat }; 
         
     } catch (err) {
-        return {message:err,code:-1}
+        return {message:err._message,code:-1}
     }
 }
 
@@ -46,7 +46,7 @@ async function getById(req,res){
         }
         return {message:"Test(s) Found",code:1, data:testFormat }; 
     } catch (err) {
-        return {message:err,code:-1}
+        return {message:err._message,code:-1}
     }    
   }
 
@@ -58,7 +58,7 @@ async function getById(req,res){
         }
         return {message:"Attempts(s) Found",code:1, data:attempts }; 
     } catch (err) {
-        return {message:err,code:-1}
+        return {message:err._message,code:-1}
     } 
 
   }
@@ -73,7 +73,7 @@ async function closeTest(req,res){
         await test.save()
         return {message:"Test Closed",code:1}; 
     } catch (err) {
-        return {message:err,code:-1} 
+        return {message:err._message,code:-1} 
     }
 }
 
@@ -85,7 +85,7 @@ async function openTest(req,res){
         await test.save()
         return {message:"Test Opened",code:1};
     } catch (err) {
-        return {message:err,code:-1} 
+        return {message:err._message,code:-1} 
     }
 }
 

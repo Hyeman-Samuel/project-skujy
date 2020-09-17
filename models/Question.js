@@ -10,7 +10,8 @@ const QuestionSchema=new Mongoose.Schema({
     "Title":{type:String,required:true},
     "Options":[{type:OptionSchema}],
     "CorrectOptionIndex":{type:Number,required:true},
-    "ImageUrl":{type:String,default:null}
+    "ImageUrl":{type:String,default:null},
+    "ImagePublicId":{type:String,default:null}
 })
     // QuestionSchema.pre("deleteOne",function(next){
     //     this.model("Course").deleteOne({"Questions":this._id},next)

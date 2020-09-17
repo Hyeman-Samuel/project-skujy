@@ -6,7 +6,11 @@
  </div>
 
  <hr>
-
+  {{#if errors }}
+              {{# each errors }}
+                <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+              {{/each}}
+{{/if}}
 <form class="form-horizontal" id="form" method="POST" action="/course/{{data.CourseId}}/question/{{data.Question._id}}/edit">
   <div class="form-group">
     <label class="control-label col-sm-2" for="email">Question:</label>

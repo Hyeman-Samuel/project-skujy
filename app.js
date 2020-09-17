@@ -2,6 +2,7 @@ const Express= require('express');
 const useMongoDB = require("./startup/useMongoDB");
 const useParser = require("./startup/useParser");
 const useHandlebars = require("./startup/useHandleBars");
+const useSession = require("./startup/useSession");
 
 const app = Express();
 app.use(Express.json());
@@ -15,6 +16,7 @@ const admin = require("./routes/AdminRoute")
 
 app.set('port', process.env.PORT || 3000)
 useParser(app)
+useSession(app)
 useMongoDB();
 useHandlebars(app,__dirname,Express)
 

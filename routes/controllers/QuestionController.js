@@ -2,12 +2,16 @@ const {Question,ValidateQuestion} = require("../../models/Question");
 const {Attempt} = require("../../models/Attempt");
 const {Course} = require("../../models/Course");
 const {TestFormat} = require("../../models/TestFormat");
-const {paginateModel,paginateArray} = require("../../utility/Pagination");
+const {paginateArray} = require("../../utility/Pagination");
 
 
 async function createQuestion(req,res) {        
     try{
     const question = new Question(req.body);
+    var result = checkOptions(question.Options)
+    if(result != null){
+      return result
+    }
     const isSet = setCorrectOptionIndex(question)
     if(isSet != null){
         return isSet 
@@ -20,37 +24,6 @@ async function createQuestion(req,res) {
       }
   }
 
-
-
-
-
-  function setIndex(question){    
-    question.Options.forEach((element,index) => {
-      question.Options[index].Index  = index  
-    });
-  }
-
-
-  function setCorrectOptionIndex(question){
-    setIndex(question)
-    const correctOption = question.Options.filter(function(item){
-        return item.IsCorrect == true
-        })
-
-        if (correctOption.length > 1){
-         return {message:"Multiple Correct Options",code:-1}
-        }else  if (correctOption.length  == 0){
-          return {message:"No Correct Options",code:-1}
-        }else if (correctOption.length == 1){
-          question.CorrectOptionIndex = correctOption[0].Index
-        }else{
-          return {message:"Unexpected Error",code:-1}
-        }
-  }
-
-
-
-
   async function getQuestions(req,res){
     try {
         const QuestionCollection=await Question.find().lean()
@@ -60,7 +33,7 @@ async function createQuestion(req,res) {
         if(!QuestionCollection)return {message:"No Questions",code:0};     
         return {message:"Document(s) Founded",code:1, data:{"Questions":Questions,"Pagination":paginationObj}};      
     } catch (err) {
-        return {message:err,code:-1}
+        return {message:err._message,code:-1}
     } 
   }
 
@@ -73,7 +46,7 @@ async function createQuestion(req,res) {
       return {message:"Document(s) Not Found",code:0};
       
     } catch (err) {
-      return {message:err,code:-1};
+      return {message:err._message,code:-1};
     }
    
   }
@@ -81,6 +54,10 @@ async function createQuestion(req,res) {
 
   async function updateQuestion(req,res) {
     try{
+      const OptionCheckedResult = checkOptions(req.body.Options)
+      if(OptionCheckedResult != null){
+        return OptionCheckedResult
+      }
         const isSet = setCorrectOptionIndex(req.body)
         if (isSet == -1){
             return {code:-1}
@@ -124,6 +101,55 @@ async function createQuestion(req,res) {
           });
           return response
     }
+
+
+
+
+
+  function setIndex(question){    
+    question.Options.forEach((element,index) => {
+      question.Options[index].Index  = index  
+    });
+  }
+
+  function checkOptions(options){
+    var EmptyOptions
+    var HasCorrectOption
+    if(Array.isArray(options)){
+      options.forEach((val)=>{
+          if(val.Title  == ""){
+            EmptyOptions = true
+          } 
+          if(val.IsCorrect){
+            HasCorrectOption = true
+          }
+      })
+      if(EmptyOptions){
+        return {message:"Options are not complete",code:-1}
+      }
+      if(!HasCorrectOption){
+        return {message:"No Correct Options",code:-1}
+      }
+    }
+  }
+
+
+  function setCorrectOptionIndex(question){
+    setIndex(question)
+    const correctOption = question.Options.filter(function(item){
+        return item.IsCorrect == true
+        })
+
+        if (correctOption.length > 1){
+         return {message:"Multiple Correct Options",code:-1}
+        }else  if (correctOption.length  == 0){
+          return {message:"No Correct Options",code:-1}
+        }else if (correctOption.length == 1){
+          question.CorrectOptionIndex = correctOption[0].Index
+        }else{
+          return {message:"Unexpected Error",code:-1}
+        }
+  }
 
     module.exports={       
             createQuestion,

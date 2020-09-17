@@ -2,7 +2,6 @@ const express = require('express');
 const Router= express.Router();
 const TestFormatController = require("./controllers/TestFormatController");
 const AttemptController = require("./controllers/AttemptsController");
-const ValidateTestFormat = require('../public_models/PublicTestFormat');
 const ResponseManager = require('../utility/ResponseManager');
 
 
@@ -16,6 +15,8 @@ Router.get("/:id", async(req,res)=>{
         res.send("error page:"+result.message+attemptResult.message);  
     }
 })
+
+
 
 
 Router.get("/:testId/close",async(req,res)=>{ 

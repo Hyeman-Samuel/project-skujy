@@ -3,9 +3,12 @@ const session = require('express-session');
 
 module.exports=function (app){
     app.use(session({
-        secret: 'positronx',
+        secret: "MyKey",
         saveUninitialized: false,
-        resave: false
+        resave: false,
+        cookie: {
+            expires: 60000
+        }
     }));
         
 }

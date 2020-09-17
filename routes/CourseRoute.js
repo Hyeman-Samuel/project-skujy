@@ -121,7 +121,6 @@ Router.post("/:id/addquestion",validateQuestion(),async(req,res)=>{
 
     var result = await CourseController.AddQuestionToCourse(req,res);
     if(result.code == -1){
-        console.log(result)
         var error = {msg:result.message,param:""}
         req.session.errors =[error]
         res.redirect(`/course/${req.params.id}/question`)

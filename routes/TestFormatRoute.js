@@ -12,7 +12,6 @@ Router.get("/:id", async(req,res)=>{
     if(result.code == 1 && attemptResult.code != -1){
         res.render("layout/admin/test_detail.hbs",{test:result.data,attemptData:attemptResult.data})
     }else{     
-        console.log(attemptResult)
         res.send("error page:"+result.message+attemptResult.message);  
     }
 })

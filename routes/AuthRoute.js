@@ -25,8 +25,8 @@ if(!User){
      res.redirect("/auth");
      return
 }
+const IsPassword= await bcrypt.compare(req.body.Password,User.Password);
 
-const IsPassword=bcrypt.compare(req.body.Password,User.Password);
 if(!IsPassword){
     var error = {msg:"invalid Password",param:""}
     req.session.errors =[error]

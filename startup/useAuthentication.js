@@ -9,7 +9,7 @@ var seeder = async (req, res, next) => {
     if (users === 0) {
       var SeededUser = new Users({
         Username:"skuji",
-        Password:"mypassword",
+        Password:await Bcrypt.hash("mypassword",10),
         Role: "Admin"
       });
       try {

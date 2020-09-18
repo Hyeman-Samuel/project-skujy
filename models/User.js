@@ -7,7 +7,7 @@ const UserSchema=new Mongoose.Schema({
 "Password":{type:String,required:true},
 "Role":{type:String,required:true}
 })
-const Users= Mongoose.model('User',UserSchema);
+const Users= Mongoose.model('AppUsers',UserSchema);
 
 module.exports={
     Users

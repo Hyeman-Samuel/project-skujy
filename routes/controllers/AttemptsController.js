@@ -81,7 +81,7 @@ async function getAttempts(req,obj){
             return {message:"None",code:0}
         }
         var AttemptPaginationObj = paginateArray(req.query.page,attempts,10)
-        var traverser = paginationObj.ArrayTraverser
+        var traverser = AttemptPaginationObj.ArrayTraverser
         const PaginatedAttempts = attempts.slice(traverser.start,traverser.end)
         
         return {message:"Sent",code:1,data:{attempts:attempts,"AttemptPagination":AttemptPaginationObj,"Attempts":PaginatedAttempts}}

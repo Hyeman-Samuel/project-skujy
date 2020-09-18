@@ -63,7 +63,7 @@
                 <div class="col-lg-5 ml-auto" data-aos="fade-up" data-aos-delay="500">
                   <form action="/attempt/start" method="post" class="form-box TestForm">
             {{#if errors }}
-              {{# each errors }}
+              {{#each errors }}
                 <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
               {{/each}}
             {{/if}}

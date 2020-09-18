@@ -13,6 +13,14 @@ Router.post("/start",validateAttempt(),async(req,res)=>{
         return
     }
     var result = await AttemptController.createAttempt(req,res)
+
+    if(result.code == -1){
+        var error = {msg:result.message,param:""}
+        req.session.errors =[error]
+        res.redirect("/");
+        return
+    }
+
     if(result.code == 1){
         res.redirect(`${result.data.id}/quiz?page=1`)
     }else{

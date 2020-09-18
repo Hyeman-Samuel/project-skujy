@@ -12,6 +12,10 @@ async function createAttempt(req,res) {
     if(test == null){
         return {message:"Test not Found",code:-1}
     }
+    const attempts = await Attempt.find({"Test":test.id,"Email":req.body.Email}).lean()
+    if(attempts.length >= test.Trials){
+        return {message:"Maximum attempts reached in this test",code:-1}
+    }
     const course  = await Course.findById(test.Course).populate(["Questions"])
     if(course == null){
         return {message:"course not Found",code:-1}
@@ -77,7 +81,7 @@ async function getAttempts(req,obj){
             return {message:"None",code:0}
         }
         var AttemptPaginationObj = paginateArray(req.query.page,attempts,10)
-        var traverser = AttemptPaginationObj.ArrayTraverser
+        var traverser = paginationObj.ArrayTraverser
         const PaginatedAttempts = attempts.slice(traverser.start,traverser.end)
         
         return {message:"Sent",code:1,data:{attempts:attempts,"AttemptPagination":AttemptPaginationObj,"Attempts":PaginatedAttempts}}

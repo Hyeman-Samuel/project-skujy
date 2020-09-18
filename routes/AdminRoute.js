@@ -13,7 +13,8 @@ Router.get("/",async(req,res)=>{
     }else if(result.code == 0){
         res.render("layout/admin/admin_index.hbs")  
     }else{
-        res.send("error page")
+        res.sendStatus(500)
+        //res.send("error page")
     }
     
     

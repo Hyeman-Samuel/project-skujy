@@ -12,7 +12,7 @@ Router.get("/:id", async(req,res)=>{
     if(result.code == 1 && attemptResult.code != -1){
         res.render("layout/admin/test_detail.hbs",{test:result.data,attemptData:attemptResult.data})
     }else{     
-        res.send("error page:"+result.message+attemptResult.message);  
+        res.sendStatus(500) 
     }
 })
 
@@ -22,7 +22,7 @@ Router.get("/:id", async(req,res)=>{
 Router.get("/:testId/close",async(req,res)=>{ 
     var result = await TestFormatController.closeTest(req,res);
     if(result.code == -1){
-        res.send("err")
+        res.sendStatus(500)
     }
     res.redirect(`/test/${req.params.testId}`)
 })
@@ -31,7 +31,7 @@ Router.get("/:testId/close",async(req,res)=>{
 Router.get("/:testId/open",async(req,res)=>{ 
     var result = await TestFormatController.openTest(req,res);
     if(result.code == -1){
-        res.send("err")
+        res.sendStatus(500)
     }
     res.redirect(`/test/${req.params.testId}`)
 })

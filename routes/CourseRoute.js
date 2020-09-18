@@ -21,6 +21,7 @@ Router.post("/",validateCourse(),async(req,res)=>{
     if(result.code == 1){
         res.redirect(`course/${result.data.id}`)
     }else{
+        res.sendStatus(500)
     }
 })
 
@@ -41,7 +42,8 @@ Router.get("/",async(req,res)=>{
     }else if(result.code == 0){
         res.render("layout/admin/courses_page.hbs",{Courses:null})  
     }else{
-        res.send("error page");
+        res.sendStatus(500)
+        //res.send("error page");
     }    
 })
 
@@ -53,8 +55,8 @@ Router.get("/:id", async(req,res)=>{
     if(result.code == 1){
         res.render("layout/admin/course_detail.hbs",{data:result.data})
     }else{
-        //res.render("layout/admin/course_detail.hbs")
-        res.send("error page: ");  
+        res.sendStatus(500)
+        //res.send("error page: ");  
     }
 })
 
@@ -65,7 +67,8 @@ Router.get("/:id/edit", async(req,res)=>{
         res.render("layout/admin/forms/edit_course_form.hbs",{data:{"Course":result.data},"errors":req.session.errors})
         req.session.errors = null;
     }else{
-        res.send("error page");  
+        res.sendStatus(500)
+        //res.send("error page");  
     }
 })
 
@@ -84,7 +87,8 @@ Router.post("/:id/edit",validateCourse(), async(req,res)=>{
     if(result.code == 1){
         res.redirect(`/course/${result.data.id}`)
     }else{
-        res.send("error page");  
+        res.sendStatus(500)
+        //res.send("error page");  
     }
 })
 
@@ -106,7 +110,8 @@ Router.get("/:id/question",async(req,res)=>{
         res.render("layout/admin/forms/question_form.hbs",{"CourseId":CourseId,"errors":req.session.errors})
         req.session.errors = null
     }else{
-        res.send("error page");  
+        res.sendStatus(500)
+        //res.send("error page");  
     }
 })
 
@@ -129,7 +134,8 @@ Router.post("/:id/addquestion",validateQuestion(),async(req,res)=>{
     if(result.code == 1){
         res.redirect(`/course/${result.data.id}`)
     }else{
-        res.send("error page" + result.message);  
+        res.sendStatus(500)
+       //res.send("error page" + result.message);  
     }
 })
 
@@ -142,7 +148,8 @@ Router.get("/:id/question/:questionId",async(req,res)=>{
         res.render("layout/admin/forms/edit_question_form.hbs",{data:{"Question":result.data,"CourseId":courseId},"errors":req.session.errors})
         req.session.errors = null;
     }else{
-        res.send("error page");  
+        res.sendStatus(500)
+        //res.send("error page");  
     }
 })
 
@@ -166,7 +173,8 @@ Router.post("/:id/question/:questionId/edit",validateQuestion(),async(req,res)=>
     if(result.code == 1){
         res.redirect(`/course/${courseId}`)
     }else{
-        res.send("error page" + result.message);  
+        res.sendStatus(500)
+        //res.send("error page" + result.message);  
     }
 })
 
@@ -185,7 +193,8 @@ Router.get("/:id/test",async(req,res)=>{
         res.render("layout/admin/forms/test_form.hbs",{"CourseId":CourseId,"errors":req.session.errors})
         req.session.errors = null;
     }else{
-        res.send("error page");  
+        res.sendStatus(500)
+        //res.send("error page");  
     }
 })
 
@@ -211,7 +220,8 @@ Router.post("/:id/addtest",validateTest(),async(req,res)=>{
     if(result.code == 1){
         res.redirect(`/course/${result.data.id}`)
     }else{
-        res.send("error page"+result.message);  
+        res.sendStatus(500)
+        //res.send("error page"+result.message);  
     }
 })
 

@@ -24,7 +24,8 @@ Router.post("/start",validateAttempt(),async(req,res)=>{
     if(result.code == 1){
         res.redirect(`${result.data.id}/quiz?page=1`)
     }else{
-        res.send("error page");  
+        res.sendStatus(500)
+        //res.send("error page");  
     }   
 })
 
@@ -35,7 +36,8 @@ Router.get("/:attemptId/quiz",async(req,res)=>{
     var data = result.data
     res.render("quiz_page.hbs",{"layout":null,data});
     }else{
-    res.send("error page");
+        res.sendStatus(500)
+    //res.send("error page");
     } 
 })
 
@@ -46,7 +48,8 @@ Router.post("/:attemptId/addbatch",async (req,res)=>{
         if(result.code == 1){
             res.redirect(`/attempt/${result.data.id}/quiz?page=${req.query.page}`)
         }else{
-            res.send("error page");  
+            res.sendStatus(500)
+            //res.send("error page");  
         }
 })
 
@@ -58,7 +61,8 @@ Router.post("/:attemptId/submit",async (req,res)=>{
         var NumberofQuestions = result.data.QuestionsAttempted.length 
         res.render("result_page.hbs",{layout:false,attempt:result.data,QuestionsCount:NumberofQuestions});
     }else{
-        res.send("error page:"+result.message);  
+        res.sendStatus(500)
+        //res.send("error page:"+result.message);  
     }
 })
 

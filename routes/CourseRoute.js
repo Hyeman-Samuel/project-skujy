@@ -242,7 +242,11 @@ function  validateTest(){
         check('DurationInMinutes',)
         .not()
         .isEmpty()
-        .withMessage(' No Duration')     
+        .withMessage(' No Duration'),
+        check('Trials',)
+        .not()
+        .isEmpty()
+        .withMessage(' No trials added')     
     ]
 }
 

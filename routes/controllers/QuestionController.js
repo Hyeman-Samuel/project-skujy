@@ -1,11 +1,17 @@
 const {Question,ValidateQuestion} = require("../../models/Question");
 const {Attempt} = require("../../models/Attempt");
-const {paginateModel,paginateArray} = require("../../utility/Pagination");
+const {Course} = require("../../models/Course");
+const {TestFormat} = require("../../models/TestFormat");
+const {paginateArray} = require("../../utility/Pagination");
 
 
 async function createQuestion(req,res) {        
     try{
     const question = new Question(req.body);
+    var result = checkOptions(question.Options)
+    if(result != null){
+      return result
+    }
     const isSet = setCorrectOptionIndex(question)
     if(isSet != null){
         return isSet 
@@ -18,6 +24,84 @@ async function createQuestion(req,res) {
       }
   }
 
+  async function getQuestions(req,res){
+    try {
+        const QuestionCollection=await Question.find().lean()
+        var paginationObj = paginateArray(req.query.page,CourseCollection,13)
+        var traverser = paginationObj.ArrayTraverser
+        const Questions = QuestionCollection.slice(traverser.start,traverser.end)
+        if(!QuestionCollection)return {message:"No Questions",code:0};     
+        return {message:"Document(s) Founded",code:1, data:{"Questions":Questions,"Pagination":paginationObj}};      
+    } catch (err) {
+        return {message:err._message,code:-1}
+    } 
+  }
+
+  async function getById(req,res){
+    try {
+      const question = await Question.findById(req.params.questionId).lean()
+      if(question != null){
+      return {message:"Document(s) Founded",code:1, data:question};
+      }
+      return {message:"Document(s) Not Found",code:0};
+      
+    } catch (err) {
+      return {message:err._message,code:-1};
+    }
+   
+  }
+  
+
+  async function updateQuestion(req,res) {
+    try{
+      const OptionCheckedResult = checkOptions(req.body.Options)
+      if(OptionCheckedResult != null){
+        return OptionCheckedResult
+      }
+        const isSet = setCorrectOptionIndex(req.body)
+        if (isSet == -1){
+            return {code:-1}
+        }                
+      const question = await Question.findOneAndUpdate({"_id":req.params.questionId},req.body,{new:true});
+      return {message:"Sent",code:1,data:{"Question":question}};
+    }catch (err){
+       return {message:err,code:-1}
+    }
+  }
+
+  
+    async function deleteQuestion(req,res) {
+        try{
+          const attempts = await Attempt.find({"QuestionsAttempted.question": req.params.id})
+
+      if (attempts.length == 0){    
+        var result = await CompareQuestionCountWithTests(req.params.id)
+          if (result != null) {
+            return result
+          }
+          const question = await Question.findByIdAndDelete(req.params.id);
+          return {message:"Document(s) Deleted",code:1}
+        }else{
+          return {message:"This Question has already been attempted and cannot be deleted,Delete the Test(s) and Attempt(s) associated with this Question",code: -1}
+        }        
+        }catch{
+        //logger
+        }
+    }
+    
+  async function CompareQuestionCountWithTests(questionId){
+    var response = null
+          const course = await Course.findOne({"Questions":questionId}).populate(["Questions"]).lean()
+          const questionCount = course.Questions.length
+          const testFormat = await TestFormat.find({"Course":course._id}).lean()
+          testFormat.forEach(test => {
+            if(questionCount <= test.NumberOfQuestions){
+              response = {message:"Not Enough Questions for test(s)",code:-1}
+            }
+          });
+          return response
+    }
+
 
 
 
@@ -26,6 +110,27 @@ async function createQuestion(req,res) {
     question.Options.forEach((element,index) => {
       question.Options[index].Index  = index  
     });
+  }
+
+  function checkOptions(options){
+    var EmptyOptions
+    var HasCorrectOption
+    if(Array.isArray(options)){
+      options.forEach((val)=>{
+          if(val.Title  == ""){
+            EmptyOptions = true
+          } 
+          if(val.IsCorrect){
+            HasCorrectOption = true
+          }
+      })
+      if(EmptyOptions){
+        return {message:"Options are not complete",code:-1}
+      }
+      if(!HasCorrectOption){
+        return {message:"No Correct Options",code:-1}
+      }
+    }
   }
 
 
@@ -45,63 +150,6 @@ async function createQuestion(req,res) {
           return {message:"Unexpected Error",code:-1}
         }
   }
-
-
-
-
-  async function getQuestions(req,res){
-    try {
-        const QuestionCollection=await Question.find().lean()
-        if(!QuestionCollection)return {message:"No Questions",code:0};     
-        return {message:"Document(s) Founded",code:1, data:QuestionCollection};      
-    } catch (err) {
-        return {message:err,code:-1}
-    } 
-  }
-
-  async function getById(req,res){
-    try {
-      const question = await Question.findById(req.params.questionId)
-      if(question != null){
-      return {message:"Document(s) Founded",code:1, data:question};
-      }
-      return {message:"Document(s) Not Found",code:0};
-      
-    } catch (err) {
-      return {message:err,code:-1};
-    }
-   
-  }
-  
-
-  async function updateQuestion(req,res) {
-    try{
-        const isSet = setCorrectOptionIndex(req.body)
-        if (isSet == -1){
-            return -1
-        }                
-      const question = await Question.findOneAndUpdate({"_id":req.params.questionId},req.body,{new:true});
-      return question;
-    }catch (err){
-       return {message:err,code:-1}
-    }
-  }
-
-  
-    async function deleteQuestion(req,res) {
-        try{
-          const attempts = Attempt.find({"QuestionsAttempted.question": req.params.questionId})
-        if (attempts == null){         
-          const question = await Question.findByIdAndDelete(req.params.questionId);
-          return {message:"Document(s) Deleted",code:1, data:question}
-        }else{
-          return {message:"This Question has already been attempted and cannot be deleted,Delete the Test(s) and Attempt(s) associated with this Question",code: -1}
-        }        
-        }catch{
-        //logger
-        }
-    }
-    
 
     module.exports={       
             createQuestion,

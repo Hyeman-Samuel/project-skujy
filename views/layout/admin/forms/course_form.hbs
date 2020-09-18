@@ -1,0 +1,28 @@
+<div class="row">
+<a href="/course"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+ <span class="glyphicon">&#xe257;</span> Back
+</button>
+</a>
+ </div>
+ <hr>
+
+<h2>Course</h2>
+  {{#if errors }}
+              {{# each errors }}
+                <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+              {{/each}}
+{{/if}}
+<form class="form-horizontal" action="/course" method="POST" >
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="email">Title</label>
+    <div class="col-sm-10">
+      <input type="text" name="Title" class="form-control"  placeholder="Enter Title">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+  </div>
+</form>
+

@@ -1,6 +1,8 @@
 const {Attempt} = require("../../models/Attempt");
 const {TestFormat} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
+const {paginateArray}=require("../../utility/Pagination");
+const Question = require("../../models/Question");
 
 async function createAttempt(req,res) { 
 
@@ -9,6 +11,10 @@ async function createAttempt(req,res) {
         const test = await TestFormat.findById(attempt.Test).populate(["Course"])
     if(test == null){
         return {message:"Test not Found",code:-1}
+    }
+    const attempts = await Attempt.find({"Test":test.id,"Email":req.body.Email}).lean()
+    if(attempts.length >= test.Trials){
+        return {message:"Maximum attempts reached in this test",code:-1}
     }
     const course  = await Course.findById(test.Course).populate(["Questions"])
     if(course == null){
@@ -47,14 +53,41 @@ async function createAttempt(req,res) {
 
 async function getAttempt(req,res){
         try {
-            var attempt = await Attempt.findById(req.params.attemptId)
+            var attempt = await Attempt.findById(req.params.attemptId).populate({
+            path:"QuestionsAttempted.question"   
+            }).lean()
             if(attempt == null){
             return {message:"Attempt Not Found",code:0};
             }
-            return {message:"Attempt Found",code:1,data:attempt}
+            var questionsAttempted = attempt.QuestionsAttempted
+           if (!Array.isArray(questionsAttempted)){
+            return {message:"retry",code:-1}
+           }
+            var paginationObj = paginateArray(req.query.page,questionsAttempted,2)
+            var traverser = paginationObj.NumberPerPage*(paginationObj.Page-1)
+            var traverserEnd = (traverser+paginationObj.NumberPerPage)
+            var Questions =questionsAttempted.slice(traverser,traverserEnd);
+            return {message:"Attempt Found",code:1,data:{"attempt":attempt,"questions":Questions,"pagination":paginationObj}}
         } catch (err) {
             return {message:err,code:-1}
         }
+}
+
+
+async function getAttempts(req,obj){
+    try {
+        const attempts = await Attempt.find(obj).lean()
+        if(attempts.length == 0){
+            return {message:"None",code:0}
+        }
+        var AttemptPaginationObj = paginateArray(req.query.page,attempts,10)
+        var traverser = AttemptPaginationObj.ArrayTraverser
+        const PaginatedAttempts = attempts.slice(traverser.start,traverser.end)
+        
+        return {message:"Sent",code:1,data:{attempts:attempts,"AttemptPagination":AttemptPaginationObj,"Attempts":PaginatedAttempts}}
+    } catch (err) {
+        return {message:err,code:-1}
+    }
 }
 
 async function submitBatchOfAttempts(req,res){
@@ -74,8 +107,10 @@ async function submitBatchOfAttempts(req,res){
         attempt.QuestionsAttempted.forEach((prevAttempt)=>{
             questionsAttempted.forEach((nextAttempt)=>{
                 if(prevAttempt.question.id == nextAttempt.question){
+                    if(nextAttempt.AnswerPickedIndex != null){
                     prevAttempt.AnswerPickedIndex = nextAttempt.AnswerPickedIndex
                 }
+            }
             })
            })
         attempt.save()
@@ -87,37 +122,37 @@ async function submitBatchOfAttempts(req,res){
 
 
 async function submitAttempt(req,res){
-    if(req.body.QuestionsAttempted == undefined){
+  try {  
+      if(req.body.QuestionsAttempted == undefined){
         req.body.QuestionsAttempted = []
     }
     var questionsAttempted = req.body.QuestionsAttempted;
-    try {
+    
         const attempt = await Attempt.findById(req.params.attemptId).populate({
             path:"QuestionsAttempted.question"
-           }) 
+           })
            if(attempt.HasSubmitted == true){
-            return {message:"Already Submitted",code:1}; 
+            return {message:"Already Submitted",code:-1}; 
            }
         attempt.QuestionsAttempted.forEach((prevAttempt)=>{
-            questionsAttempted.forEach((nextAttempt)=>{
-                if(prevAttempt.question.id == nextAttempt.question){
-                    prevAttempt.AnswerPickedIndex = nextAttempt.AnswerPickedIndex
+            questionsAttempted.forEach((newAttempt)=>{
+                if(prevAttempt.question.id == newAttempt.question){
+                    prevAttempt.AnswerPickedIndex = newAttempt.AnswerPickedIndex
                 }
             })
            })
         attempt.HasSubmitted = true;
         attempt.Score = getScore(attempt.QuestionsAttempted)
-        attempt.save()
-        return {message:"Attempt Submitted",code:1, data:attempt };      
+        await attempt.save()
+        const FinishedAttempt = await Attempt.findById(attempt.id).populate([
+        "QuestionsAttempted.question","Test","Test.Course"
+        ]).lean()
+        return {message:"Attempt Submitted",code:1, data:FinishedAttempt };      
     } catch (err) {
         return {message:err,code:-1} 
     }
    
 }
-
-
-
-
 
 function getScore(questionsAttempted){
     var score = 0;
@@ -149,5 +184,6 @@ module.exports = {
     createAttempt,
     submitAttempt,
     submitBatchOfAttempts,
-    getAttempt
+    getAttempt,
+    getAttempts
 }

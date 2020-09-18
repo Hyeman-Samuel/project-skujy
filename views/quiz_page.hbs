@@ -1,0 +1,135 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="../../../public/css/quiz_style.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<div class="row">
+
+
+<form action="/attempt/{{data.attempt._id}}/submit" method="post" id="Quiz" enctype='application/json'>
+<div class="col-sm-3">  
+    <p id="stopTime" hidden="true">{{data.attempt.StopTime}}</p>
+
+        <div class="panel panel-default text-center" style="margin:20 20 20 20!important; width:120%">
+            <div class="panel-heading" id="heading"><h1 id="timer"></h1></div>
+            <div class="panel-body">
+            <nav aria-label="Page navigation">
+            <ul class="pagination">
+            {{#each data.pagination.Pages as |item|}}
+                <li> <input type="submit" class="btn btn-primary"  class="page-link" formmethod="POST" formaction="/attempt/{{../data.attempt._id}}/addbatch?page={{item.page}}"  value="{{item.index}}"/></li>
+            {{/each}}
+            </ul>
+            </nav>
+            </div>
+        </div>
+
+</div>
+        
+<div class="col-sm-9">
+        {{!-- QUIZ START --}}
+        
+                {{#each data.questions as |item i|}}
+                <div class="container-fluid bg">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 ><span style="padding:5px 10px 5px 10px;!important" class="label label-info" id="qid">{{index i }}</span> {{item.question.Title}}</h3>
+                            {{#if item.question.ImageUrl}}
+                            <img width="60%" src="{{item.question.ImageUrl}}" />
+                            {{/if}}
+                        </div>
+                        <div class="modal-body">           
+                        <div class="funkyradio">
+                            <input  name="QuestionsAttempted[{{i}}][question]" value="{{item.question._id}}" hidden="true"/>
+                        <!---Options-->
+                        {{#each item.question.Options as |option|}}
+                        <div class="funkyradio-default">
+
+                        {{#IfEqual option.Index  item.AnswerPickedIndex}}
+                        <input type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]" value="{{option.Index}}" id="{{option._id}}" checked="true"/>
+                        {{else}}
+                        <input type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]" value="{{option.Index}}" id="{{option._id}}" />
+                        {{/IfEqual}}
+                           
+                            <label for="{{option._id}}">{{Title}}</label>
+                        </div>
+                        {{/each}}      
+                        <!---Options END--> 
+                    </div>
+                </div>
+                <div class="modal-footer text-muted">
+                    <span id="answer"></span>
+                </div>
+                </div>
+                </div>
+                </div>
+                <hr>
+                {{/each}}
+
+            {{!-- BELOW --}}
+                
+                <div class="row" style="margin: 20px;" >
+
+                <div class="col-sm-9 ">
+                <ul class="pagination">
+                {{#if data.pagination.PrevPage}}
+                 <li ><input type="submit" formmethod="POST" class="btn btn-primary" formaction="/attempt/{{data.attempt._id}}/addbatch?page={{data.pagination.PrevPage}}" value="Prev"/> </li>             
+                {{/if}}
+                
+                </ul>
+                </div>
+
+                <div class="col-sm-3 ">
+                {{#if data.pagination.NextPage}}
+                    <ul class="pagination">
+                        <li class="page-item" ><input type="submit" class="btn btn-primary"  class="page-link" formmethod="POST" formaction="/attempt/{{data.attempt._id}}/addbatch?page={{data.pagination.NextPage}}"  value="Next"/></li>
+                        </ul>  
+                        {{else}}
+                        <button style="margin: 20px;" type="submit" class="btn btn-large btn-danger">Submit</button>   
+                {{/if}}                 
+                
+                </div> 
+                </div>
+       
+        {{!--QUIZ END  --}}
+</div>
+
+ </form>
+</div>
+
+
+{{!-- TIMER --}}
+
+<script>
+var stoptime = document.getElementById("stopTime").innerText
+var countDownDate = new Date(stoptime).getTime();
+
+var x = setInterval(function() {
+
+
+  var now = new Date().getTime();
+    
+  var distance = stoptime - now;
+
+
+
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+
+
+  document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+
+ 
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("timer").innerHTML = "EXPIRED";
+    document.getElementById("Quiz").submit();
+  }
+
+  if(distance < (60000)){
+    document.getElementById("heading").style.backgroundColor = "red";
+    }
+
+}, 1000);
+</script>

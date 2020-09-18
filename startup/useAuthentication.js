@@ -1,43 +1,43 @@
-const { Users } = require("../models/user");
+const { Users } = require("../models/User");
 const Bcrypt = require("bcryptjs");
 const config= require("config");
-const session=require("express-session");
-const config= require("config");
+const jwt = require("jsonwebtoken");
 
-var seeder =async (req, res, next) => {
-    const users =await (await Users.find()).length;
+// config.get("AdminUserEmail")await Bcrypt.hash(config.get("AdminUserPassword"), 10)
+var seeder = async (req, res, next) => {
+    const users =  (await Users.find().lean()).length
     if (users === 0) {
       var SeededUser = new Users({
-        Email:config.get("AdminUserEmail"),
-        Password: await Bcrypt.hash(config.get("AdminUserPassword"), 10),
+        Username:"skuji",
+        Password:await Bcrypt.hash("mypassword",10),
         Role: "Admin"
       });
       try {
-        SeededUser.save();
+       await SeededUser.save();
       } catch {
         ////SeriousProblem
+        res.sendStatus(403)
       }
     }
     next();
   };
 
-  var sessionChecker = (req, res, next) => {
-    if (req.session.user) {
-      next();
-    } else {
-      res.redirect("/auth");
-    }
-  };
+  var TokenChecker = (req, res, next) => {
+    const authcookie = req.cookies.authcookie
 
-module.exports=function (app){
-    console.log(config.get("SercetAuthKey"));
-    app.use(seeder)
-    app.use(session({
-        secret: config.get("SercetAuthKey"),
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            expires: 10000000
-        }
-    }));
+    jwt.verify(authcookie,"secretKey",(err,data)=>{
+     if(err){
+      res.redirect("/auth");
+     } 
+     else if(data.user){
+      req.user = data.user
+       next()
+    }
+  })
+};
+
+
+module.exports={
+sessionCheck :TokenChecker,
+seedUser :seeder
 }

@@ -1,8 +1,53 @@
 const express = require('express');
 const Router= express.Router();
 const TestFormatController = require("./controllers/TestFormatController");
-const ValidateTestFormat = require('../public_models/PublicTestFormat');
+const AttemptController = require("./controllers/AttemptsController");
 const ResponseManager = require('../utility/ResponseManager');
+
+
+
+Router.get("/:id", async(req,res)=>{
+    var result = await TestFormatController.getById(req,res);
+        var attemptResult = await AttemptController.getAttempts(req,{"Test":result.data._id});
+    if(result.code == 1 && attemptResult.code != -1){
+        res.render("layout/admin/test_detail.hbs",{test:result.data,attemptData:attemptResult.data})
+    }else{     
+        res.sendStatus(500) 
+    }
+})
+
+
+
+
+Router.get("/:testId/close",async(req,res)=>{ 
+    var result = await TestFormatController.closeTest(req,res);
+    if(result.code == -1){
+        res.sendStatus(500)
+    }
+    res.redirect(`/test/${req.params.testId}`)
+})
+
+
+Router.get("/:testId/open",async(req,res)=>{ 
+    var result = await TestFormatController.openTest(req,res);
+    if(result.code == -1){
+        res.sendStatus(500)
+    }
+    res.redirect(`/test/${req.params.testId}`)
+})
+
+Router.delete("/:testId/delete",async(req,res)=>{
+    var result = await TestFormatController.deleteTest(req,res);
+    ResponseManager(req,res,result)
+})
+
+module.exports = Router;
+
+
+// Router.get("/:id/attempts", async(req,res)=>{
+//     var result = await TestFormatController.getAttempts(req,res);
+//     ResponseManager(req,res,result)
+// })
 
 
 // Router.post("/",async(req,res)=>{ 
@@ -12,33 +57,3 @@ const ResponseManager = require('../utility/ResponseManager');
 //     var result = await TestFormatController.createTestFormat(req,res);
 //     ResponseManager(req,res,result)
 // })
-
-Router.get("/:id", async(req,res)=>{
-    var result = await TestFormatController.getById(req,res);
-    ResponseManager(req,res,result)
-})
-
-Router.get("/:id/attempts", async(req,res)=>{
-    var result = await TestFormatController.getAttempts(req,res);
-    ResponseManager(req,res,result)
-})
-
-
-
-
-Router.post("/close/:testId",async(req,res)=>{ 
-    var result = await TestFormatController.closeTest(req,res);
-    ResponseManager(req,res,result)
-})
-
-Router.post("/open/:testId",async(req,res)=>{ 
-    var result = await TestFormatController.openTest(req,res);
-    ResponseManager(req,res,result)
-})
-
-Router.post("/delete/:testId",async(req,res)=>{
-    var result = await TestFormatController.deleteTest(req,res);
-    ResponseManager(req,res,result)
-})
-
-module.exports = Router;

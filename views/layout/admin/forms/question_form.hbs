@@ -44,6 +44,7 @@
    </div>
 
     <input type="text" name="ImageUrl" id="ImageUrl" hidden="true" >
+    <input type="text" name="ImagePublicId" id="public_id" hidden="true" >
 
    <div class="col-sm-10">
     <div class="col-sm-8">
@@ -100,7 +101,7 @@
     <div class="row"> 
       <div id="loader" class="offset-sm-1 col-sm-2">
      <div  class="loader"></div>
-      <p>Uploading Image</p> 
+      <p id="loader-text">Uploading Image</p> 
     </div>
     <div class=" col-sm-3">
       <button type="submit" class="btn btn-large btn-primary">Create</button>
@@ -175,6 +176,7 @@ var ImageInBase64;
               document.getElementById("ImageCropper").setAttribute("hidden","true")
               document.getElementById("file").files[0] = null
               HasImage = false
+              document.getElementById("loader").setAttribute("hidden","true")
             }
         //////Reset
             document.getElementById('reset').onclick =()=>{
@@ -226,16 +228,16 @@ function UploadFile(){
         if(response.ok){
              response.json().then((data)=>
             {
-              document.getElementById("ImageUrl").value = data.url  
+              document.getElementById("ImageUrl").value = data.url
+              document.getElementById("public_id").value = data.public_id  
+              document.getElementById("loader").setAttribute("hidden","true")
               document.getElementById("form").submit()                                                                                         
             })                                  
         }else{
-              response.json().then((data)=>
-            {
-              swal({
+            swal({
                     text: "Some thing went wrong! Maybe Internet?"
-                  });                                                                                                
-            })                                           
+                  }); 
+            document.getElementById("loader").setAttribute("hidden","true")                                                                                                                                       
         }
     })    
     }else{

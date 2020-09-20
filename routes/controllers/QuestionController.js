@@ -3,8 +3,7 @@ const {Attempt} = require("../../models/Attempt");
 const {Course} = require("../../models/Course");
 const {TestFormat} = require("../../models/TestFormat");
 const {paginateArray} = require("../../utility/Pagination");
-
-
+const Cloudinary = require("../../utility/Cloudinary")
 async function createQuestion(req,res) {        
     try{
     const question = new Question(req.body);
@@ -77,14 +76,20 @@ async function createQuestion(req,res) {
       if (attempts.length == 0){    
         var result = await CompareQuestionCountWithTests(req.params.id)
           if (result != null) {
+            console.log("here")
             return result
           }
-          const question = await Question.findByIdAndDelete(req.params.id);
+            const question = await Question.findById(req.params.id)
+             if(question.ImagePublicId != null){
+               await Cloudinary.uploader.destroy(question.ImagePublicId)
+             }
+             await Question.findByIdAndDelete(req.params.id);
           return {message:"Document(s) Deleted",code:1}
         }else{
           return {message:"This Question has already been attempted and cannot be deleted,Delete the Test(s) and Attempt(s) associated with this Question",code: -1}
         }        
-        }catch{
+        }catch(err){
+          return {message:"Question not deleted. Internet?",code:-1}
         //logger
         }
     }

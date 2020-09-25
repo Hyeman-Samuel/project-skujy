@@ -3,6 +3,7 @@ const {TestFormat} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
 const {paginateArray}=require("../../utility/Pagination");
 const Question = require("../../models/Question");
+const {Logger} = require("../../utility/Logger");
 
 async function createAttempt(req,res) { 
 
@@ -46,7 +47,8 @@ async function createAttempt(req,res) {
            })
         return {message:"Attempt Started",code:1, data:NewAttempt };      
     } catch (err) {
-        return {message:"Something Went Wrong with the Question(s):"+err+"Check if Your using it properly",code:-2}
+        Logger.error(err.message,err)
+        return {message:"Something Went Wrong with the Question(s):"+err+"Check if Your using it properly",code:-1}       
     }
    
 }
@@ -69,6 +71,7 @@ async function getAttempt(req,res){
             var Questions =questionsAttempted.slice(traverser,traverserEnd);
             return {message:"Attempt Found",code:1,data:{"attempt":attempt,"questions":Questions,"pagination":paginationObj}}
         } catch (err) {
+            Logger.error(err.message,err)
             return {message:err,code:-1}
         }
 }
@@ -86,6 +89,7 @@ async function getAttempts(req,obj){
         
         return {message:"Sent",code:1,data:{attempts:attempts,"AttemptPagination":AttemptPaginationObj,"Attempts":PaginatedAttempts}}
     } catch (err) {
+        Logger.error(ex.message,ex)
         return {message:err,code:-1}
     }
 }
@@ -116,6 +120,7 @@ async function submitBatchOfAttempts(req,res){
         attempt.save()
         return {message:"Batch Editied",code:1, data:attempt };      
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err,code:-1} 
     }
 }
@@ -149,6 +154,7 @@ async function submitAttempt(req,res){
         ]).lean()
         return {message:"Attempt Submitted",code:1, data:FinishedAttempt };      
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err,code:-1} 
     }
    

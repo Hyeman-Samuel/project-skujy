@@ -1,6 +1,7 @@
 const {TestFormat,ValidateTestFormat} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
 const {Attempt}= require("../../models/Attempt")
+const {Logger} = require("../../utility/Logger");
 
 async function createTestFormat(req,res){      
  try{    
@@ -17,7 +18,7 @@ async function createTestFormat(req,res){
     await test.save()
     return {message:"Test Created",code:1, data:{"test":test,"course":course} }; 
     }catch(err){
-     //logger
+    Logger.error(err.message,err)
      return {message:err._message,code:-1} 
       }
 }
@@ -32,6 +33,7 @@ async function getAllTests(obj){
         return {message:"Test(s) Found",code:1, data:testFormat }; 
         
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err._message,code:-1}
     }
 }
@@ -46,6 +48,7 @@ async function getById(req,res){
         }
         return {message:"Test(s) Found",code:1, data:testFormat }; 
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err._message,code:-1}
     }    
   }
@@ -58,6 +61,7 @@ async function getById(req,res){
         }
         return {message:"Attempts(s) Found",code:1, data:attempts }; 
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err._message,code:-1}
     } 
 
@@ -73,6 +77,7 @@ async function closeTest(req,res){
         await test.save()
         return {message:"Test Closed",code:1}; 
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err._message,code:-1} 
     }
 }
@@ -85,6 +90,7 @@ async function openTest(req,res){
         await test.save()
         return {message:"Test Opened",code:1};
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err._message,code:-1} 
     }
 }
@@ -95,6 +101,7 @@ async function deleteTest(req,res) {
     await Attempt.deleteMany({"Test":req.params.testId})
     return {message:"Test Deleted",code:1,data:test};
     }catch{
+    Logger.error(err.message,err)
     return {message:"UnSuccessful",code:-1}
     }
 }

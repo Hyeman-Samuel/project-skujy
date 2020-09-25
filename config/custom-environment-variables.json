@@ -1,0 +1,7 @@
+{
+  "AdminUserEmail":"AdminUserEmail",
+  "AdminUserPassword":"AdminUserPassword",
+  "CloudName":"CloudName",
+  "ApiKey":"ApiKey",
+  "ApiSecret":"ApiSecret"
+}

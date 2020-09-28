@@ -15,6 +15,7 @@ async function createTestFormat(req,res){
         return {message:"Not enough Questions ",code:-1}
     }
     test.Course = course._id
+    test.TestCode = generateCode(6)
     await test.save()
     return {message:"Test Created",code:1, data:{"test":test,"course":course} }; 
     }catch(err){
@@ -105,6 +106,15 @@ async function deleteTest(req,res) {
     return {message:"UnSuccessful",code:-1}
     }
 }
+
+function generateCode(digits) {  
+    var numbers = '0123456789'; 
+    let OTP = ''; 
+    for (let i = 0; i < digits; i++ ) { 
+        OTP += numbers[Math.floor(Math.random() * 10)]; 
+    } 
+    return OTP; 
+} 
 
 module.exports = {
     createTestFormat,

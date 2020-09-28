@@ -78,7 +78,11 @@
                           <option value="{{item._id}}" > {{item.Course.Title}}-{{item.Title}}</option>
                            {{/each}}
                         </select>
-                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="sel1">Access Code:</label>
+                      <input type="number" name="TestCode" class="form-control" placeholder="Enter Access Code">
+                    </div>
                     <div class="form-group">
                       <p data-aos="fade-up" data-aos-delay="300"><button type="submit" class="btn btn-primary py-3 px-5 btn-pill">Take The Test</button></p>
                     </div>

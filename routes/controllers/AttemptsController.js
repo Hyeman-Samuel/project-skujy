@@ -13,6 +13,10 @@ async function createAttempt(req,res) {
     if(test == null){
         return {message:"Test not Found",code:-1}
     }
+
+    if(req.body.TestCode != test.TestCode){
+        return {message:"Access Code Invalid",code:-1}
+    }
     const attempts = await Attempt.find({"Test":test.id,"Email":req.body.Email}).lean()
     if(attempts.length >= test.Trials){
         return {message:"Maximum attempts reached in this test",code:-1}

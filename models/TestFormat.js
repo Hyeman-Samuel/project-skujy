@@ -9,7 +9,8 @@ const TestFormatSchema=new Mongoose.Schema({
     "DurationInMinutes":{type:Number,required:true},
     "Course":{type:Mongoose.Schema.Types.ObjectId,ref:"Course",required:true},
     "IsClosed":{type:Boolean,default:false},
-    "Trials":{type:Number,default:1}
+    "Trials":{type:Number,default:1},
+    "TestCode":{type:String,required:true}
 })
 
 const TestFormat = Mongoose.model('TestFormat',TestFormatSchema);

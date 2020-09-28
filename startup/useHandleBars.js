@@ -24,7 +24,12 @@ module.exports=function (app,__dirname,Express){
         var newIndex = index + 1
         return newIndex
 })
-
+hbs.handlebars.registerHelper("paginatedIndex",function(index,page,numberPerPage){
+    var newIndex = Number(index)+1;
+    var pageIndex = page-1;
+    var QuestionNumber = (pageIndex * numberPerPage)+newIndex;
+    return QuestionNumber;
+})
     hbs.handlebars.registerHelper("getCount",function(list){
         if(Array.isArray(list)){
             return list.length

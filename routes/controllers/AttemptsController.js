@@ -1,5 +1,5 @@
 const {Attempt} = require("../../models/Attempt");
-const {TestFormat} = require("../../models/TestFormat");
+const {TestFormat,QuestionSelectionType} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
 const {paginateArray}=require("../../utility/Pagination");
 const Question = require("../../models/Question");
@@ -37,8 +37,19 @@ async function createAttempt(req,res) {
     attempt.StopTime = StopTime.toString();
     attempt.CourseTitle = course.Title;
 
-    
-    const questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions);
+    var questions = []
+    switch (test.QuestionSelection) {
+        case QuestionSelectionType.AllQuestions:
+            questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions);
+            break;
+        case QuestionSelectionType.SelectedQuestions:
+            questions = getRandomItemsFromArray(test.SelectedQuestions,test.NumberOfQuestions);
+            break;    
+        default:
+            questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions);
+            break;
+    }
+     
     questions.forEach((item)=>{
         const question = {        
             "question":item

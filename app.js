@@ -51,6 +51,9 @@ app.use("/auth",auth)
 
 app.get('/',home)
 
+app.get("/errorlogs",sessionCheck,async (req,res,)=>{
+  res.sendFile(`${__dirname}/error.log`)
+})
 app.use(errorMiddleware)
 
 app.listen(app.get('port'), function() {

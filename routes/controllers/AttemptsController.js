@@ -80,7 +80,7 @@ async function getAttempt(req,res){
            if (!Array.isArray(questionsAttempted)){
             return {message:"retry",code:-1}
            }
-            var paginationObj = paginateArray(req.query.page,questionsAttempted,2)
+            var paginationObj = paginateArray(req.query.page,questionsAttempted,4)
             var traverser = paginationObj.NumberPerPage*(paginationObj.Page-1)
             var traverserEnd = (traverser+paginationObj.NumberPerPage)
             var Questions =questionsAttempted.slice(traverser,traverserEnd);

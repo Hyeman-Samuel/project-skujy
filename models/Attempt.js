@@ -12,7 +12,8 @@ const AttemptSchema=new Mongoose.Schema({
     "QuestionsAttempted":[{type:QuestionsAttemptedSchema,required:true}],
     "Score":{type:Number,default:-1},
     "HasSubmitted":{type:Boolean,default:false},
-    "Test":{type:Mongoose.Schema.Types.ObjectId,ref:"TestFormat"},
+    "Test":{type:Mongoose.Schema.Types.ObjectId,ref:"TestFormat",default:null},
+    "Competition":{type:Mongoose.Schema.Types.ObjectId,ref:"CompetitionFormat",default:null},
     "StartTime":{type:String,required:true},
     "StopTime":{type:String,required:true},
     "CourseTitle":{type:String}

@@ -1,8 +1,9 @@
 const {Attempt} = require("../../models/Attempt");
-const {TestFormat} = require("../../models/TestFormat");
+const {TestFormat,QuestionSelectionType} = require("../../models/TestFormat");
 const {Course} = require("../../models/Course");
 const {paginateArray}=require("../../utility/Pagination");
 const Question = require("../../models/Question");
+const {Logger} = require("../../utility/Logger");
 
 async function createAttempt(req,res) { 
 
@@ -11,6 +12,10 @@ async function createAttempt(req,res) {
         const test = await TestFormat.findById(attempt.Test).populate(["Course"])
     if(test == null){
         return {message:"Test not Found",code:-1}
+    }
+
+    if(req.body.TestCode != test.TestCode){
+        return {message:"Access Code Invalid",code:-1}
     }
     const attempts = await Attempt.find({"Test":test.id,"Email":req.body.Email}).lean()
     if(attempts.length >= test.Trials){
@@ -32,8 +37,19 @@ async function createAttempt(req,res) {
     attempt.StopTime = StopTime.toString();
     attempt.CourseTitle = course.Title;
 
-    
-    const questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions);
+    var questions = []
+    switch (test.QuestionSelection) {
+        case QuestionSelectionType.AllQuestions:
+            questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions);
+            break;
+        case QuestionSelectionType.SelectedQuestions:
+            questions = getRandomItemsFromArray(test.SelectedQuestions,test.NumberOfQuestions);
+            break;    
+        default:
+            questions = getRandomItemsFromArray(course.Questions,test.NumberOfQuestions);
+            break;
+    }
+     
     questions.forEach((item)=>{
         const question = {        
             "question":item
@@ -46,7 +62,8 @@ async function createAttempt(req,res) {
            })
         return {message:"Attempt Started",code:1, data:NewAttempt };      
     } catch (err) {
-        return {message:"Something Went Wrong with the Question(s):"+err+"Check if Your using it properly",code:-2}
+        Logger.error(err.message,err)
+        return {message:"Something Went Wrong with the Question(s):"+err+"Check if Your using it properly",code:-1}       
     }
    
 }
@@ -63,12 +80,13 @@ async function getAttempt(req,res){
            if (!Array.isArray(questionsAttempted)){
             return {message:"retry",code:-1}
            }
-            var paginationObj = paginateArray(req.query.page,questionsAttempted,2)
+            var paginationObj = paginateArray(req.query.page,questionsAttempted,4)
             var traverser = paginationObj.NumberPerPage*(paginationObj.Page-1)
             var traverserEnd = (traverser+paginationObj.NumberPerPage)
             var Questions =questionsAttempted.slice(traverser,traverserEnd);
             return {message:"Attempt Found",code:1,data:{"attempt":attempt,"questions":Questions,"pagination":paginationObj}}
         } catch (err) {
+            Logger.error(err.message,err)
             return {message:err,code:-1}
         }
 }
@@ -86,6 +104,7 @@ async function getAttempts(req,obj){
         
         return {message:"Sent",code:1,data:{attempts:attempts,"AttemptPagination":AttemptPaginationObj,"Attempts":PaginatedAttempts}}
     } catch (err) {
+        Logger.error(ex.message,ex)
         return {message:err,code:-1}
     }
 }
@@ -116,6 +135,7 @@ async function submitBatchOfAttempts(req,res){
         attempt.save()
         return {message:"Batch Editied",code:1, data:attempt };      
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err,code:-1} 
     }
 }
@@ -149,6 +169,7 @@ async function submitAttempt(req,res){
         ]).lean()
         return {message:"Attempt Submitted",code:1, data:FinishedAttempt };      
     } catch (err) {
+        Logger.error(err.message,err)
         return {message:err,code:-1} 
     }
    

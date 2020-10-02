@@ -1,13 +1,13 @@
 const Mongoose=require('mongoose');
 const config= require("config");
+const {Logger} = require("../utility/Logger")
+
 module.exports=function (){
-   // Mongoose.set('useFindAndModify', false);
     Mongoose.connect(config.get("MongoDbConnectionString"),{ useNewUrlParser: true }).then(()=>{
-////Database Connected 
-console.log("connected");
+    Logger.info("connected to mongoDb")
 }).catch((err)=>{
-    ///End the application
-    console.log('error occured : ',err);
-    process.exit();
+    
+    Logger.error("An error occured",err)
+    ///No need for process.exit()
 })
 }

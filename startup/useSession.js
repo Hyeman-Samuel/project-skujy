@@ -7,7 +7,7 @@ module.exports=function (app){
         saveUninitialized: false,
         resave: false,
         cookie: {
-            expires: 60000
+            expires: 600000
         }
     }));
         

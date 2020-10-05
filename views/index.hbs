@@ -111,8 +111,8 @@
                   <div class="form-group">
                         <label for="sel1">Select Exam:</label>
                         <select name="Competition" class="form-control" id="sel1">
-                          {{#each tests as |item i|}}
-                          <option value="{{item._id}}" > {{item.Course.Title}}- &#8358 {{item.Price}}</option>
+                          {{#each exams as |item i|}}
+                          <option value="{{item._id}}" > {{item.Title}}- &#8358 {{item.Price}}</option>
                           {{/each}}
                         </select>
                     </div>

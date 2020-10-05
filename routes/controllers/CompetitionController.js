@@ -37,7 +37,7 @@ try{
     competition.Stage = CompetitionStage.Registration
     competition.Course = course._id
     await competition.save()
-    return {message:"Test Created",code:1, data:{"Competition":competition,"course":course} }; 
+    return {message:"Test Created",code:1, data:{"competition":competition,"course":course} }; 
     }catch(err){
     Logger.error(err.message,err)
     return {message:err._message,code:-1} 
@@ -149,8 +149,7 @@ async function deleteCompetition(req,res) {
 
 
 ////Entry 
- function MakeEntryPayment(req){
-    //var competition = await CompetitionFormat.findById(req.body.Competition)
+function MakeEntryPayment(req){
     const form ={
         "full_name":`${req.body.FullName}`,
         "email":req.body.Email,
@@ -159,7 +158,6 @@ async function deleteCompetition(req,res) {
             "CompetitionId":"33333"
         }
     }
-
 return form
 
 }

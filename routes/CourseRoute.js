@@ -44,7 +44,6 @@ Router.get("/",async(req,res)=>{
         res.render("layout/admin/courses_page.hbs",{Courses:null})  
     }else{
         res.sendStatus(500)
-        //res.send("error page");
     }    
 })
 
@@ -57,7 +56,6 @@ Router.get("/:id", async(req,res)=>{
         res.render("layout/admin/course_detail.hbs",{data:result.data})
     }else{
         res.sendStatus(500)
-        //res.send("error page: ");  
     }
 })
 
@@ -68,8 +66,7 @@ Router.get("/:id/edit", async(req,res)=>{
         res.render("layout/admin/forms/edit_course_form.hbs",{data:{"Course":result.data},"errors":req.session.errors})
         req.session.errors = null;
     }else{
-        res.sendStatus(500)
-        //res.send("error page");  
+        res.sendStatus(500) 
     }
 })
 
@@ -228,7 +225,48 @@ Router.post("/:id/addtest",validateTest(),async(req,res)=>{
     }
 })
 
+////////VALIDATE COMPETITION
 
+
+Router.get("/:id/competition",async(req,res)=>{
+    var CourseId = req.params.id
+    
+    if(CourseId != null){
+        var course = await Course.findById(CourseId).populate("Questions").lean()
+        var questions = course.Questions
+        res.render("layout/admin/forms/competition_form.hbs",{"CourseId":CourseId,"errors":req.session.errors,"Questions":questions})
+        req.session.errors = null;
+    }else{
+        res.sendStatus(500)
+        //res.send("error page");  
+    }
+})
+
+
+
+
+Router.post("/:id/competition",validateCompetition(),async(req,res)=>{
+    var errors = validationResult(req).array()
+    if(errors.length != 0){
+        req.session.errors = errors;
+        res.redirect(`/course/${req.params.id}/competition`);
+        return
+    }
+    var result = await CourseController.AddCompetitionToCourse(req,res);
+
+    if(result.code == -1){
+        var error = {msg:result.message,param:"string"}
+        req.session.errors =[error]
+        res.redirect(`/course/${req.params.id}/competition`)
+        return
+    }
+
+    if(result.code == 1){
+        res.redirect(`/course/${result.data.id}`)
+    }else{
+        res.sendStatus(500)
+    }
+})
 
 // Router.get("/:id/test/:testId/edit",async(req,res)=>{
 //     var CourseId = req.params.id
@@ -260,6 +298,27 @@ function  validateTest(){
         .not()
         .isEmpty()
         .withMessage(' No trials added')     
+    ]
+}
+
+function  validateCompetition(){
+    return [
+        check('Title')
+        .not()
+        .isEmpty()
+        .withMessage('Title is required'),
+        check('NumberOfQuestions',)
+        .not()
+        .isEmpty()
+        .withMessage('No Questions'),
+        check('DurationInMinutes',)
+        .not()
+        .isEmpty()
+        .withMessage(' No Duration'),
+        check('Price',)
+        .not()
+        .isEmpty()
+        .withMessage(' No Price')     
     ]
 }
 

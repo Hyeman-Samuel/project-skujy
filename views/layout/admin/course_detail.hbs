@@ -5,6 +5,9 @@
     function DeleteTest(testId){
         DeleteItemWithSweetAlert(`/test${testId}delete`,"Test",testId)
     }
+     function DeleteCompetition(CompetitionId){
+        DeleteItemWithSweetAlert(`/competition${CompetitionId}delete`,"Exam",CompetitionId)
+    }
                        
 </script> 
 <div class="row">
@@ -213,6 +216,88 @@
                                     {{/if}}
                                     {{#if data.TestPagination.NextPage}}
                                         <a href="?Tpage={{data.TestPagination.NextPage}}"><button class="btn-wide btn btn-info">Next</button></a>
+                                    {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">Competition
+                                           <td class="text-right">
+                                                     </td>
+                                        <div class="btn-actions-pane-right">                                         
+                                             <a href="{{data.Course._id}}/competition"><button type="button" id="PopoverCustomT-1" class="btn btn-success btn-sm">Add Competition</button> </a>                                           
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                            <thead>
+
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Name</th>
+                                                <th class="text-center">Price(&#8358)</th>
+                                                <th class="text-center">Duration (In Minutes)</th>
+                                                <th class="text-center">Questions</th>                                         
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                            </thead>
+
+
+
+                                            <tbody>
+                                        {{#each data.Competitions as |item i|}}
+                                            <tr id="/{{item._id}}/">
+                                                <td class="text-center text-muted">#{{index i }}</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">{{item.Title}}</div>                                       
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">{{item.Price}}</td>
+                                                <td class="text-center">{{item.DurationInMinutes}}</td>
+                                                <td class="text-center">{{item.NumberOfQuestions}}</td>
+                                                <td class="text-center">
+                                                    {{#IfEqual item.Stage 1}}
+                                                    <div class="badge badge-success">Registration</div>                                                    
+                                                    {{else}}
+                                                    {{#IfEqual item.Stage 2}}
+                                                    <div class="badge badge-success">Started</div>  
+                                                    {{else}}
+                                                    <div class="badge badge-warning">Ended</div>
+                                                    {{/IfEqual}}
+                                                    
+                                                    {{/IfEqual}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="/competition/{{item._id}}"> <button type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Details</button></a>
+                                                    <a href="/competition/{{item._id}}"> <button type="button" id="PopoverCustomT-1" class="btn btn-primary btn-sm">Edit</button></a>
+                                                    <button onclick="DeleteCompetition(/{{item._id}}/)" class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> </i></button>
+                                                </td>
+                                            </tr>
+
+                                            
+
+                                        {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-block text-center card-footer">
+                                    {{#if data.CompetitionPagination.PrevPage}}
+                                        <a href="?Cpage={{data.CompetitionPagination.PrevPage}}"><button class="btn-wide btn btn-info">Prev</button></a>                                      
+                                    {{/if}}
+                                    {{#if data.CompetitionPagination.NextPage}}
+                                        <a href="?Cpage={{data.CompetitionPagination.NextPage}}"><button class="btn-wide btn btn-info">Next</button></a>
                                     {{/if}}
                                     </div>
                                 </div>

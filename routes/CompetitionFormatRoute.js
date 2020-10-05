@@ -4,6 +4,7 @@ const {Logger} = require("../utility/Logger");
 const CompetitionFormatController = require("./controllers/CompetitionController");
 const AttemptController = require("./controllers/AttemptsController");
 const Paystack = require("../utility/Paystack");
+const ResponseManager = require('../utility/ResponseManager');
 
 
 
@@ -50,6 +51,13 @@ Router.get("/callback",async(req,res)=>{
         }   
     })
 })
+
+
+Router.delete("/:compId/delete",async(req,res)=>{
+    var result = await CompetitionFormatController.deleteCompetition(req,res);
+    ResponseManager(req,res,result)
+})
+
 
 
 function generateCode(digits) {  

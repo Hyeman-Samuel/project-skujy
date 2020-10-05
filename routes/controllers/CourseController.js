@@ -5,6 +5,7 @@ const {Logger} = require("../../utility/Logger");
 const {paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
 const TestFormatController=require("../controllers/TestFormatController");
+const CompetitionController = require("../controllers/CompetitionController");
 
 async function createCourse(req,res) {       
     try{
@@ -13,11 +14,11 @@ async function createCourse(req,res) {
     return {message:"Document(s) Created",code:1, data:course};
     }catch(err){
       Logger.error(err.message,err)
-     return {message:err,code:-1} 
+    return {message:err,code:-1} 
       }
- }
+}
 
- async function AddQuestionToCourse(req,res) { 
+async function AddQuestionToCourse(req,res) { 
     const question = await QuestionController.createQuestion(req,res)
     if(question.code == -1){
       return question
@@ -35,10 +36,10 @@ async function createCourse(req,res) {
       Logger.error(err.message,err)
       return {message:err,code:-1,data:course} 
     }
- }
+}
 
 
- async function AddTestToCourse(req,res){
+async function AddTestToCourse(req,res){
   const test = await TestFormatController.createTestFormat(req,res);
   if(test.code == -1){
     return test    
@@ -51,48 +52,62 @@ async function createCourse(req,res) {
   return {message:"Test Created",code:1,data:course}; 
   }catch(err){
     Logger.error(err.message,err)
-   return {message:err,code:-1} 
+  return {message:err,code:-1} 
     }
+}
 
- }
+async function AddCompetitionToCourse(req,res){
+  const competition = await CompetitionController.createCompetitionFormat(req,res)
+  if(competition.code == -1){
+    return competition   
+  }
+  var course = competition.data.course
+  course.Competitions.push(competition.data.competition._id)
+  try{   
+  await course.save();
+  return {message:"Test Created",code:1,data:course}; 
+  }catch(err){
+    Logger.error(err.message,err)
+  return {message:err,code:-1} 
+    }
+}
 
- async function getTests(req,res){
-   try { 
-     const tests = await TestFormat.find({"Course":req.params.id}).lean()
-   if(tests != null){
+async function getTests(req,res){
+  try { 
+    const tests = await TestFormat.find({"Course":req.params.id}).lean()
+  if(tests != null){
     return {message:"Document(s) Found",code:1, data:tests};
     }else{return {message:"Not Found",code:0}} 
-     
-   } catch (err) {
+    } catch (err) {
     Logger.error(err.message,err)
     return {message:err,code:-1}
-   } 
+  } 
   }
 
- async function getCourses(req,res) { 
+async function getCourses(req,res) { 
     const CourseCollection=await Course.find().populate(["Questions","Tests"]).lean()
     var paginationObj = paginateArray(req.query.page,CourseCollection,13)
     var traverser = paginationObj.ArrayTraverser
     var Courses = CourseCollection.slice(traverser.start,traverser.end);
     if(CourseCollection.length == 0)return ({message:"No Courses",code:0});
     return {message:"Document(s) Found",code:1, data:{"Courses":Courses,"Pagination":paginationObj}};
- }
+}
 
- async function getOnlyCourseById(req,res){
- try{const course = await Course.findById(req.params.id).lean()
+async function getOnlyCourseById(req,res){
+try{const course = await Course.findById(req.params.id).lean()
   if(course != null){
     return {message:"Found",code:1,data:course}
   }
   return {message:"Not Found",code:0}
- }catch (err){
+}catch (err){
   Logger.error(err.message,err)
   return {message:err,code:-1}
- }
- }
+}
+}
 
- async function getById(req,res){
-   try {
-    const course = await Course.findById(req.params.id).populate(["Questions","Tests","Questions.Options"]).lean()
+async function getById(req,res){
+  try {
+    const course = await Course.findById(req.params.id).populate(["Questions","Tests","Questions.Options","Competitions"]).lean()
     
     if(!Array.isArray(course.Questions) || !Array.isArray(course.Tests)){
       return {message:"Error",code:-1}
@@ -103,18 +118,23 @@ async function createCourse(req,res) {
     var TestpaginationObj = paginateArray(req.query.Tpage,course.Tests,13)
     var Testtraverser = TestpaginationObj.ArrayTraverser
     var Tests = course.Tests.slice(Testtraverser.start,Testtraverser.end);
+    var CompetitionpaginationObj = paginateArray(req.query.Cpage,course.Competitions,13)
+    var Competitiontraverser = CompetitionpaginationObj.ArrayTraverser
+    var Competitions = course.Competitions.slice(Competitiontraverser.start,Competitiontraverser.end);
     if (course != null){
       return {message:"Document(s) Found",code:1, data:{"Course":course,
                                                         "TestPagination":TestpaginationObj,
                                                         "Tests":Tests,
                                                         "QuestionPagination":QuestionpaginationObj,
-                                                        "Questions":Questions}};
+                                                        "Questions":Questions,
+                                                        "CompetitionPagination":CompetitionpaginationObj,
+                                                        "Competitions":Competitions}};
     }
-   else {return {message:"Not Found",code:0}}    
-   } catch (err) {
+  else {return {message:"Not Found",code:0}}    
+  } catch (err) {
     Logger.error(err.message,err)
     return {message:err,code:-1}
-   }
+  }
   
   }
 
@@ -146,13 +166,14 @@ async function createCourse(req,res) {
 
 
 module.exports = {
-     createCourse,
-     getCourses,
+    createCourse,
+    getCourses,
     updateCourse,
     deleteCourse,
     getById,
     getTests,
     AddQuestionToCourse,
     AddTestToCourse,
+    AddCompetitionToCourse,
     getOnlyCourseById
 }

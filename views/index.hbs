@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Skuji</title>
+    <title>Skujy</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -33,7 +33,7 @@
       
       <div class="container-fluid">
         <div class="d-flex align-items-center">
-          <div class="site-logo mr-auto w-25"><a>Skuji</a></div>
+          <div class="site-logo mr-auto w-25"><a>Skujy</a></div>
 
           <div class="ml-auto w-25">
             <nav class="site-navigation position-relative text-right" role="navigation">
@@ -55,10 +55,14 @@
           <div class="row align-items-center">
             <div class="col-12">
               <div class="row align-items-center">
-                <div class="col-lg-6 mb-4">
+                <div class="col-lg-8 mb-4">
                   <h1  data-aos="fade-up" data-aos-delay="100">Learn From Practicing</h1>
-                  <p class="mb-4"  data-aos="fade-up" data-aos-delay="200">Skuji Projects cbt platform</p>
+                  <p class="mb-4"  data-aos="fade-up" data-aos-delay="200">Skujy Projects cbt platform</p>
                 </div>
+
+
+               
+
 
                 <div class="col-lg-5 ml-auto" data-aos="fade-up" data-aos-delay="500">
                   <form action="/attempt/start" method="post" class="form-box TestForm">
@@ -67,7 +71,7 @@
                 <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
               {{/each}}
             {{/if}}
-                    <h3 class="h4 text-black mb-4">Take Test</h3>
+                    <h3 class="h4 text-black mb-4">Take Practise Test</h3>
                     <div class="form-group">
                       <input type="text" name="Email" class="form-control" placeholder="Email Addresss">
                     </div>
@@ -76,7 +80,7 @@
                         <select name="Test" class="form-control" id="sel1">
                           {{#each tests as |item i|}}
                           <option value="{{item._id}}" > {{item.Course.Title}}-{{item.Title}}</option>
-                           {{/each}}
+                          {{/each}}
                         </select>
                     </div>
                     <div class="form-group">
@@ -85,6 +89,35 @@
                     </div>
                     <div class="form-group">
                       <p data-aos="fade-up" data-aos-delay="300"><button type="submit" class="btn btn-primary py-3 px-5 btn-pill">Take The Test</button></p>
+                    </div>
+                  </form>
+                </div>
+
+
+                <div class="col-lg-6 offset-sm-1 ml-auto" style="padding: 10px;" data-aos="fade-up" data-aos-delay="500">
+                  <form action="/competition/entry" method="post" class="form-box TestForm">
+            {{#if errors }}
+              {{#each errors }}
+                <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+              {{/each}}
+            {{/if}}
+                    <h3 class="h4 text-black mb-4">Pay For Exam</h3>
+                    <div class="form-group">
+                      <input type="text" name="Email" class="form-control" placeholder="Email Addresss">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="FullName" class="form-control" placeholder="Full Name">
+                    </div>
+                  <div class="form-group">
+                        <label for="sel1">Select Exam:</label>
+                        <select name="Competition" class="form-control" id="sel1">
+                          {{#each tests as |item i|}}
+                          <option value="{{item._id}}" > {{item.Course.Title}}- &#8358 {{item.Price}}</option>
+                          {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                      <p data-aos="fade-up" data-aos-delay="300"><button type="submit" class="btn btn-success py-3 px-5 btn-pill">Pay</button></p>
                     </div>
                   </form>
                 </div>

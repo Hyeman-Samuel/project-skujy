@@ -18,6 +18,7 @@ const attempt = require("./routes/AttemptRoute")
 const home = require("./routes/HomeRoute")
 const admin = require("./routes/AdminRoute")
 const auth = require("./routes/AuthRoute")
+const competition = require("./routes/CompetitionFormatRoute")
 
 if (process.env.NODE_ENV !== 'production') {
  Logger.SetConsoleLogger()
@@ -48,6 +49,7 @@ app.use("/test",sessionCheck,testFormat);
 app.use("/attempt",attempt);
 app.use("/admin",sessionCheck,admin);
 app.use("/auth",auth)
+app.use("/competition",competition)
 
 app.get('/',home)
 

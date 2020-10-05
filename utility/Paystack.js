@@ -1,7 +1,7 @@
 const request =require("request");
 const config= require("config");
 const paystack = (req) => {
-    const MySecretKey = ""//config.get("PayStackSecretKey");
+    const MySecretKey = "sk_test_66884bd20ac9781e2ee8fd97f2a95c9fc563b195"//config.get("PayStackSecretKey");
     const initializePayment = (form, mycallback) => {
         const option = {
             url : 'https://api.paystack.co/transaction/initialize',
@@ -9,8 +9,8 @@ const paystack = (req) => {
                 Authorization:"Bearer "+MySecretKey,
                 'content-type': 'application/json',
                 'cache-control': 'no-cache'
-           },
-           form
+        },
+        form
         }
         const callback = (error, response, body)=>{
             return mycallback(error, body);
@@ -25,7 +25,7 @@ const paystack = (req) => {
                 Authorization:"Bearer "+ MySecretKey,
                 'content-type': 'application/json',
                 'cache-control': 'no-cache'
-           }
+        }
         }
         const callback = (error, response, body)=>{
             return mycallback(error, body);
@@ -34,4 +34,4 @@ const paystack = (req) => {
     }
     return {initializePayment, verifyPayment};
 }
-module.exports = paystack
+module.exports = paystack()

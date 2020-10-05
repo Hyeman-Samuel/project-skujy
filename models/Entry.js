@@ -9,7 +9,8 @@ const EntrySchema=new Mongoose.Schema({
     "AmountPaid":{type:Number,default:0},
     "ExamNumber":{type:Number,required:true},
     "FullName":{type:String,required:true},
-    "Attempt":{type:Mongoose.Schema.Types.ObjectId,ref:'Attempt'}
+    "Attempt":{type:Mongoose.Schema.Types.ObjectId,ref:'Attempt'},
+    "Competition":{type:Mongoose.Schema.Types.ObjectId,ref:'Competition'}
 })
 
 

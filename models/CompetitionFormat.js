@@ -7,12 +7,12 @@ const CompetitionFormatSchema=new Mongoose.Schema({
     "Title":{type:String,required:true},
     "NumberOfQuestions":{type:Number,required:true},
     "DurationInMinutes":{type:Number,required:true},
+    "Price":{type:Number,required:true},
     "Course":{type:Mongoose.Schema.Types.ObjectId,ref:"Course",required:true},
     "Trials":{type:Number,default:1},
     "QuestionSelection":{type:Number,default:1},
     "SelectedQuestions":[{type:Mongoose.Schema.Types.ObjectId,ref:"Question"}],
-    "Stage":{type:Number,default:1},
-    "Price":{type:Number,default:0},
+    "Stage":{type:Number,default:1},   
     "Registrations":[{type:Mongoose.Schema.Types.ObjectId,ref:"Entry"}]
 })
 ///For QuestionSelection

@@ -5,11 +5,12 @@ const CompetitionFormatController = require("./controllers/CompetitionController
 const AttemptController = require("./controllers/AttemptsController");
 const Paystack = require("../utility/Paystack");
 const ResponseManager = require('../utility/ResponseManager');
+const CompetitionController = require('./controllers/CompetitionController');
 
 
 
 Router.post("/entry", async(req,res)=>{
-const form = CompetitionFormatController.MakeEntryPayment(req)
+const form = await CompetitionFormatController.MakeEntryPayment(req)
     Paystack.initializePayment(form,(err,body)=>{
         if(err)return {message:err,code:-1}
         const response = JSON.parse(body);
@@ -27,24 +28,17 @@ const form = CompetitionFormatController.MakeEntryPayment(req)
 
 Router.get("/callback",async(req,res)=>{ 
     const ref = req.query.reference;
-    verifyPayment(ref,(err,body)=>{
+Paystack.verifyPayment(ref,(err,body)=>{
         if(err){
             return {message:err,code:-1};
         }
         const response = JSON.parse(body);
         if(response.status){   
-        async function verify(){
-            var entry = new Entry({
-                "Email":response.data.email,
-                "AmountPaid":response.data.amount,
-                "ExamNumber":generateCode(3),
-                "FullName":response.data.full_name,
-                "Competition":response.data.metadata.CompetitionId
-            })
-                await entry.save()   
-                return entry            
-                }            
-            res.send(verify());
+        async function verify(){            
+            await CompetitionController.AddEntry(response)           
+                }  
+            verify()          
+            res.redirect("/");
         }else{
             Logger.error("error with paystack",response)
             return {message:"UnSuccessful",code:-1}
@@ -53,6 +47,41 @@ Router.get("/callback",async(req,res)=>{
 })
 
 
+Router.get("/:compId", async(req,res)=>{
+    var result = await CompetitionFormatController.getById(req,res);
+    if(result.code == 1){
+        res.render("layout/admin/competition_detail.hbs",{competition:result.data})
+    }else{     
+        res.sendStatus(500) 
+    }
+})
+
+Router.get("/:compId/startregistration", async(req,res)=>{
+    var result = await CompetitionFormatController.StartRegisterStage(req,res)
+    if(result.code == 1){
+        res.redirect(`competition/${req.params.compId}`)
+    }else{     
+        res.sendStatus(500) 
+    }
+})
+
+Router.get("/:compId/startexam", async(req,res)=>{
+    var result = await CompetitionFormatController.StartRegisterStage(req,res)
+    if(result.code == 1){
+        res.redirect(`competition/${req.params.compId}`)
+    }else{     
+        res.sendStatus(500) 
+    }
+})
+Router.get("/:compId/endexam", async(req,res)=>{
+    var result = await CompetitionFormatController.EndStage(req,res)
+    if(result.code == 1){
+        res.redirect(`competition/${req.params.compId}`)
+    }else{     
+        res.sendStatus(500) 
+    }
+})
+
 Router.delete("/:compId/delete",async(req,res)=>{
     var result = await CompetitionFormatController.deleteCompetition(req,res);
     ResponseManager(req,res,result)
@@ -60,13 +89,6 @@ Router.delete("/:compId/delete",async(req,res)=>{
 
 
 
-function generateCode(digits) {  
-    var numbers = '0123456789'; 
-    let OTP = ''; 
-    for (let i = 0; i < digits; i++ ) { 
-        OTP += numbers[Math.floor(Math.random() * 10)]; 
-    } 
-    return OTP; 
-}
+
 
 module.exports = Router  

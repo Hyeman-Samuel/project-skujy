@@ -1,7 +1,7 @@
 const {CompetitionFormat,CompetitionStage,QuestionSelectionType} = require("../../models/CompetitionFormat");
 const {Course} = require("../../models/Course");
 const {Attempt}= require("../../models/Attempt");
-const {Entry}=require("../../models/Entry")
+const {Entry}= require("../../models/Entry")
 const {Logger} = require("../../utility/Logger");
 const {paginateArray} = require("../../utility/Pagination");
 
@@ -63,14 +63,14 @@ async function getAllCompetition(obj){
 
 async function getById(req,res){
     try {
-        const competition = await CompetitionFormat.findById(req.params.compId).populate(["Course","SelectedQuestions"]).lean()
+        const competition = await CompetitionFormat.findById(req.params.compId).populate(["Course","SelectedQuestions","Registrations"]).lean()
         var paginationObj = paginateArray(req.query.Qpage,competition.SelectedQuestions,13)
         var traverser = paginationObj.ArrayTraverser
         const Questions = competition.SelectedQuestions.slice(traverser.start,traverser.end)
         if(competition == null){
             return {message:"Test(s) Not Found",code:0, };    
         }
-        return {message:"Test(s) Found",code:1, data:{"Competition":competition,"Questions":Questions,"QuestionPagination":paginationObj} }; 
+        return {message:"Test(s) Found",code:1, data:{"Competition":competition,"Questions":Questions,"QuestionPagination":paginationObj}}; 
     } catch (err) {
         Logger.error(err.message,err)
         return {message:err._message,code:-1}
@@ -185,50 +185,52 @@ async function deleteCompetition(req,res) {
 
 
 ////Entry 
-function MakeEntryPayment(req){
+async function MakeEntryPayment(req){
+    var competition = await CompetitionFormat.findById(req.body.Competition).lean()
+    console.log(req.body.FullName)
     const form ={
-        "full_name":`${req.body.FullName}`,
         "email":req.body.Email,
-        "amount":10000000,
+        "amount":competition.Price * 100 ,
         "metadata":{
-            "CompetitionId":"33333"
+            "CompetitionId": req.body.Competition,
+            "FullName":req.body.FullName
         }
     }
 return form
 
 }
 
-async function AddEntry(req) {
+async function AddEntry(response) {
     try {
-    return  verifyPayment(ref,(err,body)=>{
-        if(err){
-            return {message:err,code:-1};
-        }
-        const response = JSON.parse(body);
-        if(response.status){
-            console.log(response)    
-        async function verify(){
-            var entry = new Entry({
-                "Email":response.data.email,
-                "AmountPaid":response.data.amount,
-                "ExamNumber":generateCode(3),
-                "FullName":response.data.full_name,
-                "Competition":response.data.metadata.CompetitionId})
-                await entry.save()   
-                return entry            
-                }            
-                verify();
-        }else{
-            Logger.error("error with paystack",response)
-            return {message:"UnSuccessful",code:-1}
-        }   
-    })
+        console.log(response)
+        var entry = new Entry({
+            "Email":response.data.customer.email,
+            "AmountPaid":(response.data.amount/10),
+            "ExamNumber":generateCode(3),
+            "FullName":response.data.metadata.FullName,
+            "Competition":response.data.metadata.CompetitionId
+        })
+        var competition = await CompetitionFormat.findById(entry.Competition) 
+        if(competition != null){
+            await entry.save()
+            competition.Registrations.push(entry.id)
+            await competition.save()
+        }  
+        
     } catch (err) {
         Logger.error(err.message,err)
         return {message:"UnSuccessful",code:-1}
     }
 }
 
+function generateCode(digits) {  
+    var numbers = '0123456789'; 
+    let OTP = ''; 
+    for (let i = 0; i < digits; i++ ) { 
+        OTP += numbers[Math.floor(Math.random() * 10)]; 
+    } 
+    return OTP; 
+}
 
 
 

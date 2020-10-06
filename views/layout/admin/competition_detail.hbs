@@ -1,0 +1,202 @@
+<div class="row">
+{{#if competition.Competition.Course._id }}
+<a href="/course/{{competition.Course._id}}"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+<span class="glyphicon">&#xe257;</span> Back
+</button>
+</a>
+{{else}}
+<a href="/admin"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+<span class="glyphicon">&#xe257;</span> Back
+</button>
+</a>
+{{/if}}
+</div>
+
+<div class="col-md-8">
+<h2>{{competition.Competition.Title}}</h2>
+<p>{{competition.Competition.CourseTitle}}</p>
+<h3>Price :&#8358 {{competition.Competition.Price}}</h3>
+<div class="row">
+    {{#IfEqual item.Stage 1}} 
+            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Start Exam</button></a>
+            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Close Exam</button></a>                                                 
+                {{else}}
+            {{#IfEqual item.Stage 2}}
+            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Open Registration For Exam</button></a>
+            Nb:Exam cannot be attempted
+            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Close Exam</button></a>  
+                {{else}}
+            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Open Registration For Exam</button></a>
+            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Start Exam</button></a> 
+                {{/IfEqual}}                
+    {{/IfEqual}}
+</div>
+</div>
+<hr>
+<div class="row">
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card mb-3 widget-content">
+                                    <div class="widget-content-outer">
+                                        <div class="widget-content-wrapper">
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">Registrations</div>
+                                                <div class="widget-subheading">Candidates </div>
+                                            </div>
+                                            <div class="widget-content-right">
+                                                <div class="widget-numbers text-warning">{{getCount competition.Competition.Registrations }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{!-- <div class="col-md-6 col-xl-4">
+                                <div class="card mb-3 widget-content">
+                                    <div class="widget-content-outer">
+                                        <div class="widget-content-wrapper">
+                                            <div class="widget-content-left">
+                                                <div class="widget-heading">People</div>
+                                                <div class="widget-subheading">Emails</div>
+                                            </div>
+                                            <div class="widget-content-right">
+                                                <div class="widget-numbers text-danger">350</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                           --}}
+                        </div>
+                        <hr>
+
+<div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">Candidates
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Email</th>
+                                                <th class="text-center">Score</th>
+                                                <th class="text-center">Submitted</th>
+                                                <th class="text-center">Exam Number</th>
+                                                <th class="text-center">Full Number</th>
+                                                {{!-- <th class="text-center">Actions</th> --}}
+                                            </tr>
+                                            </thead>
+                                    <tbody>
+                                        {{#each competition.Competition.Registrations as |item i| }}
+                                            <tr>
+                                                <td class="text-center text-muted">#{{index i }}</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                        {{item.Email}}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    {{#if item.Attempt.Score}}
+                                                        {{item.Attempt.Score}}
+                                                    {{else}}
+                                                    Not Attempted
+                                                    {{/if}}
+                                                    </td>
+                                                <td class="text-center">
+                                                    {{#if item.Attempt.HasSubmitted}}
+                                                    <div class="badge badge-success">Submitted</div>
+                                                    {{else}}
+                                                    <div class="badge badge-warning">Not Submitted</div>
+                                                    {{/if}}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{item.ExamNumber}}
+                                                    </td>
+                                                <td class="text-center">
+                                                    {{item.FullName}}
+                                                    </td>
+                                            </tr>
+                                            {{/each}}
+                                    </tbody>
+                                        </table>
+                                    </div>
+                                    {{!-- <div class="d-block text-center card-footer">
+                                    {{#if competition.AttemptPagination.PrevPage}}
+                                        <a href="?page={{competition.AttemptPagination.PrevPage}}"><button class="btn-wide btn btn-primary">Prev</button></a>                                      
+                                    {{/if}}
+                                    {{#if competition.AttemptPagination.NextPage}}
+                                        <a href="?page={{competition.AttemptPagination.NextPage}}"><button class="btn-wide btn btn-primary">Next</button></a>
+                                    {{/if}}
+                                    </div> --}}
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    <hr/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header">Questions
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Title</th>
+                                                <th class="text-center">Option</th>
+                                                <th class="text-center">Option</th>
+                                                <th class="text-center">Option</th>
+                                                <th class="text-center">Option</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {{#each competition.Competition.SelectedQuestions as |item i|}}
+                                            <tr id="/{{item._id}}/">
+                                                <td class="text-center text-muted">#{{index i }}</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left flex2">
+                                                                <p>
+                                                                {{item.Title}}   
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                
+                                                {{#each item.Options as |option|}}
+
+                                                {{#if option.IsCorrect}}
+                                                
+                                                <td class="text-center">
+                                                    <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">{{option.Title}}</div>
+                                                                <div class="widget-subheading opacity-7">(Correct)</div>
+                                                    </div>
+                                                </td>
+                                                {{else}}
+                                                <td class="text-center">{{option.Title}} </td>
+                                            {{/if}}
+                                                {{/each}}
+                                            </tr>
+                                        {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-block text-center card-footer">
+                                    {{#if competition.QuestionPagination.PrevPage}}
+                                        <a href="?Qpage={{competition.QuestionPagination.PrevPage}}"><button class="btn-wide btn btn-info">Prev</button></a>                                      
+                                    {{/if}}
+                                    {{#if competition.QuestionPagination.NextPage}}
+                                        <a href="?Qpage={{competition.QuestionPagination.NextPage}}"><button class="btn-wide btn btn-info">Next</button></a>
+                                    {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>

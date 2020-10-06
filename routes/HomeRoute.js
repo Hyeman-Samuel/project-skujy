@@ -11,7 +11,7 @@ Router.get("/admin",async(req,res)=>{
 Router.get("/",async(req,res)=>{ 
 
     var testResult = await TestController.getAllTests({IsClosed:false})
-    var examResult = await CompetitionController.getAllCompetition({Stage:CompetitionStage.Started})
+    var examResult = await CompetitionController.getAllCompetition({Stage:CompetitionStage.Registration})
     if(testResult.code == -1){
         //res.send("error page")
         res.sendStatus(500)

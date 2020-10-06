@@ -118,8 +118,11 @@ async function getById(req,res){
     var TestpaginationObj = paginateArray(req.query.Tpage,course.Tests,13)
     var Testtraverser = TestpaginationObj.ArrayTraverser
     var Tests = course.Tests.slice(Testtraverser.start,Testtraverser.end);
+    if(course.Competitions == undefined){
+      course.Competitions = []
+    }
     var CompetitionpaginationObj = paginateArray(req.query.Cpage,course.Competitions,13)
-    var Competitiontraverser = CompetitionpaginationObj.ArrayTraverser
+    var Competitiontraverser = CompetitionpaginationObj.ArrayTraverser   
     var Competitions = course.Competitions.slice(Competitiontraverser.start,Competitiontraverser.end);
     if (course != null){
       return {message:"Document(s) Found",code:1, data:{"Course":course,

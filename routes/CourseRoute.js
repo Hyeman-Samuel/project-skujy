@@ -2,6 +2,7 @@ const express = require('express');
 const Router = express.Router();
 const CourseController = require("./controllers/CourseController");
 const QuestionController = require("./controllers/QuestionController");
+const CompetitionController = require("./controllers/CompetitionController");
 const {Course} = require("../models/Course");
 const TestController = require("./controllers/TestFormatController")
 const ResponseManager = require('../utility/ResponseManager');
@@ -268,16 +269,49 @@ Router.post("/:id/competition",validateCompetition(),async(req,res)=>{
     }
 })
 
-// Router.get("/:id/test/:testId/edit",async(req,res)=>{
-//     var CourseId = req.params.id
-//     var result = await TestController.getById(req,res)
-//     if(CourseId != null && result.code == 1){
-//         res.render("layout/admin/forms/edit_question_form.hbs",{data:{"CourseId":CourseId,"Test":result.data},"errors":req.session.errors})
-//         req.session.errors = null;
-//     }else{
-//         res.send("error page");  
-//     }
-// })
+
+
+
+Router.get("/:id/competition/:compId/edit",async(req,res)=>{
+    var CourseId = req.params.id
+    
+    if(CourseId != null){
+        var result  =  await CompetitionController.getById(req,res)
+        var course = await Course.findById(CourseId).populate("Questions").lean()
+        var questions = course.Questions
+        res.render("layout/admin/forms/edit_competition_form.hbs",{"CourseId":CourseId,"errors":req.session.errors,"Questions":questions,"competition":result.data.Competition})
+        req.session.errors = null;
+    }else{
+        res.sendStatus(500) 
+    }
+})
+
+
+
+
+Router.post("/:id/competition/:compId/edit",validateCompetition(),async(req,res)=>{
+    var errors = validationResult(req).array()
+    if(errors.length != 0){
+        req.session.errors = errors;
+        res.redirect(`/course/${req.params.id}/competition/${req.params.compId}/edit`);
+        return
+    }
+    var result = await CompetitionController.editCompetition(req,res)
+
+    if(result.code == -1){
+        var error = {msg:result.message,param:"string"}
+        req.session.errors =[error]
+        res.redirect(`/course/${req.params.id}/competition/${req.params.compId}/edit`)
+        return
+    }
+
+    if(result.code == 1){
+        res.redirect(`/course/${req.params.id}`)
+    }else{
+        res.sendStatus(500)
+    }
+})
+
 
 
 function  validateTest(){

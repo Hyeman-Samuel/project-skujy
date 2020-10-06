@@ -63,11 +63,11 @@ async function getAllCompetition(obj){
 
 async function getById(req,res){
     try {
-        const competition = await CompetitionFormat.findById(req.params.id).populate(["Course","SelectedQuestions"]).lean()
+        const competition = await CompetitionFormat.findById(req.params.compId).populate(["Course","SelectedQuestions"]).lean()
         var paginationObj = paginateArray(req.query.Qpage,competition.SelectedQuestions,13)
         var traverser = paginationObj.ArrayTraverser
-        const Questions = testFormat.SelectedQuestions.slice(traverser.start,traverser.end)
-        if(testFormat == null){
+        const Questions = competition.SelectedQuestions.slice(traverser.start,traverser.end)
+        if(competition == null){
             return {message:"Test(s) Not Found",code:0, };    
         }
         return {message:"Test(s) Found",code:1, data:{"Competition":competition,"Questions":Questions,"QuestionPagination":paginationObj} }; 
@@ -75,6 +75,42 @@ async function getById(req,res){
         Logger.error(err.message,err)
         return {message:err._message,code:-1}
     }    
+}
+
+
+async function editCompetition(req,res){
+    try {
+        const course = await Course.findById(req.params.id).populate(["Questions","Competitions"]);
+        if(course == null){
+            return {message:"Course Not Found",code:0}
+        }
+        if(req.body.SelectedQuestions != ""){
+            req.body.SelectedQuestions = JSON.parse(req.body.SelectedQuestions)
+        }
+
+            switch (req.body.QuestionSelection) {
+                case QuestionSelectionType.AllQuestions:
+                if(course.Questions.length < req.body.NumberOfQuestions){
+                    return {message:"Not enough Questions ",code:-1}
+                }    
+                    break;
+                case QuestionSelectionType.SelectedQuestions:
+                if(req.body.SelectedQuestions < req.body.NumberOfQuestions){
+                    return {message:"Not enough Questions ",code:-1}
+                }              
+                    break;
+                default:
+                    if(course.Questions.length < req.body.NumberOfQuestions){
+                        return {message:"Not enough Questions ",code:-1}
+                    }
+                    break;
+            }
+        await CompetitionFormat.findByIdAndUpdate(req.params.compId,req.body,{new:true});
+        return {message:"Sent",code:1};
+    }catch (err){
+        Logger.error(err.message,err)
+        return {message:err,code:-1}
+    }
 }
 
 
@@ -206,5 +242,6 @@ module.exports = {
     getById,
     getAttempts,
     MakeEntryPayment,
-    AddEntry
+    AddEntry,
+    editCompetition
 }

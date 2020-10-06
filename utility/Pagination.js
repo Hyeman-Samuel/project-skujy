@@ -5,10 +5,15 @@ async function paginateModel(Page,Model,NumberPerPage){
 }
 
 function  paginateArray(Page,arrayOfItems,NumberPerPage){
-  const ArrayCount=arrayOfItems.length;
+  var ArrayCount
+  if(arrayOfItems == undefined){
+    ArrayCount = 0
+  }else{
+    ArrayCount=arrayOfItems.length;
+}
   if((!Page)||(Page<=0)){Page=1;}
-  if(Page >= arrayOfItems.length){
-    Page = arrayOfItems.length
+  if(Page >= ArrayCount){
+    Page = ArrayCount
   }
  return pagination(Page,ArrayCount,NumberPerPage);
 }

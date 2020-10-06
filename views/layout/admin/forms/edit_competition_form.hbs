@@ -1,0 +1,211 @@
+<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+
+
+<div class="row">
+<a href="/course/{{CourseId}}"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+<span class="glyphicon">&#xe257;</span> Back
+</button>
+</a>
+</div>
+<hr>
+  {{#if errors }}
+      {{# each errors }}
+        <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+      {{/each}}
+{{/if}}
+<form class="form-horizontal" id="Form" method="POST" action="/course/{{CourseId}}/competition/{{competition._id}}/edit">
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="email">Exam Name:</label>
+    <div class="col-sm-10">
+      <input type="text" name="Title" value="{{competition.Title}}" class="form-control" id="email" placeholder="Enter Exam Title">
+    </div>
+  </div>
+
+
+<div class="form-group">
+    <label class="control-label col-sm-2" for="email">Number of Questions</label>
+    <div class="col-sm-10">
+      <input type="number" name="NumberOfQuestions" value="{{competition.NumberOfQuestions}}" class="form-control" id="QuestionNumber" placeholder="Enter Number">
+    </div>
+  </div>
+
+
+<div class="form-group">
+    <label class="control-label col-sm-2" for="email">Duration(In Minutes)</label>
+    <div class="col-sm-10">
+      <input type="number" name="DurationInMinutes" value="{{competition.DurationInMinutes}}" class="form-control"  placeholder="Enter Duration">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="email">Price(&#8358)</label>
+    <div class="col-sm-10">
+      <input type="number" name="Price" value="{{competition.Price}}" class="form-control" value="1000"  placeholder="Enter Digits">
+    </div>
+  </div> 
+
+    <div class="form-group">
+        <label for="control-label col-sm-2">Question Selection:</label>
+        <div class="col-sm-10">
+        <select class="form-control" onchange="HandleSelectChange(this.value)" name="QuestionSelection" id="questionsSelection" id="sel1">
+            {{#IfEqual competition.QuestionSelection 1}}
+            <option selected="true" value="1" >All Questions</option>
+            {{else}}
+            <option value="1" >All Questions</option>
+            {{/IfEqual}}
+            {{#IfEqual competition.QuestionSelection 2}}
+            <option selected="true" value="2" >Selected Questions</option>
+            {{else}}
+            <option value="2" >Selected Questions</option>
+            {{/IfEqual}}
+            
+        </select>
+        </div>
+        </div> 
+
+<hr/>
+{{!--PICK QUESTIONS --}}
+                        <div id="questions" class="row">
+                            <div class="col-md-12">
+                                <div class="main-card mb-3 card">
+                                    <div class="card-header"> Questions
+                                    <td class="text-right">
+                                        <div class="btn-actions-pane-right">
+                                        {{!-- <button type="button" id="button" class="btn btn-success btn-sm">Select All </button>                                                                                   --}}
+                                        </div>
+                                    </td>
+                                    </div>
+                                    <div class="table-responsive">
+
+
+
+                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover" 
+                                            id="table"  
+                                            data-show-header="true" 
+                                            data-pagination="true"
+                                            data-id-field="name"
+                                            data-search="true"
+                                            data-show-toggle="true"
+                                            data-page-list="[5, 10, 25, 50, 100, ALL]"
+                                            data-page-size="5">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center" data-checkbox="true" data-formatter="checkBoxFormatter"></th>
+                                                <th data-field="Title">Question</th>
+                                                <th data-field="Option0" class="text-center">Option 1</th>
+                                                <th data-field="Option1" class="text-center">Option 2</th>
+                                                <th data-field="Option2" class="text-center">Option 3</th>
+                                                <th data-field="Option3" class="text-center">Option 4</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            
+                                            {{!-- <tr>
+                                                <td class="text-center text-muted"><input type="checkbox"></td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">John Doe</div>                                       
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr> --}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" id="SelectedQuestions" name="SelectedQuestions" hidden="true"/>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+  </div>
+</form>
+
+<span hidden="true" id="SelectedQuestionBank">[{{#each competition.SelectedQuestions as |question|}},{"Id":"{{question._id}}"}{{/each}}]</span>
+<span hidden="true" id="QuestionBank"> [{{#each Questions as |question|}},{"Title":"{{question.Title}}"{{#each question.Options as |option i|}},"Option{{i}}":"{{option.Title}}"{{/each}},"Id":"{{question._id}}" }{{/each}}]</span>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script>
+document.getElementById("Form").onsubmit = function(e){
+  e.preventDefault()
+  var numberOfQuestions = document.getElementById("QuestionNumber").value
+  var selectedQuestions =JSON.parse(JSON.stringify($('#table').bootstrapTable('getSelections')))
+  var selectQuestionType = document.getElementById("questionsSelection").value 
+  if(selectQuestionType == 2 && (selectedQuestions.length < numberOfQuestions)){
+        swal({
+          text:"Questions Selected Not Enough"
+        });
+     return
+  }else{
+    const selectedQuestionsArray = Object.keys(selectedQuestions).map(key => [key, selectedQuestions[key]]);
+    const arrayOfSelectedIds = []
+    selectedQuestionsArray.forEach((value)=>{
+     arrayOfSelectedIds.push(value[1].Id)
+    })
+     document.getElementById("SelectedQuestions").value = JSON.stringify(arrayOfSelectedIds);
+    document.getElementById("Form").submit()
+  }  
+}
+</script>
+<script>
+
+  var QuestionsInTextFormat = document.getElementById("QuestionBank").innerText
+  var QuestionsInString ="["+QuestionsInTextFormat.substr(3,(QuestionsInTextFormat.length-1)).toString()
+  var data = JSON.parse(QuestionsInString)
+  $(function () {
+    $('#table').bootstrapTable({
+    data: data
+    });
+});
+
+
+ var $button = $('#button')
+
+  $(function() {
+    $button.click(function () {
+      alert('getSelections: ' + JSON.stringify($('#table').bootstrapTable('getSelections')))
+    })
+  })
+HandleSelectChange(document.getElementById("questionsSelection").value)
+
+function HandleSelectChange(value){
+    if(value == 1){
+    document.getElementById("questions").setAttribute("hidden","true")
+    }else if(value ==2){
+    document.getElementById("questions").removeAttribute("hidden")
+    }
+}
+
+</script>
+
+<script>
+var SelectedQuestionsInTextFormat = document.getElementById("SelectedQuestionBank").innerText
+    var SelectedQuestionsInString ="[{"+SelectedQuestionsInTextFormat.substr(3,(SelectedQuestionsInTextFormat.length-1)).toString()
+    var Selectedata = JSON.parse(SelectedQuestionsInString)
+function checkBoxFormatter(value,row,index){
+
+var isChecked=false ;   
+if(Array.isArray(Selectedata)){
+    Selectedata.forEach((item)=>{
+        if(row.Id == item.Id){
+    isChecked = true
+    }
+    })
+}
+    if(isChecked){
+        return{checked:true}
+        }else{
+        return{checked:false}
+        }
+        return value
+}
+
+</script>

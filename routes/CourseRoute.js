@@ -2,6 +2,7 @@ const express = require('express');
 const Router = express.Router();
 const CourseController = require("./controllers/CourseController");
 const QuestionController = require("./controllers/QuestionController");
+const {Course} = require("../models/Course");
 const TestController = require("./controllers/TestFormatController")
 const ResponseManager = require('../utility/ResponseManager');
 const { check, validationResult, body} = require('express-validator');
@@ -189,8 +190,11 @@ Router.post("/:id/question/:questionId/edit",validateQuestion(),async(req,res)=>
 
 Router.get("/:id/test",async(req,res)=>{
     var CourseId = req.params.id
+    
     if(CourseId != null){
-        res.render("layout/admin/forms/test_form.hbs",{"CourseId":CourseId,"errors":req.session.errors})
+        var course = await Course.findById(CourseId).populate("Questions").lean()
+        var questions = course.Questions
+        res.render("layout/admin/forms/test_form.hbs",{"CourseId":CourseId,"errors":req.session.errors,"Questions":questions})
         req.session.errors = null;
     }else{
         res.sendStatus(500)
@@ -221,7 +225,6 @@ Router.post("/:id/addtest",validateTest(),async(req,res)=>{
         res.redirect(`/course/${result.data.id}`)
     }else{
         res.sendStatus(500)
-        //res.send("error page"+result.message);  
     }
 })
 

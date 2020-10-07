@@ -2,6 +2,7 @@ const { Users } = require("../models/User");
 const Bcrypt = require("bcryptjs");
 const config= require("config");
 const jwt = require("jsonwebtoken");
+const {Logger} = require("../utility/Logger")
 
 // config.get("AdminUserEmail")await Bcrypt.hash(config.get("AdminUserPassword"), 10)
 var seeder = async (req, res, next) => {
@@ -14,8 +15,9 @@ var seeder = async (req, res, next) => {
       });
       try {
        await SeededUser.save();
-      } catch {
+      } catch(err) {
         ////SeriousProblem
+        Logger.error("Failed to seed user",err)
         res.sendStatus(403)
       }
     }

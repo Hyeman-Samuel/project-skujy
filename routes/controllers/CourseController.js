@@ -1,6 +1,7 @@
 const {Course,ValidateCourse} = require("../../models/Course");
 const {TestFormat} = require("../../models/TestFormat");
 const {Question} = require("../../models/Question");
+const {Logger} = require("../../utility/Logger");
 const {paginateArray} = require("../../utility/Pagination");
 const QuestionController = require("../controllers/QuestionController");
 const TestFormatController=require("../controllers/TestFormatController");
@@ -11,7 +12,7 @@ async function createCourse(req,res) {
     await course.save();
     return {message:"Document(s) Created",code:1, data:course};
     }catch(err){
-     //logger
+      Logger.error(err.message,err)
      return {message:err,code:-1} 
       }
  }
@@ -31,7 +32,8 @@ async function createCourse(req,res) {
     await course.populate(["Questions","Tests"])
     return {message:"Document(s) Added",code:1, data:course};
     }catch(err){
-        return {message:err,code:-1,data:course} 
+      Logger.error(err.message,err)
+      return {message:err,code:-1,data:course} 
     }
  }
 
@@ -48,7 +50,7 @@ async function createCourse(req,res) {
   await course.populate(["Questions","Tests"])
   return {message:"Test Created",code:1,data:course}; 
   }catch(err){
-   //logger
+    Logger.error(err.message,err)
    return {message:err,code:-1} 
     }
 
@@ -62,6 +64,7 @@ async function createCourse(req,res) {
     }else{return {message:"Not Found",code:0}} 
      
    } catch (err) {
+    Logger.error(err.message,err)
     return {message:err,code:-1}
    } 
   }
@@ -82,6 +85,7 @@ async function createCourse(req,res) {
   }
   return {message:"Not Found",code:0}
  }catch (err){
+  Logger.error(err.message,err)
   return {message:err,code:-1}
  }
  }
@@ -108,6 +112,7 @@ async function createCourse(req,res) {
     }
    else {return {message:"Not Found",code:0}}    
    } catch (err) {
+    Logger.error(err.message,err)
     return {message:err,code:-1}
    }
   
@@ -119,6 +124,7 @@ async function createCourse(req,res) {
       const course = await Course.findOneAndUpdate({"_id":req.params.id},req.body,{new:true});
       return {message:"Document(s) Updated",code:1, data:course};
     }catch (err){
+      Logger.error(err.message,err)
       return {message:err,code:-1}
     }
   }
@@ -131,7 +137,7 @@ async function createCourse(req,res) {
     
     return {message:"Document(s) deleted",code:1, data:course};
     }catch(err){
-
+      Logger.error(err.message,err)
     return {message:err,code:-1}
     }
 }

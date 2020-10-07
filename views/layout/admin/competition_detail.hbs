@@ -1,11 +1,15 @@
+<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+
+
 <div class="row">
 {{#if competition.Competition.Course._id }}
-<a href="/course/{{competition.Course._id}}"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+<a href="/course/{{competition.Course._id}}"><button style="margin: 20px;"  type="button" class="btn btn-danger" aria-label="Left Align">
 <span class="glyphicon">&#xe257;</span> Back
 </button>
 </a>
 {{else}}
-<a href="/admin"><button  type="button" class="btn btn-danger" aria-label="Left Align">
+<a href="/admin"><button  type="button" style="margin: 20px;" class="btn btn-danger" aria-label="Left Align">
 <span class="glyphicon">&#xe257;</span> Back
 </button>
 </a>
@@ -16,18 +20,19 @@
 <h2>{{competition.Competition.Title}}</h2>
 <p>{{competition.Competition.CourseTitle}}</p>
 <h3>Price :&#8358 {{competition.Competition.Price}}</h3>
+
 <div class="row">
-    {{#IfEqual item.Stage 1}} 
-            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Start Exam</button></a>
-            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Close Exam</button></a>                                                 
+    {{#IfEqual competition.Competition.Stage 1}} 
+            <a href="/competition/{{../competition.Competition._id}}/start"><button class="btn btn-success" style="margin: 20px;" >Start Exam</button></a>
+            <a href="/competition/{{../competition.Competition._id}}/end"> <button class="btn btn-danger" style="margin: 20px;">Close Exam</button></a>                                                 
                 {{else}}
             {{#IfEqual item.Stage 2}}
-            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Open Registration For Exam</button></a>
+            <a href="/competition/{{../competition.Competition._id}}/registration"> <button class="btn btn-success" style="margin: 20px;">Open Registration For Exam</button></a>
             Nb:Exam cannot be attempted
-            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Close Exam</button></a>  
+            <a href="/competition/{{../competition.Competition._id}}/end"> <button class="btn btn-danger" style="margin: 20px;">Close Exam</button></a>  
                 {{else}}
-            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Open Registration For Exam</button></a>
-            <a href="/test/{{test.testFormat._id}}/open"> <button class="btn btn-success" >Start Exam</button></a> 
+            <a href="/competition/{{../competition.Competition._id}}/registration"> <button class="btn btn-success" style="margin: 20px;">Open Registration For Exam</button></a>
+            <a href="/competition/{{../competition.Competition._id}}/start"> <button class="btn btn-success" style="margin: 20px;">Start Exam</button></a> 
                 {{/IfEqual}}                
     {{/IfEqual}}
 </div>
@@ -73,68 +78,34 @@
                                     <div class="card-header">Candidates
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                                        <table
+                                        class="align-middle mb-0 table table-borderless table-striped table-hover"
+                                        id="RegistrationTable"  
+                                        data-show-header="true" 
+                                        data-pagination="true"
+                                        data-id-field="name"
+                                        data-search="true"
+                                        data-show-toggle="true"
+                                        data-page-list="[5, 10, 25, 50, 100, ALL]"
+                                        data-page-size="5">
                                             <thead>
                                             <tr>
                                                 <th class="text-center">#</th>
-                                                <th>Email</th>
-                                                <th class="text-center">Score</th>
-                                                <th class="text-center">Submitted</th>
-                                                <th class="text-center">Exam Number</th>
-                                                <th class="text-center">Full Number</th>
+                                                <th data-field="Email">Email</th>
+                                                <th data-field="Score" data-sortable="true" class="text-center">Score</th>
+                                                <th data-field="Submitted" class="text-center">Submitted</th>
+                                                <th data-field="ExamNumber" class="text-center">Exam Number</th>
+                                                <th data-field="FullName" class="text-center">Full Name</th>
                                                 {{!-- <th class="text-center">Actions</th> --}}
                                             </tr>
                                             </thead>
                                     <tbody>
-                                        {{#each competition.Competition.Registrations as |item i| }}
-                                            <tr>
-                                                <td class="text-center text-muted">#{{index i }}</td>
-                                                <td>
-                                                    <div class="widget-content p-0">
-                                                        <div class="widget-content-wrapper">
-                                                        {{item.Email}}
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-center">
-                                                    {{#if item.Attempt.Score}}
-                                                        {{item.Attempt.Score}}
-                                                    {{else}}
-                                                    Not Attempted
-                                                    {{/if}}
-                                                    </td>
-                                                <td class="text-center">
-                                                    {{#if item.Attempt.HasSubmitted}}
-                                                    <div class="badge badge-success">Submitted</div>
-                                                    {{else}}
-                                                    <div class="badge badge-warning">Not Submitted</div>
-                                                    {{/if}}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{item.ExamNumber}}
-                                                    </td>
-                                                <td class="text-center">
-                                                    {{item.FullName}}
-                                                    </td>
-                                            </tr>
-                                            {{/each}}
                                     </tbody>
                                         </table>
                                     </div>
-                                    {{!-- <div class="d-block text-center card-footer">
-                                    {{#if competition.AttemptPagination.PrevPage}}
-                                        <a href="?page={{competition.AttemptPagination.PrevPage}}"><button class="btn-wide btn btn-primary">Prev</button></a>                                      
-                                    {{/if}}
-                                    {{#if competition.AttemptPagination.NextPage}}
-                                        <a href="?page={{competition.AttemptPagination.NextPage}}"><button class="btn-wide btn btn-primary">Next</button></a>
-                                    {{/if}}
-                                    </div> --}}
                                 </div>
                             </div>
                         </div>
-
-
-
                     <hr/>
                         <div class="row">
                             <div class="col-md-12">
@@ -200,3 +171,22 @@
                                 </div>
                             </div>
                         </div>
+<span hidden="true" id="RegistrationBank">[{{#each competition.Competition.Registrations as |item i|}},
+                                        {"Email":"{{item.Email}}",
+                                        "Score":"{{#if item.Attempt.Score}}{{item.Attempt.Score}}{{else}}Not Attempted{{/if}}",
+                                        "Submitted":"{{#if item.Attempt.HasSubmitted}}<div class="badge badge-success">Submitted</div>{{else}}<div class="badge badge-warning">Not Submitted</div>{{/if}}",
+                                        "ExamNumber":"{{item.ExamNumber}}",
+                                        "FullName":"{{item.FullName}}" }{{/each}}] </span>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script>
+var dataInTextFormat = document.getElementById("RegistrationBank").innerText
+var dataInString ="["+dataInTextFormat.substr(3,(dataInTextFormat.length-1)).toString()
+var data = JSON.parse(dataInString)
+$(function () {
+    $('#RegistrationTable').bootstrapTable({
+    data: data
+    });
+});
+</script>

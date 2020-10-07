@@ -56,27 +56,27 @@ Router.get("/:compId", async(req,res)=>{
     }
 })
 
-Router.get("/:compId/startregistration", async(req,res)=>{
+Router.get("/:compId/registration", async(req,res)=>{
     var result = await CompetitionFormatController.StartRegisterStage(req,res)
     if(result.code == 1){
-        res.redirect(`competition/${req.params.compId}`)
+        res.redirect(`/competition/${req.params.compId}`)
     }else{     
         res.sendStatus(500) 
     }
 })
 
-Router.get("/:compId/startexam", async(req,res)=>{
-    var result = await CompetitionFormatController.StartRegisterStage(req,res)
+Router.get("/:compId/start", async(req,res)=>{
+    var result = await CompetitionFormatController.StartCompetitionStage(req,res)
     if(result.code == 1){
-        res.redirect(`competition/${req.params.compId}`)
+        res.redirect(`/competition/${req.params.compId}`)
     }else{     
         res.sendStatus(500) 
     }
 })
-Router.get("/:compId/endexam", async(req,res)=>{
+Router.get("/:compId/end", async(req,res)=>{
     var result = await CompetitionFormatController.EndStage(req,res)
     if(result.code == 1){
-        res.redirect(`competition/${req.params.compId}`)
+        res.redirect(`/competition/${req.params.compId}`)
     }else{     
         res.sendStatus(500) 
     }

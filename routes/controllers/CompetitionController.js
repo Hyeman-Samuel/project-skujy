@@ -150,7 +150,7 @@ async function StartCompetitionStage(req,res){
     try { 
     const competition = await CompetitionFormat.findById(req.params.compId);
     competition.Stage = CompetitionStage.Started
-
+        
         await competition.save()
         return {message:"Test Opened",code:1};
     } catch (err) {
@@ -187,7 +187,6 @@ async function deleteCompetition(req,res) {
 ////Entry 
 async function MakeEntryPayment(req){
     var competition = await CompetitionFormat.findById(req.body.Competition).lean()
-    console.log(req.body.FullName)
     const form ={
         "email":req.body.Email,
         "amount":competition.Price * 100 ,

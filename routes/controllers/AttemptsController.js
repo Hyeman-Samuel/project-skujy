@@ -1,6 +1,8 @@
 const {Attempt} = require("../../models/Attempt");
 const {TestFormat,QuestionSelectionType} = require("../../models/TestFormat");
+const {CompetitionFormat,CompetitionStage} = require("../../models/CompetitionFormat");
 const {Course} = require("../../models/Course");
+const {Entry} = require("../../models/Entry");
 const {paginateArray}=require("../../utility/Pagination");
 const Question = require("../../models/Question");
 const {Logger} = require("../../utility/Logger");
@@ -68,6 +70,77 @@ async function createTestAttempt(req,res) {
    
 }
 
+
+async function createExamAttempt(req,res) { 
+
+    const attempt = new Attempt(req.body);
+    try { 
+        const entry = await Entry.findOne({"Email":req.body.Email,"ExamNumber":req.body.ExamNumber,"Competition":req.body.Competition})
+    if (entry == null){
+        return {message:"Not Registered",code:-1}
+    }
+        const competition = await CompetitionFormat.findById(attempt.Competition).populate(["Course"])
+    if(competition == null){
+        return {message:"Test not Found",code:-1}
+    }
+
+    if(req.body.ExamNumber != competition.ExamNumber){
+        return {message:"Access Exam Number Invalid",code:-1}
+    }
+    const attempts = await Attempt.find({"Competition":competition.id,"Email":req.body.Email}).lean()
+    if(attempts.length >= competition.Trials){
+        return {message:"Maximum attempts reached in this test",code:-1}
+    }
+    const course  = await Course.findById(competition.Course).populate(["Questions"])
+    if(course == null){
+        return {message:"course not Found",code:-1}
+    } 
+    
+    if(competition.Stage != CompetitionStage.Started){
+        return {message:"Competition Not Found",code:-1}
+    }  
+    var timeStamp = (new Date()).getTime();
+    var Duration = competition.DurationInMinutes;
+    var DurationInTimeStamp = Duration*1000*60;
+    var StopTime = (new Date(timeStamp + DurationInTimeStamp)).getTime();
+    attempt.StartTime = timeStamp.toString();
+    attempt.StopTime = StopTime.toString();
+    attempt.CourseTitle = course.Title;
+
+    var questions = []
+    switch (competition.QuestionSelection) {
+        case QuestionSelectionType.AllQuestions:
+            questions = getRandomItemsFromArray(course.Questions,competition.NumberOfQuestions);
+            break;
+        case QuestionSelectionType.SelectedQuestions:
+            questions = getRandomItemsFromArray(competition.SelectedQuestions,competition.NumberOfQuestions);
+            break;    
+        default:
+            questions = getRandomItemsFromArray(course.Questions,competition.NumberOfQuestions);
+            break;
+    }
+    
+    questions.forEach((item)=>{
+        const question = {        
+            "question":item
+        }
+        attempt.QuestionsAttempted.push(question)
+    })  
+        await attempt.save()
+        const NewAttempt = await Attempt.findById(attempt.id).populate({
+            path:"QuestionsAttempted.question"
+        })
+        return {message:"Attempt Started",code:1, data:NewAttempt };      
+    } catch (err) {
+        Logger.error(err.message,err)
+        return {message:"Something Went Wrong with the Question(s):"+err+"Check if Your using it properly",code:-1}       
+    }
+   
+}
+
+
+
+
 async function getAttempt(req,res){
         try {
             var attempt = await Attempt.findById(req.params.attemptId).populate({
@@ -77,9 +150,9 @@ async function getAttempt(req,res){
             return {message:"Attempt Not Found",code:0};
             }
             var questionsAttempted = attempt.QuestionsAttempted
-           if (!Array.isArray(questionsAttempted)){
+        if (!Array.isArray(questionsAttempted)){
             return {message:"retry",code:-1}
-           }
+        }
             var paginationObj = paginateArray(req.query.page,questionsAttempted,4)
             var traverser = paginationObj.NumberPerPage*(paginationObj.Page-1)
             var traverserEnd = (traverser+paginationObj.NumberPerPage)

@@ -5,7 +5,7 @@ const {paginateArray}=require("../../utility/Pagination");
 const Question = require("../../models/Question");
 const {Logger} = require("../../utility/Logger");
 
-async function createAttempt(req,res) { 
+async function createTestAttempt(req,res) { 
 
     const attempt = new Attempt(req.body);
     try { 
@@ -202,7 +202,7 @@ function getRandomItemsFromArray(arr, n) {
 
 
 module.exports = {
-    createAttempt,
+    createTestAttempt,
     submitAttempt,
     submitBatchOfAttempts,
     getAttempt,

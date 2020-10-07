@@ -12,7 +12,7 @@ Router.post("/start",validateAttempt(),async(req,res)=>{
         res.redirect("/");
         return
     }
-    var result = await AttemptController.createAttempt(req,res)
+    var result = await AttemptController.createTestAttempt(req,res)
 
     if(result.code == -1){
         var error = {msg:result.message,param:""}
@@ -28,6 +28,14 @@ Router.post("/start",validateAttempt(),async(req,res)=>{
         //res.send("error page");  
     }   
 })
+
+
+
+
+
+
+
+
 
 
 Router.get("/:attemptId/quiz",async(req,res)=>{

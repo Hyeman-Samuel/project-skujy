@@ -2,6 +2,7 @@ const {Question,ValidateQuestion} = require("../../models/Question");
 const {Attempt} = require("../../models/Attempt");
 const {Course} = require("../../models/Course");
 const {TestFormat} = require("../../models/TestFormat");
+const {CompetitionFormat} = require("../../models/CompetitionFormat");
 const {Logger} = require("../../utility/Logger");
 const {paginateArray} = require("../../utility/Pagination");
 const Cloudinary = require("../../utility/Cloudinary")
@@ -103,6 +104,8 @@ async function createQuestion(req,res) {
           const questionCount = course.Questions.length
           const testFormat = await TestFormat.find({"Course":course._id}).lean()
           const testsSelectedIn = await TestFormat.find({"SelectedQuestions":questionId}).lean()
+          const competition = await CompetitionFormat.find({"Course":course._id}).lean()
+          const competitionSelectedIn = await CompetitionFormat.find({"SelectedQuestions":questionId}).lean()
           testFormat.forEach(test => {
             if(questionCount <= test.NumberOfQuestions){
               response = {message:"Not Enough Questions for test(s)",code:-1}
@@ -111,6 +114,16 @@ async function createQuestion(req,res) {
           testsSelectedIn.forEach(test => {
             if(test.SelectedQuestions.length <= test.NumberOfQuestions){
               response = {message:"Not Enough Questions for test(s)",code:-1}
+            }
+          });
+          competition.forEach(exam => {
+            if(questionCount <= exam.NumberOfQuestions){
+              response = {message:"Not Enough Questions for exam(s)",code:-1}
+            }
+          });
+          competitionSelectedIn.forEach(exam => {
+            if(exam.SelectedQuestions.length <= exam.NumberOfQuestions){
+              response = {message:"Not Enough Questions for exam(s)",code:-1}
             }
           });
           return response

@@ -83,8 +83,7 @@ async function createExamAttempt(req,res) {
     if(competition == null){
         return {message:"Test not Found",code:-1}
     }
-
-    if(req.body.ExamNumber != competition.ExamNumber){
+    if(req.body.ExamNumber != entry.ExamNumber){
         return {message:"Access Exam Number Invalid",code:-1}
     }
     const attempts = await Attempt.find({"Competition":competition.id,"Email":req.body.Email}).lean()
@@ -126,7 +125,10 @@ async function createExamAttempt(req,res) {
         }
         attempt.QuestionsAttempted.push(question)
     })  
+        entry.Attempt = attempt.id
         await attempt.save()
+        await entry.save()
+        ///meant to be a transaction
         const NewAttempt = await Attempt.findById(attempt.id).populate({
             path:"QuestionsAttempted.question"
         })
@@ -276,6 +278,7 @@ function getRandomItemsFromArray(arr, n) {
 
 module.exports = {
     createTestAttempt,
+    createExamAttempt,
     submitAttempt,
     submitBatchOfAttempts,
     getAttempt,

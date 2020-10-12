@@ -1,0 +1,167 @@
+    <!--================ Start Registration Area =================-->
+    <div class="section_gap registration_area" id="home">
+    <div class="container">
+        <div class="row align-items-center">
+        <div class="col-lg-5 mobile-hide">
+            <div class="row clock_sec clockdiv" id="clockdiv">
+            <div class="col-lg-12">
+                <h1>Register Now</h1>
+                <p>
+                There is a moment in the life of any aspiring astronomer that
+                it is time to buy that first telescope. It’s exciting to think
+                about setting up your own viewing station.
+            </p>
+            </div>
+            </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+            <div class="register_form">
+            <h3>Take A Free Test</h3>
+            <p>Benchmark your progress</p>
+            {{#if errors }}
+            {{#each errors }}
+                <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+            {{/each}}
+            {{/if}}
+            <form
+                class="form_area"
+                action="/attempt/start" 
+                method="post"
+            >
+                <div class="row">
+                <div class="col-lg-12 form_group">
+                <input type="text" 
+                name="Email" 
+                pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" 
+                required="" class="form-control" placeholder="Email Addresss"
+                        />
+                    <br />
+                    <select name="Test">
+                        {{#each tests as |item i|}}
+                        <option value="{{item._id}}" > {{item.Course.Title}}-{{item.Title}}</option>
+                        {{/each}}
+                    </select>
+                    <br />
+                    <br />
+                    <input type="number" name="TestCode" class="form-control" placeholder="Enter Access Code"
+                    />
+                    <br />
+                    <br />
+                    
+                </div>
+                <div class="col-lg-12 text-center">
+                    <button class="primary-btn">Submit</button>
+                </div>
+                </div>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    <!--================ End Registration Area =================-->
+    <!--================ Start Department Area =================-->
+    <div class="department_area section_gap" id="about">
+    <div class="container">
+        <div class="row align-items-center">
+        <div class="col-lg-6">
+            <div class="dpmt_courses">
+            <div class="row">
+                <!-- single course -->
+                <div
+                class="col-lg-4 col-md-4 col-sm-6 col-12 text-center mt-100"
+                >
+                <div class="single_department">
+                    <div class="dpmt_icon">
+                    <img src="/public/images/dpmt/icon1.png" alt="" />
+                    </div>
+                    <h4>Languages</h4>
+                </div>
+                </div>
+                <!-- single course -->
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12 text-center">
+                <div class="single_department">
+                    <div class="dpmt_icon">
+                    <img src="/public/images/dpmt/icon2.png" alt="" />
+                    </div>
+                    <h4>Business</h4>
+                </div>
+                </div>
+                <!-- single course -->
+                <div
+                class="col-lg-4 col-md-4 col-sm-6 col-12 text-center mt-100"
+                >
+                <div class="single_department">
+                    <div class="dpmt_icon">
+                    <img src="/public/images/dpmt/icon3.png" alt="" />
+                    </div>
+                    <h4>Engineering</h4>
+                  </div>
+                </div>
+                <!-- single course -->
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12 text-center">
+                  <div class="single_department">
+                    <div class="dpmt_icon">
+                      <img src="/public/images/dpmt/icon4.png" alt="" />
+                    </div>
+                    <h4>Software</h4>
+                  </div>
+                </div>
+                <!-- single course -->
+                <div
+                  class="col-lg-4 col-md-4 col-sm-6 col-12 text-center mt--100"
+                >
+                  <div class="single_department">
+                    <div class="dpmt_icon">
+                      <img src="/public/images/dpmt/icon5.png" alt="" />
+                    </div>
+                    <h4>Design</h4>
+                  </div>
+                </div>
+                <!-- single course -->
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12 text-center">
+                  <div class="single_department">
+                    <div class="dpmt_icon">
+                      <img src="/public/images/dpmt/icon6.png" alt="" />
+                    </div>
+                    <h4>Coaching</h4>
+                  </div>
+                </div>
+                <!-- single course -->
+                <div
+                  class="offset-lg-4 col-lg-4 col-md-4 col-sm-6 col-12 text-center mt--100"
+                >
+                  <div class="single_department">
+                    <div class="dpmt_icon">
+                      <img src="/public/images/dpmt/icon7.png" alt="" />
+                    </div>
+                    <h4>Development</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="offset-lg-1 col-lg-5">
+            <div class="dpmt_right">
+              <h1>Over 2500 Courses from 5 Platform</h1>
+              <p>
+                There is a moment in the life of any aspiring astronomer that it
+                is time to buy that first telescope. It’s exciting to think
+                about setting up your own viewing station. In the life of any
+                aspiring astronomer that it is time to buy that first telescope.
+                It’s exciting to think about setting up your own viewing
+                station.
+              </p>
+              <p>
+                It’s exciting to think about setting up your own viewing
+                station. In the life of any aspiring astronomer that it is time
+                to buy that first telescope exciting is time to buy that first.
+              </p>
+              <a href="#" class="primary-btn text-uppercase">Explore Courses</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--================ End Department Area =================-->

@@ -1,5 +1,5 @@
 const session = require('express-session');
-
+var back = require('express-back');
 
 module.exports=function (app){
     app.use(session({
@@ -10,5 +10,6 @@ module.exports=function (app){
             expires: 600000
         }
     }));
+    app.use(back());
         
 }

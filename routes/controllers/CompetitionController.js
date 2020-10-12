@@ -3,6 +3,7 @@ const {Course} = require("../../models/Course");
 const {Attempt}= require("../../models/Attempt");
 const {Entry}= require("../../models/Entry")
 const {Logger} = require("../../utility/Logger");
+const Mailer = require("../../utility/Mailer");
 const {paginateArray} = require("../../utility/Pagination");
 
 
@@ -47,7 +48,7 @@ try{
 
 async function getAllCompetition(obj){
     try {
-        const competition = await CompetitionFormat.find(obj).populate(["Course"]).lean()
+        const competition = await CompetitionFormat.find(obj).populate(["Course","Registrations"]).lean()
         if(competition == null){
             return {message:"Test(s) Not Found",code:0, };    
         }
@@ -60,10 +61,26 @@ async function getAllCompetition(obj){
 }
 
 
+async function getSingleby(obj){
+    try {
+        const competition = await CompetitionFormat.findOne(obj).populate(["Course"]).lean()
+        if(competition == null){
+            return {message:"Test(s) Not Found",code:0, };    
+        }
+        return {message:"Test(s) Found",code:1, data:competition }; 
+        
+    } catch (err) {
+        Logger.error(err.message,err)
+        return {message:err._message,code:-1}
+    }
+}
 
 async function getById(req,res){
     try {
-        const competition = await CompetitionFormat.findById(req.params.compId).populate(["Course","SelectedQuestions","Registrations"]).lean()
+        const competition = await CompetitionFormat.findById(req.params.compId).populate(["Course","Registrations","SelectedQuestions"]).lean()
+        competition.Registrations.forEach(async (entry) => {
+            entry.Attempt = await Attempt.findById(entry.Attempt).lean()
+        });
         var paginationObj = paginateArray(req.query.Qpage,competition.SelectedQuestions,13)
         var traverser = paginationObj.ArrayTraverser
         const Questions = competition.SelectedQuestions.slice(traverser.start,traverser.end)
@@ -201,7 +218,6 @@ return form
 
 async function AddEntry(response) {
     try {
-        console.log(response)
         var entry = new Entry({
             "Email":response.data.customer.email,
             "AmountPaid":(response.data.amount/10),
@@ -214,7 +230,10 @@ async function AddEntry(response) {
             await entry.save()
             competition.Registrations.push(entry.id)
             await competition.save()
+            entry = entry.toJSON()
+            //Mailer.SendTextEmail(entry.Email,RegistrationMessage(entry.ExamNumber),`Registation for ${competition.Title}`)
         }  
+        return {message:"Successful",code:1,data:entry}
         
     } catch (err) {
         Logger.error(err.message,err)
@@ -231,7 +250,9 @@ function generateCode(digits) {
     return OTP; 
 }
 
-
+function RegistrationMessage(ExamNumber){
+return `<p>Thank you for registring. Your Exam Number is <b>${ExamNumber}</b>. DO NOT SHARE THIS INFORMATION AS THIS IS WHAT YOU WILL USE TO TAKE PART IN THE COMPETITION <p>`
+}
 
 module.exports = {
     getAllCompetition,
@@ -244,5 +265,6 @@ module.exports = {
     getAttempts,
     MakeEntryPayment,
     AddEntry,
-    editCompetition
+    editCompetition,
+    getSingleby
 }

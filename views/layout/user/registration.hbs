@@ -1,0 +1,44 @@
+ <!--================ Start Registration Area =================-->
+    <div class="section_gap registration_area" id="home">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 offset-lg-3">
+            <div class="register_form">
+              <h3>Exam Registration</h3>
+              <p> </p>
+              {{#if errors }}
+              {{#each errors }}
+                <p class="alert alert-danger" style="color: black;">{{ this.msg }}</p>
+              {{/each}}
+            {{/if}}
+              <form
+                action="/competition/entry" method="post"
+              >
+                <div class="row">
+                  <div class="col-lg-12 form_group">
+                    <input type="text" name="Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" required="" class="form-control" placeholder="Email Addresss"
+                    />
+                    <br />
+                    <input type="text" name="FullName" class="form-control" placeholder="Full Name"
+                    />
+                    <br />  
+                    <label for="sel1">Pick Exam:</label>                                  
+                    <select name="Competition">
+                          {{#each exams as |item i|}}
+                          <option value="{{item._id}}" > {{item.Title}}- &#8358 {{item.Price}}</option>
+                          {{/each}}
+                        </select>
+                    <br />
+                    <br />                  
+                  </div>
+                  <div class="col-lg-12 text-center">
+                    <button style="border-radius: 5px;" class="btn-success success-btn">Pay</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--================ End Registration Area =================-->

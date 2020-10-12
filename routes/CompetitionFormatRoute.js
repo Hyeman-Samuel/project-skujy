@@ -2,21 +2,56 @@ const express = require('express');
 const Router= express.Router();
 const {Logger} = require("../utility/Logger");
 const CompetitionFormatController = require("./controllers/CompetitionController");
+const {CompetitionFormat} = require("../models/CompetitionFormat")
 const AttemptController = require("./controllers/AttemptsController");
 const Paystack = require("../utility/Paystack");
 const ResponseManager = require('../utility/ResponseManager');
 const CompetitionController = require('./controllers/CompetitionController');
+const { check, validationResult } = require('express-validator');
 
 
+Router.post("/entry",validateRegistration(),async(req,res)=>{
+    var errors = validationResult(req).array()
+    console.log(errors)
+    if(errors.length != 0){
+        req.session.errors = errors;
+        res.redirect("/home/register");
+        return
+    }
 
-Router.post("/entry", async(req,res)=>{
+
+    const competition = await CompetitionFormat.findById(req.body.Competition).populate(["Course","Registrations"]).lean()
+    if(competition == null){
+        var error = {msg:"Competition Not Found",param:""}
+        req.session.errors =[error]
+        res.redirect("/home/register");
+        return
+    }
+    
+    var hasRegistered = false
+    competition.Registrations.forEach(entry => {
+        if(entry.Email === req.body.Email){
+            hasRegistered = true;
+        }
+    });
+
+    if(hasRegistered){
+        var error = {msg:"You Have already registered",param:""}
+        req.session.errors =[error]
+        res.redirect("/home/register");
+        return
+    }
+
 const form = await CompetitionFormatController.MakeEntryPayment(req)
     Paystack.initializePayment(form,(err,body)=>{
         if(err)return {message:err,code:-1}
         const response = JSON.parse(body);
         if(response.status){
             res.redirect(response.data.authorization_url)      
-        }else{res.sendStatus(500)
+        }else{
+        var error = {msg:"Failed to process payment",param:""}
+        req.session.errors =[error]
+        res.redirect("/home/register");
         Logger.error("Paystack fail",response)
             return {message:"UnSuccessful",code:-1}
         }; 
@@ -35,10 +70,15 @@ Paystack.verifyPayment(ref,(err,body)=>{
         const response = JSON.parse(body);
         if(response.status){   
         async function verify(){            
-            await CompetitionController.AddEntry(response)           
-                }  
+        var result = await CompetitionController.AddEntry(response) 
+            if(result.code == 1){          
+                res.render("layout/user/payment_comfirmation.hbs",{"layout":"user/user_layout.hbs","entry":result.data})   
+            }else{
+                Logger.error("error when adding entry",result.message)
+            }
+        }  
             verify()          
-            res.redirect("/");
+            
         }else{
             Logger.error("error with paystack",response)
             return {message:"UnSuccessful",code:-1}
@@ -88,7 +128,15 @@ Router.delete("/:compId/delete",async(req,res)=>{
 })
 
 
-
-
+function validateRegistration(){
+    return [
+        check('Email', 'Email is required')
+        .isEmail(),
+        check('FullName')
+        .not()
+        .isEmpty()
+        .withMessage('Full Name Required')  
+    ]
+}
 
 module.exports = Router  

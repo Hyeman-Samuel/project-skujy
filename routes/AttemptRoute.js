@@ -34,15 +34,15 @@ Router.post("/startexam",validateExamAttempt(),async(req,res)=>{
 
     if(errors.length != 0){
         req.session.errors = errors;
-        res.redirect("/");
+        res.redirect("/home/competition");
         return
     }
-    var result = await AttemptController.createTestAttempt(req,res)
+    var result = await AttemptController.createExamAttempt(req,res)
 
     if(result.code == -1){
         var error = {msg:result.message,param:""}
         req.session.errors =[error]
-        res.redirect("/");
+        res.redirect("/home/competition");
         return
     }
 
@@ -109,7 +109,10 @@ function validateExamAttempt(){
     return [
         check('Email', 'Email is required')
         .isEmail(),
-        check('ExamNumber', 'Exam Number is required')
+        check('ExamNumber')
+        .not()
+        .isEmpty()
+        .withMessage('Exam Number required')  
     ]
 }
 module.exports = Router

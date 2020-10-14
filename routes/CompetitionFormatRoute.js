@@ -12,7 +12,6 @@ const { check, validationResult } = require('express-validator');
 
 Router.post("/entry",validateRegistration(),async(req,res)=>{
     var errors = validationResult(req).array()
-    console.log(errors)
     if(errors.length != 0){
         req.session.errors = errors;
         res.redirect("/home/register");

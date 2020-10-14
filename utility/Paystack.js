@@ -1,7 +1,7 @@
 const request =require("request");
 const config= require("config");
 const paystack = (req) => {
-    const MySecretKey = "sk_test_66884bd20ac9781e2ee8fd97f2a95c9fc563b195"//config.get("PayStackSecretKey");
+    const MySecretKey = config.get("PayStackSecretKey");//
     const initializePayment = (form, mycallback) => {
         const option = {
             url : 'https://api.paystack.co/transaction/initialize',

@@ -3,5 +3,6 @@
   "AdminUserPassword":"AdminUserPassword",
   "CloudName":"CloudName",
   "ApiKey":"ApiKey",
-  "ApiSecret":"ApiSecret"
+  "ApiSecret":"ApiSecret",
+  "PayStackSecretKey":"PayStackSecretKey"
 }

@@ -113,7 +113,11 @@ Router.get("/:id/question",async(req,res)=>{
         //res.send("error page");  
     }
 })
-
+////This Api Route is called when selecting questions for tests/competition
+Router.get("/:id/questions",async(req,res)=>{
+    var result = await CourseController.getQuestions(req,res)
+    ResponseManager(req,res,result);
+})
 
 Router.post("/:id/addquestion",validateQuestion(),async(req,res)=>{
     var errors = validationResult(req).array()

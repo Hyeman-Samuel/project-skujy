@@ -58,6 +58,7 @@
 <hr/>
 {{!--PICK QUESTIONS --}}
                         <div id="questions" class="row">
+                          <p id="questionLoader">Loading...</p>
                             <div class="col-md-12">
                                 <div class="main-card mb-3 card">
                                     <div class="card-header"> Questions
@@ -118,9 +119,16 @@
     </div>
   </div>
 </form>
-
-
-<span hidden="true" id="QuestionBank"> [{{#each Questions as |question|}},{"Title":"{{question.Title}}"{{#each question.Options as |option i|}},"Option{{i}}":"{{option.Title}}"{{/each}},"Id":"{{question._id}}" }{{/each}}]</span>
+{{!-- var dataInTextFormat = document.getElementById("QuestionBank").innerText
+  var dataInString ="["+dataInTextFormat.substr(3,(dataInTextFormat.length-1)).toString()
+  var data = JSON.parse(dataInString)
+  $(function () {
+    $('#table').bootstrapTable({
+    data: data
+    });
+}); --}}
+<input type="text" value="{{CourseId}}" id="CourseId" hidden="true" >
+<script src="/public/js/server_calls.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
@@ -147,17 +155,18 @@ document.getElementById("Form").onsubmit = function(e){
 }
 </script>
 <script>
-  var dataInTextFormat = document.getElementById("QuestionBank").innerText
-  var dataInString ="["+dataInTextFormat.substr(3,(dataInTextFormat.length-1)).toString()
-  var data = JSON.parse(dataInString)
-  $(function () {
+  var CourseId = document.getElementById("CourseId").value
+  GetDataFromServer(`/course/${CourseId}/questions`,"Questions",function(data){
+    $(function () {
     $('#table').bootstrapTable({
     data: data
     });
+    document.getElementById("questionLoader").setAttribute("hidden","true")
 });
+  })
 
 
- var $button = $('#button')
+var $button = $('#button')
 
   $(function() {
     $button.click(function () {

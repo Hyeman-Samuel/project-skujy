@@ -67,6 +67,7 @@
 <hr/>
 {{!--PICK QUESTIONS --}}
                         <div id="questions" class="row">
+                          <p id="questionLoader">Loading...</p>
                             <div class="col-md-12">
                                 <div class="main-card mb-3 card">
                                     <div class="card-header"> Questions
@@ -129,7 +130,8 @@
 </form>
 
 <span hidden="true" id="SelectedQuestionBank">[{{#each competition.SelectedQuestions as |question|}},{"Id":"{{question._id}}"}{{/each}}]</span>
-<span hidden="true" id="QuestionBank"> [{{#each Questions as |question|}},{"Title":"{{question.Title}}"{{#each question.Options as |option i|}},"Option{{i}}":"{{option.Title}}"{{/each}},"Id":"{{question._id}}" }{{/each}}]</span>
+<input type="text" value="{{CourseId}}" id="CourseId" hidden="true" >
+<script src="/public/js/server_calls.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
@@ -157,14 +159,15 @@ document.getElementById("Form").onsubmit = function(e){
 </script>
 <script>
 
-  var QuestionsInTextFormat = document.getElementById("QuestionBank").innerText
-  var QuestionsInString ="["+QuestionsInTextFormat.substr(3,(QuestionsInTextFormat.length-1)).toString()
-  var data = JSON.parse(QuestionsInString)
-  $(function () {
+var CourseId = document.getElementById("CourseId").value
+GetDataFromServer(`/course/${CourseId}/questions`,"Questions",function(data){
+    $(function () {
     $('#table').bootstrapTable({
     data: data
     });
+    document.getElementById("questionLoader").setAttribute("hidden","true")
 });
+  })
 
 
  var $button = $('#button')

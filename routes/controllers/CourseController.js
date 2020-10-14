@@ -39,6 +39,28 @@ async function AddQuestionToCourse(req,res) {
 }
 
 
+async function getQuestions(req,res) { 
+  const course = await Course.findById(req.params.id).populate(["Questions"]).lean()
+  if(course == null){
+    return {message:"Document(s) Not Found",code:-1}
+  }
+  var questions = course.Questions
+  var questionsInJson = []
+  questions.forEach(item => {
+    var question = {
+      "Title":item.Title,
+      "Option0":item.Options[0].Title,
+      "Option1":item.Options[1].Title,
+      "Option2":item.Options[2].Title,
+      "Option3":item.Options[3].Title,
+      "Id":item._id
+    }
+    questionsInJson.push(question)
+  });
+  return {message:"Document(s)  Found",code:1,data:questionsInJson}
+}
+
+
 async function AddTestToCourse(req,res){
   const test = await TestFormatController.createTestFormat(req,res);
   if(test.code == -1){
@@ -178,5 +200,6 @@ module.exports = {
     AddQuestionToCourse,
     AddTestToCourse,
     AddCompetitionToCourse,
-    getOnlyCourseById
+    getOnlyCourseById,
+    getQuestions
 }

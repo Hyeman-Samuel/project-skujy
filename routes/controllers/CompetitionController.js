@@ -231,7 +231,7 @@ async function AddEntry(response) {
             competition.Registrations.push(entry.id)
             await competition.save()
             entry = entry.toJSON()
-            //Mailer.SendTextEmail(entry.Email,RegistrationMessage(entry.ExamNumber),`Registation for ${competition.Title}`)
+        //await Mailer.SendTextEmail(entry.Email,RegistrationMessage(entry.ExamNumber),`Registation for ${competition.Title}`)
         }  
         return {message:"Successful",code:1,data:entry}
         

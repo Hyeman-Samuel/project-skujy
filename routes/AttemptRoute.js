@@ -93,7 +93,11 @@ Router.post("/:attemptId/submit",async (req,res)=>{
         var NumberofQuestions = result.data.QuestionsAttempted.length 
         res.render("result_page.hbs",{layout:false,attempt:result.data,QuestionsCount:NumberofQuestions});
     }else{
-        res.sendStatus(500)
+        var error = {msg:"You were redirected to this page because their was an error. Did you submit twice? . What did you expect? ",param:""}
+        req.session.errors =[error]
+        res.redirect("/");
+        return
+        //res.sendStatus(500)
         //res.send("error page:"+result.message);  
     }
 })

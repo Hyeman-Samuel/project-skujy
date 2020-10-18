@@ -1,6 +1,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="../../../public/css/quiz_style.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 <div class="container-fluid bg-info">      
 <div class="row">
@@ -8,17 +11,97 @@
       
 <p><span class="heading">Your Score :</span>
 <span class="heading" style="font-weight: bolder;!important"><span style="margin-left: -20px ;" id="correct">{{attempt.Score}}</span>/<span id="total">{{QuestionsCount}}</span></span></p>
+{{#if attempt.Test}}
 <p><span class="heading">Test :</span>
 <span class="heading" style="font-weight: bolder !important; margin-left: -20px ;">{{attempt.CourseTitle}} - {{attempt.Test.Title}}</span></p>
 <p><span class="heading">Duration :</span>
 <span class="heading" style="font-weight: bolder !important; margin-left: -20px ;">{{attempt.Test.DurationInMinutes}} minutes</span></p>
+{{/if}}
+{{#if attempt.Competition}}
+<p><span class="heading">Exam :</span>
+<span class="heading" style="font-weight: bolder !important; margin-left: -20px ;">{{attempt.CourseTitle}} - {{attempt.Competition.Title}}</span></p>
+<p><span class="heading">Duration :</span>
+<span class="heading" style="font-weight: bolder !important; margin-left: -20px ;">{{attempt.Competition.DurationInMinutes}} minutes</span></p>
+{{/if}}
  <h2>{{attempt.Email}}</h2> 
 <hr style="border:3px solid #f1f1f1">
     </div> 
    <hr>
-        <canvas id="myChart" width="400" height="400"></canvas>     
+          
+</div>
+<div class="row">
+  <div class="col-md-6 col-md-offset-2">
+<canvas id="myChart" width="400" height="400"></canvas>
 </div>
 </div>
+   
+</div>
+<hr>
+{{#if attempt.Test}}
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            <h2><b>Test Details</b></h2>
+          </div>
+          
+        </div>
+              
+<div class="col-sm-12">
+        {{!-- QUIZ START --}}
+        
+                {{#each attempt.QuestionsAttempted as |item i|}}
+                <div class="container-fluid bg">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 ><span style="padding:5px 10px 5px 10px;!important" class="label label-info" id="qid">{{index i }}</span> {{item.question.Title}}</h3>
+                            {{#if item.question.ImageUrl}}
+                            <img width="60%" src="{{item.question.ImageUrl}}" />
+                            {{/if}}
+                        </div>
+                        <div class="modal-body">           
+                        <div class="funkyradio">
+                        <!---Options-->
+                        {{#each item.question.Options as |option|}}
+                        <div class="funkyradio-default">
+
+              {{#IfEqual option.Index  item.AnswerPickedIndex}}
+                    {{#IfEqual option.Index  item.question.CorrectOptionIndex}}
+                    
+                          <input disabled="true" type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]" value="{{option.Index}}" id="correct" id="{{option._id}}" checked="true" />
+                          {{else}}
+                          
+                          <input disabled="true" type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]"  value="{{option.Index}}" id="wrong" id="{{option._id}}" checked="true"/>
+                    {{/IfEqual}}
+                {{else}}
+                    {{#IfEqual option.Index  item.question.CorrectOptionIndex}}
+                    
+                          <input disabled="true" type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]"  value="{{option.Index}}" id="solution" id="{{option._id}}" />
+                        {{else}}
+                          <input disabled="true" type="radio" name="QuestionsAttempted[{{i}}][AnswerPickedIndex]" value="{{option.Index}}" id="{{option._id}}" />
+                    {{/IfEqual}}
+                        
+              {{/IfEqual}}                           
+                            <label for="{{option._id}}">{{Title}}</label>
+                        </div>
+
+                    
+                        {{/each}}      
+                        <!---Options END--> 
+                    </div>
+                </div>
+                <div class="modal-footer text-muted">
+                    <span id="answer"></span>
+                </div>
+                </div>
+                </div>
+                </div>
+                <hr>
+                {{/each}}
+      
+        {{!--QUIZ END  --}}
+</div>
+{{/if}}
+
 
 <script>
     var GotCorrect = document.getElementById("correct").innerText;
@@ -62,8 +145,7 @@ var myDoughnutChart = new Chart(ctx, {
     }
 
     #myChart{
-        position: absolute;
-        left: 35%;
+
     }
     * {
   box-sizing: border-box;

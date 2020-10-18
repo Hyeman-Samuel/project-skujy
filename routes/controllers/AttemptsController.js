@@ -240,7 +240,7 @@ async function submitAttempt(req,res){
         attempt.Score = getScore(attempt.QuestionsAttempted)
         await attempt.save()
         const FinishedAttempt = await Attempt.findById(attempt.id).populate([
-        "QuestionsAttempted.question","Test","Test.Course"
+        "QuestionsAttempted.question","Test","Test.Course","Competition"
         ]).lean()
         return {message:"Attempt Submitted",code:1, data:FinishedAttempt };      
     } catch (err) {

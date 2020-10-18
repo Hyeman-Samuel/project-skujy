@@ -69,6 +69,18 @@
           user-select: none;
 }
 
+.funkyradio #correct:empty ~ label:before {
+  background: #4CAF50 !important;
+}
+
+.funkyradio #wrong:empty ~ label:before {
+  background:#f44336 !important;
+}
+
+.funkyradio #solution:empty ~ label:before {
+  background:#4CAF50 !important;
+}
+
 .funkyradio input[type="radio"]:empty ~ label:before {
   position: absolute;
   display: block;
@@ -112,6 +124,13 @@
   background-color: #7971ea;
 }
 
+ .funkyradio-default #correct:checked ~ label:before {
+  background-color: #4CAF50 !important;
+}
+
+.funkyradio-default #wrong:checked ~ label:before {
+  background-color:#f44336 !important;
+} 
 
 
 

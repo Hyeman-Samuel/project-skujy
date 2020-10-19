@@ -4,5 +4,7 @@
   "CloudName":"CloudName",
   "ApiKey":"ApiKey",
   "ApiSecret":"ApiSecret",
-  "PayStackSecretKey":"PayStackSecretKey"
+  "PayStackSecretKey":"PayStackSecretKey",
+  "MongoDbConnectionString":"MongoDbConnectionString",
+  "SecretKey":"SecretKey"
 }

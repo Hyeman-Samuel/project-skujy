@@ -1,8 +1,12 @@
 Local  Uri
 mongodb://localhost:27017/skuji
 
-Hosted Development Uri
-mongodb://<indexter>:<MyPassword1>@ds241298.mlab.com:41298/heroku_cf7hck7m
+HEROKU  Uri(depreciating 10 nov)
+mongodb://<username>:<password>@ds241298.mlab.com:41298/heroku_cf7hck7m
+
+migrated Heroku Uri(Current being used from 19th oct 2020)
+mongodb+srv://skujy:<password>@clustercbt.a3sam.mongodb.net/<dbname>?retryWrites=true&w=majority
+
 
 Local PayStackKey
 sk_test_66884bd20ac9781e2ee8fd97f2a95c9fc563b195

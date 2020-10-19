@@ -3,7 +3,7 @@ const config= require("config");
 const {Logger} = require("../utility/Logger")
 
 module.exports=function (){
-    Mongoose.connect(config.get("MongoDbConnectionString"),{ useNewUrlParser: true }).then(()=>{
+    Mongoose.connect(config.get("MongoDbConnectionString"),{ useNewUrlParser: true,useUnifiedTopology: true }).then(()=>{
     Logger.info("connected to mongoDb")
 }).catch((err)=>{
     

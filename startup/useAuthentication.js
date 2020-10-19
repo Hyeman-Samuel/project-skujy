@@ -4,13 +4,13 @@ const config= require("config");
 const jwt = require("jsonwebtoken");
 const {Logger} = require("../utility/Logger")
 
-// config.get("AdminUserEmail")await Bcrypt.hash(config.get("AdminUserPassword"), 10)
+// 
 var seeder = async (req, res, next) => {
     const users =  (await Users.find().lean()).length
     if (users === 0) {
       var SeededUser = new Users({
-        Username:"skuji",
-        Password:await Bcrypt.hash("mypassword",10),
+        Username:config.get("AdminUserEmail"),
+        Password:await Bcrypt.hash(config.get("AdminUserPassword"), 10),
         Role: "Admin"
       });
       try {
@@ -27,7 +27,7 @@ var seeder = async (req, res, next) => {
   var TokenChecker = (req, res, next) => {
     const authcookie = req.cookies.authcookie
 
-    jwt.verify(authcookie,"secretKey",(err,data)=>{
+    jwt.verify(authcookie,config.get("SecretKey"),(err,data)=>{
      if(err){
       res.redirect("/auth");
      } 

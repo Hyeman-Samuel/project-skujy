@@ -20,19 +20,24 @@
 <h2>{{competition.Competition.Title}}</h2>
 <p>{{competition.Competition.CourseTitle}}</p>
 <h3>Price :&#8358 {{competition.Competition.Price}}</h3>
-
+<hr><label>Status:</label>
 <div class="row">
     {{#IfEqual competition.Competition.Stage 1}} 
+
+        <h3>Open For Registration </h3>
             <a href="/competition/{{../competition.Competition._id}}/start"><button class="btn btn-success" style="margin: 20px;" >Start Exam</button></a>
             <a href="/competition/{{../competition.Competition._id}}/end"> <button class="btn btn-danger" style="margin: 20px;">Close Exam</button></a>                                                 
                 {{else}}
-            {{#IfEqual item.Stage 2}}
-            <a href="/competition/{{../competition.Competition._id}}/registration"> <button class="btn btn-success" style="margin: 20px;">Open Registration For Exam</button></a>
-            Nb:Exam cannot be attempted
-            <a href="/competition/{{../competition.Competition._id}}/end"> <button class="btn btn-danger" style="margin: 20px;">Close Exam</button></a>  
-                {{else}}
+            {{#IfEqual ../competition.Competition.Stage 3}}
+            <h3>Exam has Ended </h3>
             <a href="/competition/{{../competition.Competition._id}}/registration"> <button class="btn btn-success" style="margin: 20px;">Open Registration For Exam</button></a>
             <a href="/competition/{{../competition.Competition._id}}/start"> <button class="btn btn-success" style="margin: 20px;">Start Exam</button></a> 
+                {{else}}
+                <!---When the Stage is 2 --->
+                <h3>Exam has Started </h3>
+            <a href="/competition/{{../competition.Competition._id}}/registration"> <button class="btn btn-success" style="margin: 20px;">Open Registration For Exam</button></a>            
+            <a href="/competition/{{../competition.Competition._id}}/end"> <button class="btn btn-danger" style="margin: 20px;">Close Exam</button></a>  
+                Nb:Exam cannot be attempted
                 {{/IfEqual}}                
     {{/IfEqual}}
 </div>

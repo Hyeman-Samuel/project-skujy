@@ -3,9 +3,9 @@ const handlebars= require("handlebars");
 const fs = require("fs");
 const config= require("config");
 const {Logger} = require("./Logger");
-const { logger } = require('handlebars');
-const AdminMail=""//config.get("MailerEmail")
-const AdminPassword =""//config.get("MailerPassword")
+//const { logger } = require('handlebars');
+const AdminMail=config.get("MailerEmail")
+const AdminPassword =config.get("MailerPassword")
 
 async function SendHbsEmail(HbsFilePath,HbsData,receiverMail,subject){
 fs.readFile(HbsFilePath,(error,data)=>{

@@ -6,5 +6,7 @@
   "ApiSecret":"ApiSecret",
   "PayStackSecretKey":"PayStackSecretKey",
   "MongoDbConnectionString":"MongoDbConnectionString",
-  "SecretKey":"SecretKey"
+  "SecretKey":"SecretKey",
+  "MailerEmail":"MailerEmail",
+  "MailerPassword":"MailerPassword"
 }

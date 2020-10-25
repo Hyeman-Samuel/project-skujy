@@ -197,7 +197,7 @@ async function getRegistrations(req,res) {
         competition.Registrations.forEach(async (entry) => {
         var attempt = null 
             attempts.forEach((value)=>{
-            if(value._id.toString() === entry.Attempt.toString()){
+            if(entry.Attempt!= null && value._id.toString() === entry.Attempt.toString()){
                 attempt = value
             }}) 
             var Registeree ={

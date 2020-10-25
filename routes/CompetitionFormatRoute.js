@@ -67,6 +67,7 @@ Paystack.verifyPayment(ref,(err,body)=>{
             return {message:err,code:-1};
         }
         const response = JSON.parse(body);
+        Logger.error("response",response)
         if(response.status){   
         async function verify(){            
         var result = await CompetitionController.AddEntry(response) 

@@ -58,6 +58,10 @@ const form = await CompetitionFormatController.MakeEntryPayment(req)
 })
 
 
+Router.get("/:compId/candidates",async(req,res)=>{ 
+    var result = await CompetitionController.getRegistrations(req,res)
+    ResponseManager(req,res,result)
+})
 
 
 Router.get("/callback",async(req,res)=>{ 

@@ -171,22 +171,17 @@
                                 </div>
                             </div>
                         </div>
-<span hidden="true" id="RegistrationBank">[{{#each competition.Competition.Registrations as |item i|}},
-                                        {"Email":"{{item.Email}}",
-                                        "Score":"{{#if item.Attempt.Score}}{{item.Attempt.Score}}{{else}}Not Attempted{{/if}}",
-                                        "Submitted":"{{#if item.Attempt.HasSubmitted}}<div class="badge badge-success">Submitted</div>{{else}}<div class="badge badge-warning">Not Submitted</div>{{/if}}",
-                                        "ExamNumber":"{{item.ExamNumber}}",
-                                        "FullName":"{{item.FullName}}" }{{/each}}] </span>
+<input type="text" value="{{competition.Competition._id}}" id="CompetitionId" hidden="true" >
+<script src="/public/js/server_calls.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script>
-var dataInTextFormat = document.getElementById("RegistrationBank").innerText
-var dataInString ="["+dataInTextFormat.substr(3,(dataInTextFormat.length-1)).toString()
-var data = JSON.parse(dataInString)
-$(function () {
+    var CompetitionId = document.getElementById("CompetitionId").value
+    GetDataFromServer(`/competition/${CompetitionId}/candidates`,"Registrations",function(data){
     $('#RegistrationTable').bootstrapTable({
     data: data
     });
-});
+    })
+
 </script>

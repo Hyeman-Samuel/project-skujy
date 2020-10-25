@@ -189,6 +189,38 @@ async function EndStage(req,res){
     }
 }
 
+async function getRegistrations(req,res) {
+    try{
+        const competition = await CompetitionFormat.findById(req.params.compId).populate(["Registrations"]).lean()
+        var Registrations = []
+        var attempts = await Attempt.find({"Competition":req.params.compId}).lean()
+        competition.Registrations.forEach(async (entry) => {
+        var attempt = null 
+            attempts.forEach((value)=>{
+            if(value._id.toString() === entry.Attempt.toString()){
+                attempt = value
+            }}) 
+            var Registeree ={
+                "Email":entry.Email,
+                "ExamNumber":entry.ExamNumber,
+                "FullName":entry.FullName,
+            }
+            if(attempt != null){
+                Registeree.Score = attempt.Score
+                Registeree.Submitted = "Submitted"
+            }else{
+                Registeree.Score = -1
+                Registeree.Submitted = "Not Submitted"
+            }
+            Registrations.push(Registeree)
+        });
+        return {message:"Successful",code:1,data:Registrations}
+    }catch(err){
+        Logger.error(err.message,err)
+        return {message:"UnSuccessful",code:-1}
+    }
+}
+
 async function deleteCompetition(req,res) {
     try{
     const competition = await CompetitionFormat.findByIdAndDelete(req.params.compId);
@@ -266,5 +298,6 @@ module.exports = {
     MakeEntryPayment,
     AddEntry,
     editCompetition,
-    getSingleby
+    getSingleby,
+    getRegistrations
 }

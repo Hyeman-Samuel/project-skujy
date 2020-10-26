@@ -8,6 +8,8 @@ const Paystack = require("../utility/Paystack");
 const ResponseManager = require('../utility/ResponseManager');
 const CompetitionController = require('./controllers/CompetitionController');
 const { check, validationResult } = require('express-validator');
+var crypto = require('crypto');
+const config= require("config");
 
 
 Router.post("/entry",validateRegistration(),async(req,res)=>{
@@ -71,7 +73,6 @@ Paystack.verifyPayment(ref,(err,body)=>{
             return {message:err,code:-1};
         }
         const response = JSON.parse(body);
-        Logger.error("response",response)
         if(response.status){  
         async function verify(){            
         var result = await CompetitionController.AddEntry(response) 
@@ -93,6 +94,33 @@ Paystack.verifyPayment(ref,(err,body)=>{
     })
 })
 
+
+Router.get("/webhook",async(req,res)=>{ 
+    var hash = crypto.createHmac('sha512', config("PayStackSecretKey")).update(JSON.stringify(req.body)).digest('hex');
+    if (hash == req.headers['x-paystack-signature']) {    
+    var event = req.body;
+    switch (event.event) {
+        case "charge.success":
+            async function verify(){            
+                var result = await CompetitionController.AddEntry(event) 
+                    if(result.code == 1){          
+                        res.render("layout/user/payment_comfirmation.hbs",{"layout":"user/user_layout.hbs","entry":result.data})   
+                    }else{
+                        Logger.error("error when adding entry",result.message)
+                    }
+                }  
+                    verify() 
+            break;
+        default:
+            var error = {msg:"Failed to process payment",param:""}
+            req.session.errors =[error]
+            res.redirect("/home/register");
+            Logger.error("error with paystack",response)
+            break;
+    }
+    }
+    res.send(200);
+})
 
 Router.get("/:compId", async(req,res)=>{
     var result = await CompetitionFormatController.getById(req,res);

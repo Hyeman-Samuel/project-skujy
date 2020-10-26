@@ -283,7 +283,7 @@ function generateCode(digits) {
 }
 
 function RegistrationMessage(ExamNumber){
-return `<p>Thank you for registring. Your Exam Number is <b>${ExamNumber}</b>. DO NOT SHARE THIS INFORMATION AS THIS IS WHAT YOU WILL USE TO TAKE PART IN THE COMPETITION <p>`
+return `<p>Thank you for registering. Your Exam Number is <b>${ExamNumber}</b>. DO NOT SHARE THIS INFORMATION AS THIS IS WHAT YOU WILL USE TO TAKE PART IN THE COMPETITION <p>`
 }
 
 module.exports = {

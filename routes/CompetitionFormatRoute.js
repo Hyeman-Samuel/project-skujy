@@ -72,7 +72,7 @@ Paystack.verifyPayment(ref,(err,body)=>{
         }
         const response = JSON.parse(body);
         Logger.error("response",response)
-        if(response.status){   
+        if(response.status){  
         async function verify(){            
         var result = await CompetitionController.AddEntry(response) 
             if(result.code == 1){          
@@ -84,6 +84,9 @@ Paystack.verifyPayment(ref,(err,body)=>{
             verify()          
             
         }else{
+            var error = {msg:"Failed to process payment",param:""}
+            req.session.errors =[error]
+            res.redirect("/home/register");
             Logger.error("error with paystack",response)
             return {message:"UnSuccessful",code:-1}
         }   

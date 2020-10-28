@@ -30,11 +30,16 @@
           
 </div>
 <div class="row">
-  <div class="col-md-6 col-md-offset-2">
+  <div class="col-md-6 col-sm-offset-2">
 <canvas id="myChart" width="400" height="400"></canvas>
 </div>
+{{#if attempt.Test}}
+<div class="col-sm-2 col-sm-offset-2">
+<a href="/"><button class="btn btn-success">Return</button></a>
 </div>
-   
+{{/if}}
+</div>
+  
 </div>
 <hr>
 {{#if attempt.Test}}

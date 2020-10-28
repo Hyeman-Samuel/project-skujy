@@ -6,6 +6,7 @@ const {Entry} = require("../../models/Entry");
 const {paginateArray}=require("../../utility/Pagination");
 const Question = require("../../models/Question");
 const {Logger} = require("../../utility/Logger");
+const { isNull } = require("lodash");
 
 async function createTestAttempt(req,res) { 
 
@@ -16,18 +17,32 @@ async function createTestAttempt(req,res) {
         return {message:"Test not Found",code:-1}
     }
 
-    if(req.body.TestCode != test.TestCode){
+    const course  = await Course.findById(test.Course).populate(["Questions","Competitions"]).lean()
+    if(course == null){
+        return {message:"course not Found",code:-1}
+    }
+    const competitions = course.Competitions   
+    const entry = await Entry.findOne({"Email":req.body.Email,"ExamNumber":req.body.TestCode})
+    var HasPaid = null
+    if(entry != null){        
+        competitions.forEach(index => {
+        if(index._id.toString() === entry.Competition.toString()){
+            HasPaid = true
+        } 
+        });
+    }
+    
+    if(!HasPaid){
+    
+    if (req.body.TestCode != test.TestCode){
         return {message:"Access Code Invalid",code:-1}
     }
     const attempts = await Attempt.find({"Test":test.id,"Email":req.body.Email}).lean()
     if(attempts.length >= test.Trials){
         return {message:"Maximum attempts reached in this test",code:-1}
     }
-    const course  = await Course.findById(test.Course).populate(["Questions"])
-    if(course == null){
-        return {message:"course not Found",code:-1}
-    } 
-    
+        } 
+
     if(test.IsClosed){
         return {message:"Test is already closed",code:-1}
     }  

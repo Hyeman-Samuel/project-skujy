@@ -4,6 +4,7 @@ const Router= express.Router();
 const { check, validationResult } = require('express-validator');
 const {Users}=require('../models/User');
 const jwt = require("jsonwebtoken");
+const config= require("config");
 
 Router.get("/",async(req,res)=>{
 res.render('layout/admin/login.hbs',{layout:false,errors:req.session.errors})
@@ -22,8 +23,8 @@ const User = await Users.findOne({"Username":req.body.Username}).lean();
 if(!User){
     var error = {msg:"invalid Username",param:""}
     req.session.errors =[error]
-     res.redirect("/auth");
-     return
+    res.redirect("/auth");
+    return
 }
 const IsPassword= await bcrypt.compare(req.body.Password,User.Password);
 
@@ -34,7 +35,7 @@ if(!IsPassword){
     return
 };
 
-const token = jwt.sign({user:User},'secretKey')
+const token = jwt.sign({user:User},config.get("SecretKey"))
 res.cookie('authcookie',token,{maxAge:900000,httpOnly:true}) 
 
 res.redirect('/admin')
